@@ -38,9 +38,10 @@ your name in the `author` field, that is your credit.
 
 **Lesson packs** (`lessons/<track>/*.json`) — one concept per lesson, voice-neutral, the
 character's current personality colors it at runtime. See
-[`lessons/python/example_lesson.json`](lessons/python/example_lesson.json). Every lesson
-needs a concept, an explanation, a code example, a quiz, and exactly three hints that get
-progressively more revealing.
+[`lessons/python/c1_l1_variables.json`](lessons/python/c1_l1_variables.json). Every lesson
+needs a concept, an explanation, a code example, a quiz (`mcq`, `predict_output`, or
+`fill_blank`), and exactly three hints that get progressively more revealing. Teaching
+order comes from the `cluster` and `lesson` numbers inside the file, not the filename.
 
 **Narrative arcs** (`arcs/*.json`) — story chapters spanning 7–14 sessions, selected by
 mood and Echo Distance. The format lands with the narrative engine, see `arcs/README.md`.

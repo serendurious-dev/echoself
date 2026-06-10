@@ -182,13 +182,42 @@ class SkyWorld(World):
 
 
 class AmbientWorld(SkyWorld):
-    caption = "1 ambient   2 learning   d drift   esc quit"
+    caption = "tab - learn   d - drift   esc - quit"
 
 
 class LearningWorld(SkyWorld):
-    caption = "the lesson panel arrives soon"
+    # the character teaches here. the lesson session owns the panel and the
+    # flow, this world owns the sky around it. number keys, typing and h all
+    # belong to the lesson, so this world captures input - tab leaves.
+    caption = "tab - back to the sky"
     star_speed = 0.6
     star_brightness = 0.7
+    capture_input = True
+
+    def __init__(self, *args, voice=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.voice   = voice
+        self.session = None
+
+    def enter(self):
+        super().enter()
+        from learning.quiz_engine import LessonSession
+        # a fresh session each visit picks up wherever the log says you are
+        self.session = LessonSession("python", self.character, self.voice)
+
+    def handle(self, event):
+        if self.session:
+            self.session.handle(event)
+
+    def update(self, dt):
+        super().update(dt)
+        if self.session:
+            self.session.update(dt)
+
+    def draw(self, surface):
+        super().draw(surface)
+        if self.session:
+            self.session.draw(surface)
 
 
 class DriftWorld(SkyWorld):
@@ -203,9 +232,10 @@ def default_worlds(size):
     # light around them, not the person or the stars. the character is whoever
     # the profile says, the gentle guide until session zero has happened.
     from core.session_manager import load_profile
-    from character.character_builder import spec_from_profile
+    from character.character_builder import spec_from_profile, voice_from_profile
     profile = load_profile()
     spec    = spec_from_profile(profile) if profile else gentle_guide()
+    voice   = voice_from_profile(profile)
     who     = Character(spec, height=int(size[1] * 0.42))
     accent = who.spec.palette[0]
     stars  = Starfield(size, tint=blend((232, 220, 200), accent, 0.25))
@@ -218,7 +248,8 @@ def default_worlds(size):
                                  stars, character=who, char_pos=(cx, cy)),
         "learning": LearningWorld(size, "learning",
                                   blend((8, 16, 22), accent, 0.22), blend((26, 58, 62), accent, 0.30),
-                                  stars, character=who, char_pos=(int(size[0] * 0.30), cy)),
+                                  stars, character=who, char_pos=(int(size[0] * 0.24), cy),
+                                  voice=voice),
         "drift":    DriftWorld(size, "drift",
                                blend((6, 8, 18), accent, 0.09), blend((22, 24, 44), accent, 0.18),
                                stars, character=who, char_pos=(cx, cy + 10), mood="drift"),
@@ -299,17 +330,18 @@ def run(args=None):
     running = True
     while running:
         dt = clock.tick(FPS) / 1000.0
+        # worlds that take typing (the lesson panel) get the keys first, only
+        # esc and tab stay global there. everywhere else d is one keypress.
+        captured = getattr(worlds.current, "capture_input", False)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-                elif event.key == pygame.K_1:
-                    worlds.switch("ambient")
-                elif event.key == pygame.K_2:
-                    worlds.switch("learning")
-                elif event.key == pygame.K_d:
+                elif event.key == pygame.K_TAB:
+                    worlds.switch("ambient" if worlds.current.name == "learning" else "learning")
+                elif event.key == pygame.K_d and not captured:
                     worlds.toggle_drift()
                 else:
                     worlds.handle(event)

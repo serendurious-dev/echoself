@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "track": "python",
+  "cluster": 1,
+  "lesson": 1,
+  "id": "py-c1-l1-variables",
+  "title": "Variables - giving things names",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A variable is a name bound to a value. Assignment with = creates or rebinds the name.",
+  "explanation": "When you write city = 'Seoul', Python does not put the value in a box - it ties a name to it, like a label on a string. Names can be retied to new values at any time, and the old value quietly lets go.",
+  "code_example": "city = \"Seoul\"\nyear = 2026\ncity = \"Busan\"   # retied\nprint(city, year)",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": ["Seoul 2026", "Busan 2026", "city year", "Busan year"],
+    "answer_index": 1
+  },
+  "hints": [
+    "Read the lines top to bottom - what happens to 'city' on line 3?",
+    "Assignment does not keep history. A name only remembers its latest value.",
+    "By the time print() runs, 'city' was last assigned \"Busan\"."
+  ]
+}

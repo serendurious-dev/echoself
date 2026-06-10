@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "track": "python",
+  "cluster": 1,
+  "lesson": 2,
+  "id": "py-c1-l2-numbers",
+  "title": "Numbers - two kinds of division",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "Python has int and float. / always gives a float, // divides and floors, % gives the remainder.",
+  "explanation": "7 / 2 is 3.5 - regular division never throws information away. 7 // 2 is 3 - floor division keeps only the whole part. 7 % 2 is 1 - the remainder, which is how you check if a number is even. Three little operators, three different questions you can ask.",
+  "code_example": "print(7 / 2)    # 3.5\nprint(7 // 2)   # 3\nprint(7 % 2)    # 1",
+  "quiz": {
+    "type": "mcq",
+    "question": "What type does 8 / 4 give you?",
+    "options": ["int, because it divides evenly", "float, always", "it depends on the numbers", "str"],
+    "answer_index": 1
+  },
+  "hints": [
+    "The result value is 2.0, not 2. What does the .0 tell you?",
+    "/ does not look at whether the division is clean. It always answers the same way.",
+    "Even 8 / 4 gives 2.0 - regular division always returns a float."
+  ]
+}
