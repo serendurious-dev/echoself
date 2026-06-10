@@ -43,6 +43,10 @@
   },
   "visual": {
     "palette": ["#7FB5A8", "#E8DCC8", "#4A6670"],
+    "skin": "#F2D5C0",
+    "hair": { "style": "long", "color": "#6E5A4E" },
+    "eyes": "#5B8A80",
+    "outfit": ["#5E8C80", "#4A6E66"],
     "glow_intensity": 0.4,
     "form": "soft",
     "symbol": "lantern"
