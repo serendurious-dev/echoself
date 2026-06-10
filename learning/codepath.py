@@ -1,13 +1,10 @@
-"""CodePath track and lesson orchestration.
+"""tracks and lessons.
 
-Language tracks (v1.0 ships Python; C, C++, Java are on the roadmap), each
-with three topic clusters; each cluster contains five lessons, one
-micro-challenge, and one mini project. Lessons are voice-neutral JSON
-(lessons/, CC BY 4.0) colored at runtime by the character's *current* —
-drifted — voice tone.
-
-In-world interactions: multiple choice, fill-in-the-blank, predict-the-output.
-Real coding happens via the challenge runner (challenge_runner.py).
+v1.0 ships Python (C, C++, Java are roadmap), three clusters per track, each cluster
+five lessons + a micro-challenge + a mini project. lessons are voice-neutral JSON
+(lessons/, CC BY 4.0), colored at runtime by the character's current - drifted -
+voice. in-world questions are multiple choice, fill-in-the-blank, predict-the-output.
+real coding goes through challenge_runner.py.
 """
 
-# Implementation arrives in Layer 1.
+# lands with issue #6

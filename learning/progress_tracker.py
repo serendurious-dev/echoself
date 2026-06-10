@@ -1,9 +1,8 @@
-"""Progress tracker — learning_log.csv and the Learning axis.
+"""learning_log.csv and the fourth axis.
 
-Records lessons completed, quiz scores, challenge attempts, hint usage, and
-timestamps. Feeds the fourth Echo Distance axis (Learning): completing a topic
-cluster closes the axis slightly; a week of avoiding a track lets it drift
-outward. The character notices — gently.
+records lessons, quiz scores, attempts, hint usage, timestamps. feeds the Learning
+axis of the Echo Distance - finishing a cluster closes it a little, avoiding a track
+for a week lets it drift back out. the character notices, gently.
 """
 
-# Implementation arrives in Layer 1.
+# lands with issue #4

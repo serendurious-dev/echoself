@@ -1,12 +1,12 @@
-"""Quiz engine — in-world questions, hints, and spaced repetition memory.
+"""quizzes, hints, and the character remembering what you got wrong.
 
-Renders lesson quizzes in the glowing panel and feeds every answer event to
-the expression engine (live reactions) and the behavioral model (passive
-signals). A progressive hint system reveals three hints before the answer.
+renders lesson questions in the glowing panel, feeds every answer to the expression
+engine (live reaction) and the behavioral model (signal). three hints before the
+answer, each more revealing.
 
-Character memory: questions the user missed return days later, in the
-character's voice — "You missed this one before. Try it now." Pedagogically
-this is spaced repetition; emotionally, it is the character remembering.
+missed questions come back days later in the character's voice - "you missed this
+one before. try it now." spaced repetition on paper, the character remembering you
+in practice.
 """
 
-# Implementation arrives in Layer 1; spaced repetition in Layer 2.
+# lands with issue #6, the memory part in Layer 2

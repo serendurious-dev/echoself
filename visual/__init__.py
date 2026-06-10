@@ -1,1 +1,1 @@
-"""The visible worlds: ambient sky, learning environment, transitions, charts."""
+"""what you see: the worlds, the transitions, the charts."""

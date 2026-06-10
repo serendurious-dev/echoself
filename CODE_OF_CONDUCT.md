@@ -11,9 +11,9 @@ or sexual identity and orientation.
 We pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive,
 and healthy community.
 
-EchoSelf is a project built for people on their hardest days. That standard applies inside the
-community too: we are patient with beginners, gentle in code review, and we never shame anyone
-for what they don't know yet.
+EchoSelf is built for people on their hardest days, and that standard applies inside the
+community too. We are patient with beginners, gentle in code review, and nobody gets shamed
+here for what they do not know yet.
 
 ## Our Standards
 

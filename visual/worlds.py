@@ -1,15 +1,13 @@
-"""The three worlds (Pygame).
+"""the three worlds, in pygame.
 
-Ambient World: the living sky — the character's color bleeds into the
-environment, stars drift with the Echo Distance. Drift Mode lives here:
-soft sky, no UI pressure, the character sits quietly, breathing.
+Ambient: the living sky. the character's color bleeds into the environment, stars
+drift with the Echo Distance. Drift Mode lives here - soft sky, zero UI, the
+character just sits and breathes.
 
-Learning World: focused environment — the glowing lesson panel beside the
-character, ambient particles, world color shifting with the detected
-psychological state.
+Learning: the glowing lesson panel beside the character, ambient particles, the
+world's color shifting with the detected state.
 
-Transitions between worlds are smooth — no hard cuts; everything fades and
-shifts. The character is present in every world.
+transitions are fades, never hard cuts. the character is present in every world.
 """
 
-# Implementation arrives in Layer 1.
+# lands with issues #1 and #3

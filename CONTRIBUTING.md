@@ -1,76 +1,61 @@
-# Contributing to EchoSelf
+# Contributing
 
-Thank you for wanting to build this with us. EchoSelf accepts two kinds of contributions, and
-they live under different licenses on purpose:
+Thanks for wanting to build this with me. There are two kinds of contributions here and
+they carry different licenses, on purpose:
 
-| Contribution type | Where it lives | License |
+| What | Where it lives | License |
 |---|---|---|
 | Engine code (Python) | `core/`, `character/`, `learning/`, `ml/`, `visual/`, `audio/` | MIT |
 | Creative content (JSON packs, sentences) | `characters/`, `lessons/`, `arcs/`, `exchange/` | CC BY 4.0 |
 
-By submitting a pull request you agree your contribution is licensed accordingly. You retain
-your copyright; content contributors are always credited (that's what the BY means).
+By opening a pull request you agree your contribution is licensed accordingly. You keep
+your copyright, and content authors are always credited — that is what the BY means.
 
-## The Workflow
+## The workflow
 
-1. **Open an issue first** for anything non-trivial — bug, feature, or content pack proposal.
-   Use the issue templates.
-2. **Fork** the repository and create a branch from `main`:
-   `git checkout -b feature/your-feature` or `content/your-pack-name`
-3. **Make your changes.** One logical change per pull request.
-4. **Open a pull request** using the PR template. Link the issue it resolves.
-5. A maintainer reviews, discusses if needed, and merges.
+1. Open an issue first for anything that is not trivial. There are templates.
+2. Fork, then branch from `main`: `feature/your-feature` or `content/your-pack-name`.
+3. Make the change. One logical change per pull request.
+4. Open the PR with the template, link the issue.
+5. I review, we talk if needed, it merges.
 
-## Contributing Code
+## Code
 
-- Python 3.10+, follow [PEP 8](https://peps.python.org/pep-0008/).
-- Match the existing module structure — engine logic stays out of content directories.
-- Docstrings on every public module, class, and function.
-- **Respect the philosophy: presence over pressure.** Features that shame, pressure, streak-guilt,
-  or gamify the user against their own well-being will not be merged, no matter how well written.
-- The user's private data (`data/`, the Vault) is sacred. Code that transmits, analyzes Vault
-  contents, or phones home will not be merged.
+- Python 3.10+, PEP 8, docstrings on public things.
+- Engine logic stays out of the content directories.
+- **Presence over pressure is a merge requirement, not a suggestion.** Anything that
+  shames, guilts, streak-pressures or gamifies the user against their own well-being will
+  not be merged, no matter how clean the code is.
+- The user's private data is off limits. Code that transmits anything, or reads the Vault,
+  will not be merged. See [SECURITY.md](SECURITY.md).
 
-## Contributing Content Packs
+## Content packs
 
-### Personality Packs (`characters/*.json`)
+**Personality packs** (`characters/*.json`) — who a character starts as: voice, teaching
+style, visual defaults. [`characters/gentle_guide.json`](characters/gentle_guide.json) is
+the canonical format. Write phrases that sound like a person, not like UI copy. Include
+your name in the `author` field, that is your credit.
 
-A personality pack defines who a character starts as — their voice, teaching style, and visual
-defaults. See [`characters/gentle_guide.json`](characters/gentle_guide.json) for the canonical
-format. A pack must include:
+**Lesson packs** (`lessons/<track>/*.json`) — one concept per lesson, voice-neutral, the
+character's current personality colors it at runtime. See
+[`lessons/python/example_lesson.json`](lessons/python/example_lesson.json). Every lesson
+needs a concept, an explanation, a code example, a quiz, and exactly three hints that get
+progressively more revealing.
 
-- `id`, `name`, `archetype` — identity
-- `voice` — tone descriptors and phrase banks (greeting, correct, incorrect, hesitation,
-  encouragement, farewell). Write phrases that sound like a person, not a UI.
-- `teaching_style` — pacing, challenge appetite, explanation depth
-- `visual` — default palette, glow, form parameters for the procedural renderer
-- `author` — your name or handle, for attribution
+**Narrative arcs** (`arcs/*.json`) — story chapters spanning 7–14 sessions, selected by
+mood and Echo Distance. The format lands with the narrative engine, see `arcs/README.md`.
 
-### Lesson Packs (`lessons/<track>/*.json`)
+**Echo Exchange** (`exchange/sentences.json`) — one sentence, something your ideal self
+told you that helped. Anonymous by default, your credit lives in the git history, not in
+the sentence. Original work only, nothing identifying, and please — no advice, no "just
+try harder". These sentences reach people on their worst days.
 
-Lessons teach one concept each, in a voice-neutral template the character's current personality
-colors at runtime. See [`lessons/python/example_lesson.json`](lessons/python/example_lesson.json).
-A lesson must include concept, explanation, code example, quiz, and hints (exactly three,
-progressively more revealing).
+## How content gets reviewed
 
-### Narrative Arc Packs (`arcs/*.json`)
-
-Story chapters (7–14 sessions) selected by mood and Echo Distance. Format documented in
-`arcs/README.md` as the narrative engine lands.
-
-### Echo Exchange Sentences (`exchange/sentences.json`)
-
-One sentence: something your ideal self told you that helped. Anonymous by default — attribution
-goes in the PR history, not the sentence. Submissions must be original, kind, and free of
-identifying information. No advice-giving, no toxicity, no "just try harder."
-
-## Content Review Standards
-
-Content PRs are reviewed for tone as much as correctness. EchoSelf speaks to people on their
-worst days. Anything that could shame a struggling user — even accidentally, even as a joke —
-gets a revision request, kindly.
+Tone matters as much as correctness here. If something could land wrong on a struggling
+person, even accidentally, even as a joke, I will ask for a revision. Kindly.
 
 ## Questions
 
-Open a discussion or an issue. There are no stupid questions here; that's rather the point of
-the whole project.
+Open an issue or a discussion. There are no stupid questions here, that is rather the
+point of the whole project.

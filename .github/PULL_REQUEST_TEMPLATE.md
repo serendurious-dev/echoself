@@ -1,22 +1,23 @@
-# Pull Request
+# Pull request
 
 ## What this changes
 
-Brief description of the change. Link the issue it resolves: Closes #
+What it does, and the issue it closes: Closes #
 
-## Type of contribution
+## What kind of contribution
 
-- [ ] Engine code (licensed **MIT**)
-- [ ] Creative content — personality / lesson / arc / exchange (licensed **CC BY 4.0**, you are
-      credited as author)
+- [ ] Engine code (**MIT**)
+- [ ] Creative content — personality / lesson / arc / exchange (**CC BY 4.0**, you get
+      credited as the author)
 - [ ] Documentation
 - [ ] Other
 
 ## Checklist
 
-- [ ] One logical change per PR
-- [ ] Follows the philosophy: presence over pressure — nothing here shames or pressures users
-- [ ] No code reads, transmits, or analyzes private user data (`data/`, the Vault)
-- [ ] New dependencies (if any) are added to `THIRD_PARTY_NOTICES.md` with license info
-- [ ] Content (if any) follows the formats in CONTRIBUTING.md
-- [ ] I agree my contribution is licensed under the license matching its type above
+- [ ] One logical change
+- [ ] Nothing here shames or pressures the user (presence over pressure, it is a merge
+      requirement)
+- [ ] Nothing reads, transmits or analyzes private user data (`data/`, the Vault)
+- [ ] New dependencies, if any, are in `THIRD_PARTY_NOTICES.md` with their license
+- [ ] Content, if any, follows the formats in CONTRIBUTING.md
+- [ ] I agree my contribution is licensed under the license matching its type

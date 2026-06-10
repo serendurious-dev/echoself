@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Propose a new feature or improvement
+about: An idea for something new
 title: "[Feature] "
 labels: enhancement
 assignees: ''
@@ -8,20 +8,20 @@ assignees: ''
 
 ## The idea
 
-What would this feature do?
+What would it do?
 
-## Why it belongs in EchoSelf
+## Why it belongs here
 
-EchoSelf's philosophy is **presence over pressure** — features must never shame, pressure, or
-gamify the user against their own well-being. How does this idea fit?
+The rule for every feature is presence over pressure — nothing that shames, guilts or
+pushes the user harder than they can take. How does this idea fit that?
 
 ## Which world does it live in?
 
-- [ ] Ambient World (sky, Drift Mode, atmosphere)
+- [ ] Ambient World (the sky, Drift Mode, atmosphere)
 - [ ] Learning World (CodePath, lessons, challenges)
-- [ ] Inner World (ML brain, psychology layer)
-- [ ] Core / data / OSS infrastructure
+- [ ] Inner World (the ML brain, psychology layer)
+- [ ] core / data / project infrastructure
 
-## Rough shape of the implementation (optional)
+## Rough shape (optional)
 
-Modules touched, data involved, anything you've already thought through.
+Modules it would touch, data involved, anything you already thought through.

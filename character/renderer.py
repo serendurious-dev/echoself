@@ -1,12 +1,9 @@
-"""Procedural character renderer (Pygame).
+"""procedural character renderer.
 
-Draws the companion as a soft, glowing, semi-humanoid figure built from
-layered shapes, gradients, and particles. Idle animation: breathing rhythm,
-blinking, subtle micro-movements. Every visual property — palette, form,
-glow intensity, symbol — is a parameter sourced from the user's character
-definition or a personality pack's visual defaults.
-
-No PNG, no sprite sheets. The character is source code, breathing.
+a soft glowing semi-humanoid figure out of layered shapes, gradients and particles.
+idle = breathing rhythm + blinking + small micro-movements. every visual property
+(palette, form, glow, symbol) is a parameter from the user's character or a
+personality pack. no PNGs, no sprite sheets - the character is source code, breathing.
 """
 
-# Implementation arrives in Layer 1.
+# lands with issue #2

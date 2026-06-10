@@ -1,1 +1,1 @@
-"""Procedural soundscape — sound synthesized from state, no audio files."""
+"""sound, synthesized not sampled."""

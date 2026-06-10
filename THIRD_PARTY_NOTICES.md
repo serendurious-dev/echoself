@@ -1,7 +1,7 @@
 # Third-Party Notices
 
-EchoSelf is built on the shoulders of these open source projects. We are grateful to their
-maintainers and contributors. Copyright notices are preserved as required by each license.
+EchoSelf stands on these open source projects, and I am grateful to the people who maintain
+them. Copyright notices are preserved as each license requires.
 
 | Dependency | Purpose in EchoSelf | License | Project |
 |---|---|---|---|
@@ -47,4 +47,5 @@ Our CODE_OF_CONDUCT.md is adapted from the Contributor Covenant v2.1,
 - Creative content (`characters/`, `lessons/`, `arcs/`, `exchange/`): CC BY 4.0 — see
   [LICENSE-CONTENT](LICENSE-CONTENT)
 
-Modifications to this project are tracked in the public git history of this repository.
+Modifications to this project are tracked in the public git history of this repository,
+there is no separate changelog to fall out of date.

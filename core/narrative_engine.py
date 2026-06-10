@@ -1,11 +1,9 @@
-"""Narrative engine — arcs, Echo Moments, Mirror Report, Dark Days Protocol.
+"""narrative: arcs, the Mirror Report, the Dark Days Protocol.
 
-Selects community-contributed narrative arcs (arcs/, CC BY 4.0) by mood and
-Echo Distance. Generates the weekly Mirror Report in the ideal self's voice.
-Detects low-mood streaks and activates the Dark Days Protocol: the narrative
-pauses, all pressure stops, the character stays.
-
-Philosophy enforced here above all: presence over pressure.
+picks arc chapters (arcs/, CC BY 4.0) by mood and Echo Distance. writes the weekly
+Mirror Report in the ideal self's voice. when a low-mood streak shows up in the log,
+everything pauses - no lessons, no prompts, the character stays. presence over
+pressure is enforced here more than anywhere.
 """
 
-# Implementation arrives in Layer 2.
+# Layer 2

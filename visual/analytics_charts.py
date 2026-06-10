@@ -1,8 +1,8 @@
-"""Echo Distance visualization (matplotlib).
+"""the Echo Distance, drawn. matplotlib.
 
-Four-axis radar chart — Mental, Behavioral, Emotional, Learning — showing the
-gap between current self and ideal self. 30-day timeline tracking movement
-across all four axes. The gap closes not just emotionally but intellectually.
+four-axis radar (Mental, Behavioral, Emotional, Learning) - the gap between who you
+are and who you want to be, closing not just emotionally but intellectually. plus
+the 30-day timeline across all four axes.
 """
 
-# Implementation arrives in Layer 2.
+# Layer 2

@@ -1,12 +1,11 @@
-"""Demo and time-lapse modes.
+"""demo and timelapse.
 
---demo:      seeds data/ with ~35 days of synthetic history so the lived-in
-             features (personality drift, Mirror Report, Dark Days Protocol,
-             30-day timeline) are experienceable immediately. Documented
-             feature, clearly labeled — never mixed with real user data.
+--demo seeds data/ with ~35 days of synthetic history so the slow features (drift,
+Mirror Report, Dark Days, the 30-day timeline) can be felt immediately. clearly
+labeled, never mixed with real data.
 
---timelapse: accelerated mode where each session counts as one full day,
-             letting drift and milestones emerge quickly during real use.
+--timelapse makes each session count as a full day, so the slow features emerge
+quickly during real use too.
 """
 
-# Implementation arrives in Layer 3.
+# Layer 3

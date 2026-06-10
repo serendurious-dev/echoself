@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Something in EchoSelf isn't working as it should
+about: Something is not working the way it should
 title: "[Bug] "
 labels: bug
 assignees: ''
@@ -8,7 +8,7 @@ assignees: ''
 
 ## What happened
 
-A clear description of the bug.
+What broke.
 
 ## What you expected
 
@@ -16,17 +16,17 @@ What should have happened instead.
 
 ## Steps to reproduce
 
-1. Launch with `python main.py ...`
+1. `python main.py ...`
 2. ...
-3. ...
 
 ## Environment
 
 - OS:
 - Python version:
-- EchoSelf commit/version:
+- commit / version:
 
-## Logs / screenshots
+## Traceback or screenshots
 
-Paste any traceback here. **Please do not paste contents of your `data/` directory — it's your
-private data and we don't need it.** Describe the data shape instead if relevant.
+Paste the traceback here if there is one. Please do not paste anything from your `data/`
+folder, that is your private data and I do not need it — describe the shape of it instead
+if it matters.

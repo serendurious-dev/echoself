@@ -1,45 +1,41 @@
-# Security Policy
+# Security
 
-## EchoSelf's Privacy Model
+## The privacy model
 
-EchoSelf is **local-first by design**. This is not a feature; it is the foundation the entire
-project stands on.
+EchoSelf is local-first, and that is not a feature, it is the foundation. A person cannot
+write honestly into something they do not trust.
 
-- **No server. No account. No telemetry.** Nothing you do in EchoSelf leaves your machine.
-- All user data lives in the local `data/` directory: `profile.json`, `echo_log.csv`,
-  `learning_log.csv`, `user_model.json`, letters, and the Vault.
-- `data/` is excluded from version control by `.gitignore` — your data can never be accidentally
-  committed or pushed.
-- **The Vault** is encrypted at rest using Python standard library primitives. Its contents are
-  never read, parsed, analyzed, or used as ML features by any part of the system. The system
-  holds it; it does not look at it.
-- The ML behavioral model trains only on interaction metadata (response timing, session length,
-  quiz accuracy) — never on the text of private writing.
+- No server, no account, no telemetry. Nothing leaves your machine.
+- Everything you generate lives in the local `data/` directory: your profile, the session
+  and learning logs, the model file, your letters, the Vault.
+- `data/` is gitignored, so your data cannot be committed or pushed even by accident.
+- **The Vault is never read.** It is encrypted at rest and no part of the system parses,
+  analyzes or trains on its contents. The system holds it. It does not look at it.
+- The ML model trains on interaction metadata only — timing, session length, quiz accuracy.
+  Never on the text of anything you wrote privately.
 
-## Supported Versions
+## Supported versions
 
 | Version | Supported |
 |---|---|
-| `main` branch | ✅ |
-| Tagged releases < latest | ❌ — please update |
+| `main` | yes |
+| anything older | no, please update |
 
-## Reporting a Vulnerability
+## Reporting a vulnerability
 
-If you discover a vulnerability — especially anything that could expose local user data, weaken
-Vault encryption, or cause EchoSelf to transmit data — please report it privately:
+If you find something — especially anything that could expose local data, weaken the Vault,
+or make EchoSelf transmit anything — please tell me privately first:
 
-1. **Preferred:** open a private report via GitHub Security Advisories
-   ("Security" tab → "Report a vulnerability").
-2. **Alternative:** email the maintainer at `prodiptaach0109@gmail.com` with subject
-   `[EchoSelf Security]`.
+1. Preferred: GitHub Security Advisories on this repo ("Security" tab → "Report a
+   vulnerability").
+2. Or email `prodiptaach0109@gmail.com` with the subject `[EchoSelf Security]`.
 
-Please include reproduction steps and affected files. Do not open a public issue for security
-problems before a fix is available.
+Include how to reproduce it. Please do not open a public issue for a security problem
+before there is a fix. I will acknowledge within 72 hours, and reporters get credited in
+the release notes if they want to be.
 
-You can expect an acknowledgment within 72 hours. Once fixed, reporters are credited (with
-permission) in the release notes.
+## A note for contributors
 
-## Scope Notes for Contributors
-
-Pull requests that add network calls, analytics, or any read access to Vault contents will be
-rejected on security grounds regardless of intent. See CONTRIBUTING.md.
+Pull requests that add network calls, analytics, or any read access to the Vault get
+rejected on sight, whatever the intent. It is in [CONTRIBUTING.md](CONTRIBUTING.md) too,
+but it belongs here as well.

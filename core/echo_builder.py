@@ -1,15 +1,10 @@
-"""EchoBuilder — defining the ideal self and the Shadow Self.
+"""EchoBuilder: first launch, the user defines their ideal self and Shadow Self.
 
-First-launch experience (Session Zero): the user defines their ideal self —
-name, voice tone, core trait, values, visual identity — and their Shadow Self,
-the version of them at their worst. The narrative tension between the two
-drives everything else.
+This is Session Zero. It looks like onboarding, it is also the ML brain's first
+calibration - answer speed, length and hesitation become the model's first samples.
+We never ask how you feel, we watch how you answer.
 
-Session Zero is also, silently, the ML brain's first calibration: the way the
-user answers (speed, length, hesitation) provides the behavioral model's
-initial samples. The system never asks how you feel; it watches how you answer.
-
-Writes: data/profile.json
+writes data/profile.json
 """
 
-# Implementation arrives in Layer 1 (see the project roadmap in README.md).
+# lands with issue #5

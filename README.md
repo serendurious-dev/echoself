@@ -2,147 +2,157 @@
 
 > *"The version of you that made it — is waiting to tell you how."*
 
-EchoSelf is an open source Python platform — a **living psychological companion and adaptive
-learning system**. You build a character; the character teaches you programming, watches how you
-learn, and silently becomes who you need them to be.
+This is my final project for Introduction to Open Source Software. On the surface it is a
+program that teaches you to code. Underneath it is something I have wanted to exist for a
+long time: a companion that learns who you are without asking, and slowly becomes who you
+need it to be.
 
-It is not a chatbot. It is not a productivity tracker. It is not a tutorial app.
-
-It is a system that learns you, teaches you, and grows with you — simultaneously.
-
-**The core philosophy: presence over pressure.** Every feature is designed so you never feel
-alone, never feel shamed, and never feel pushed harder than you can handle in that moment.
+Built by **Prodipta Acharjee**, Sejong University.
 
 ---
 
-## The Three Worlds
+## Why I built it
 
-EchoSelf runs across three interconnected environments, unified by a continuously learning ML brain:
+There is a gap between who people want to be and who they actually are, and almost nothing
+addresses that gap without adding pressure. Productivity apps feel mechanical. Journaling
+needs energy you do not have on the bad days. AI chatbots give advice and then forget you
+existed. Programming tutorials are built for everyone, which means they are built for no one.
 
-- **The Ambient World** — a living sky rendered in Pygame. Your character's color bleeds into the
-  environment; stars drift with your Echo Distance. Drift Mode lives here: a soft place to simply
-  exist, no interaction required.
-- **The Learning World** — where your character teaches. A glowing panel opens beside them with
-  lessons, code examples, and challenges. The world's color and atmosphere shift with your
-  detected psychological state.
-- **The Inner World** — invisible but constant. A behavioral model reads your patterns passively
-  (response speed, pauses, session rhythm — never your private writing) and decides, without ever
-  asking, whether you need a challenge or empathy, a push or silence.
+So I am building a character that teaches you, watches how you learn, and decides on its
+own whether you need a challenge or empathy today, a push or silence. You never tell it how
+you feel. It reads how you answer, how long you pause, when you show up and when you stop
+showing up. The character starts as a preset personality and drifts, session by session,
+toward whatever actually works for you. It never announces this. You just notice, after a
+few weeks, that it knows you.
 
-## Key Features
+The rule behind every feature: **presence over pressure**. Nothing in here shames you,
+nothing guilts you, nothing pushes harder than you can take that day.
 
-- **Code-drawn character** — your companion is rendered 100% procedurally. No image assets exist
-  in this repository; the character is source code, breathing.
-- **Five pre-built personalities** — the Strict Mentor, the Gentle Guide, the Playful Rival, the
-  Philosophical Elder, the Quiet Empath — or build your own from scratch.
-- **Personality drift** — every session, the character drifts slightly toward what actually works
-  for you. It is never announced. After thirty sessions, they have genuinely changed.
-- **CodePath** — learn Python (C, C++, and Java tracks on the roadmap) through lessons taught in
-  your character's voice, with real coding challenges solved in *your own editor* while the
-  character runs the tests and reacts live.
-- **Four-Axis Echo Distance** — the gap between who you are and who you want to be, tracked across
-  Mental, Behavioral, Emotional, and Learning dimensions. Radar chart and 30-day timeline.
-- **Dark Days Protocol** — when a low-mood streak is detected, all pressure stops. The narrative
-  pauses. The character stays.
-- **Mirror Report** — a weekly reflection written in your ideal self's voice.
-- **The Vault** — a locally encrypted private writing space. Never read by the system. Just held.
-- **Echo Exchange** — anonymous community sentences ("something your ideal self told you that
-  helped"), contributed via pull request.
+---
+
+## The three worlds
+
+Everything happens in one of three places, with one ML brain underneath all of them:
+
+- **The Ambient World** — a living sky in Pygame. Your character's color bleeds into the
+  environment, stars drift with your Echo Distance. Drift Mode lives here: a soft place to
+  just exist, no interaction required, one keypress away from anywhere.
+- **The Learning World** — where the character teaches. A glowing panel opens beside them
+  with the lesson, code examples, challenges. The world's color shifts with your detected
+  psychological state.
+- **The Inner World** — invisible, always running. A behavioral model that builds a
+  fingerprint of you from interaction patterns (never from your private writing, see
+  [SECURITY.md](SECURITY.md)) and tells the character what you need.
+
+## What it does
+
+- **A character drawn entirely by code.** No image assets exist in this repository. Form,
+  color, glow and expression are all parameters, the character is source code, breathing.
+- **Five starting personalities** — the Strict Mentor, the Gentle Guide, the Playful Rival,
+  the Philosophical Elder, the Quiet Empath. Or build your own.
+- **Personality drift.** Every session nudges the personality toward what works for you.
+  After thirty sessions it has genuinely changed. It never says so.
+- **CodePath.** Learn Python (C, C++ and Java are on the roadmap) through lessons taught in
+  the character's voice. Quizzes happen in-world; real coding challenges open as a starter
+  file in *your own editor*, and the character runs the tests and reacts when they pass.
+- **Four-axis Echo Distance.** The gap between your current self and your ideal self,
+  tracked across Mental, Behavioral, Emotional and Learning, drawn as a radar chart with a
+  30-day timeline.
+- **Dark Days Protocol.** A low-mood streak stops everything. No lessons, no prompts. The
+  character stays.
+- **Mirror Report.** A weekly reflection, written in your ideal self's voice.
+- **The Vault.** An encrypted private writing space. The system holds it, it never reads it.
+- **Echo Exchange.** Anonymous community sentences — something your ideal self told you
+  that helped — contributed by pull request.
 
 ## Status
 
-🚧 **Under active development.** This repository currently contains the project foundation
-(Layer 0): structure, OSS documentation, and module skeletons. See the
-[Roadmap](#roadmap) below — the build is public from the first commit, on purpose.
+Under active development. Right now the repository holds the foundation: structure, the
+OSS documents, and module skeletons that say what each part will be. The build is public
+from the first commit, on purpose — watch the issues and milestones if you want to follow
+along.
 
-## Installation
+## Getting started
 
-```bash
-git clone https://github.com/<your-username>/echoself.git
+You need Python 3.10 or newer.
+
+```
+git clone https://github.com/serendurious-dev/echoself.git
 cd echoself
 pip install -r requirements.txt
 python main.py
 ```
 
-Requires Python 3.10+.
-
 ## Usage
 
-```bash
-python main.py              # normal session
-python main.py --demo       # experience EchoSelf with a lived-in profile (~35 days of history)
-python main.py --timelapse  # accelerated mode: each session counts as one day
+```
+python main.py              normal session
+python main.py --demo       a lived-in profile, ~35 days of history already there
+python main.py --timelapse  each session counts as a full day
 ```
 
-The `--demo` flag exists because EchoSelf's deepest features — personality drift, the Mirror
-Report, the Dark Days Protocol — emerge over weeks of real use. Demo mode lets you feel the
-lived-in version immediately.
+The `--demo` flag exists because the deepest features here — the drift, the Mirror Report,
+Dark Days — only emerge over weeks of real use. Demo mode lets you feel the lived-in
+version immediately instead of taking my word for it.
 
-## Project Structure
+## Project structure
 
 ```
-echoself/
-├── main.py                  # Entry point
-├── core/                    # EchoBuilder, narrative engine, session manager, demo mode
-├── character/               # Procedural character renderer, expressions, personality drift
-├── learning/                # CodePath lessons, quizzes, challenge runner, progress
-├── ml/                      # Behavioral model, psychology layer, synthetic archetypes
-├── visual/                  # The three worlds, transitions, analytics charts
-├── audio/                   # Procedural soundscape (numpy-synthesized, no audio files)
-├── characters/              # Personality packs (JSON, CC BY 4.0)
-├── lessons/                 # Lesson packs per language track (JSON, CC BY 4.0)
-├── arcs/                    # Narrative arc packs (JSON, CC BY 4.0)
-├── exchange/                # Echo Exchange community sentences (CC BY 4.0)
-└── data/                    # Your local data — never leaves your machine, never committed
+main.py             entry point
+core/               echo builder, sessions, narrative, demo mode
+character/          the renderer, expressions, personality drift
+learning/           codepath, quizzes, the challenge runner
+ml/                 the brain: behavioral model, psychology layer, archetypes
+visual/             the three worlds, charts
+audio/              soundscape, synthesized not sampled
+characters/         personality packs (JSON, CC BY 4.0)
+lessons/            lesson packs per track (JSON, CC BY 4.0)
+arcs/               narrative arc packs (JSON, CC BY 4.0)
+exchange/           echo exchange sentences (CC BY 4.0)
+data/               your local data. never committed, never leaves your machine
 ```
 
 ## Privacy
 
-EchoSelf is **local-first**. Your profile, logs, letters, and Vault never leave your machine.
-There is no server, no telemetry, no account. See [SECURITY.md](SECURITY.md).
+Local-first, no exceptions. No server, no account, no telemetry. Everything you do stays in
+`data/` on your machine, and `data/` is gitignored so it cannot even be committed by
+accident. The full promise is in [SECURITY.md](SECURITY.md).
 
 ## Contributing
 
-Contributions are welcome — both code and creative content (personality packs, lesson packs,
-narrative arcs, Echo Exchange sentences). See [CONTRIBUTING.md](CONTRIBUTING.md) for formats and
-workflow, and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community guidelines.
+Code and creative content are both welcome — personality packs, lesson packs, narrative
+arcs, exchange sentences. [CONTRIBUTING.md](CONTRIBUTING.md) has the formats and the
+workflow, [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) has the ground rules.
 
-## Licensing
+## Two licenses, on purpose
 
-EchoSelf uses a **dual-license model**:
+- **MIT** for the engine — everything in `core/`, `character/`, `learning/`, `ml/`,
+  `visual/`, `audio/` and `main.py`. See [LICENSE](LICENSE).
+- **CC BY 4.0** for creative content — `characters/`, `lessons/`, `arcs/`, `exchange/`.
+  See [LICENSE-CONTENT](LICENSE-CONTENT).
 
-- **MIT** — the Python engine (everything in `core/`, `character/`, `learning/`, `ml/`,
-  `visual/`, `audio/`, `main.py`). See [LICENSE](LICENSE).
-- **CC BY 4.0** — community-contributed creative content (`characters/`, `lessons/`, `arcs/`,
-  `exchange/`). See [LICENSE-CONTENT](LICENSE-CONTENT).
-
-Code and creative content have different legal needs; separating them is a deliberate
-architectural decision. Third-party dependencies are credited in
+Code and creative writing have different legal needs. MIT keeps the engine maximally
+forkable, CC BY 4.0 makes sure the people who write characters and lessons are always
+credited. Dependencies and their licenses are listed in
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Roadmap
 
-- **v1.0** — Character system (custom + 5 prebuilts), ML brain (5-state classification),
-  psychology layer with personality drift, full Python CodePath track, three worlds, four-axis
-  Echo Distance, Dark Days Protocol, Mirror Report, Vault, Letters, Echo Exchange, procedural
-  soundscape, demo + time-lapse modes.
-- **v1.5** — C and Java tracks, deeper NLP analysis, cross-session pattern memory.
-- **v2.0** — All four language tracks, community lesson pack ecosystem, anonymous peer challenge
-  showcase, Echo Circle study pods.
-
-## Why
-
-This project was built from a real feeling — the exhaustion of surviving instead of living, and
-the quiet wish for something that knows you without needing you to explain yourself.
-
-EchoSelf does not optimize productivity. It does not gamify discipline. It builds a character that
-learns you, teaches you through that character, and slowly, quietly, without announcing it — the
-character becomes who you needed them to be all along.
-
-That is also what open source is: something built by people for people, freely given, honestly
-maintained, always there.
+- **v1.0** — character system (custom + the five presets), the ML brain and psychology
+  layer, personality drift, the full Python track, the three worlds, four-axis Echo
+  Distance, Dark Days, Mirror Report, the Vault, Letters, Echo Exchange, the soundscape,
+  demo and time-lapse modes.
+- **v1.5** — C and Java tracks, deeper analysis of written responses, longer pattern memory.
+- **v2.0** — all four tracks, a community lesson pack ecosystem, anonymous peer challenges,
+  study pods.
 
 ---
 
-*Created by Prodipta Acharjee — Sejong University, Seoul.*
-*Built for "Introduction to Open Source Software" (Prof. Junaid Rashid, Ph.D.) and for anyone who needs it.*
+This project came from a real feeling, the exhaustion of surviving instead of living, and
+the wish for something that knows you without needing you to explain yourself. EchoSelf
+does not optimize your productivity and it does not gamify your discipline. It builds a
+character that learns you, and slowly, without announcing it, the character becomes who
+you needed all along.
+
+That is what open source is too — something built by people for people, freely given,
+honestly maintained, always there.

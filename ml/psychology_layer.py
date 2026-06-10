@@ -1,21 +1,16 @@
-"""Psychology layer — the response engine.
+"""the response engine. reads the detected state, decides who the character is today.
 
-Reads the ML brain's detected state and decides the character's mode for the
-session. Not a mood tracker: a behavioral intelligence that determines,
-without asking, whether the user needs to be challenged or held.
+    Flowing  -> Challenger   harder questions, faster pace, playful pressure
+    Pushing  -> Companion    empathy first, new angle, slower, zero judgment
+    Drifting -> Presence     soft lesson, no pressure, Drift Mode offered
+    Avoiding -> Mirror       gentle confrontation: "you've been circling this one.
+                             want to try it once?"
+    Fading   -> Memory       shows the user their own past wins, in the character's
+                             voice. the evidence is already in the log, we just
+                             show it back.
 
-    Detected state -> Character mode
-    Flowing        -> Challenger  (harder questions, faster pace, playful pressure)
-    Pushing        -> Companion   (empathy first, new explanation angle, slower)
-    Drifting       -> Presence    (soft lesson, no pressure, Drift Mode offered)
-    Avoiding       -> Mirror      (gentle confrontation: "You've been circling
-                                   this one. Want to try it once?")
-    Fading         -> Memory      (surfaces the user's own past wins, in the
-                                   character's voice — the system already has
-                                   the evidence; it just shows it back)
-
-Also emits the per-session drift nudge consumed by
-character/personality_drift.py.
+not a mood tracker. it decides, without asking, whether you need to be challenged
+or held. also emits the per-session drift nudge for personality_drift.py.
 """
 
-# Implementation arrives in Layer 2.
+# Layer 2

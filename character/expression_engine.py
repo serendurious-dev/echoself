@@ -1,10 +1,9 @@
-"""Expression engine — live reactions.
+"""live reactions.
 
-Maps events (correct answer, wrong answer, hesitation, excitement, struggle)
-to expression states rendered procedurally: posture, glow, particle behavior,
-timing. When the user is struggling, the character does not look disappointed
-— they look patient. When the user finally gets it, the celebration is
-personal.
+maps events (correct, wrong, hesitating, excited, struggling) to expression states:
+posture, glow, particle behavior, timing. when the user struggles the character does
+not look disappointed, they look patient. when the user finally gets it, the
+celebration is personal.
 """
 
-# Implementation arrives in Layer 1.
+# lands with issue #6
