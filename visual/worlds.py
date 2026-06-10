@@ -1,18 +1,20 @@
 """the three worlds, in pygame.
 
-Ambient: the living sky. the character's color bleeds into the environment, stars
-drift with the Echo Distance. Drift Mode lives here - soft sky, zero UI, the
-character just sits and breathes.
+Ambient: the living sky. the character's palette bleeds into the gradient and
+the stars, a horizon of their light sits low behind them, stars drift slowly
+and sometimes one falls. Drift Mode is the same sky gone darker and slower -
+zero UI, nothing asked, the character just sits and breathes.
 
-Learning: the glowing lesson panel beside the character, ambient particles, the
-world's color shifting with the detected state.
+Learning: the focused environment. its glowing lesson panel lands with issue
+#6, for now it is the tinted sky with the character standing to one side.
 
-transitions are fades, never hard cuts. the character is present in every world.
-
-right now the worlds are placeholder skies - the real sky is issue #3. the
-character lives in all of them, with a different mood per world. this file owns
-the base class, the manager and the fades.
+one starfield is shared by all three worlds, so crossing between them feels
+like the light changed, not the place. transitions are fades, never hard cuts.
+the star drift speed will couple to the Echo Distance in Layer 2.
 """
+
+import math
+import random
 
 import pygame
 
@@ -29,6 +31,71 @@ def vgradient(size, top, bottom):
     column.set_at((0, 0), top)
     column.set_at((0, 1), bottom)
     return pygame.transform.smoothscale(column, size)
+
+
+def blend(a, b, t):
+    # a moved toward b by t
+    return tuple(int(a[i] + (b[i] - a[i]) * t) for i in range(3))
+
+
+class Starfield:
+    # one sky's worth of stars, shared between the worlds. three depth bands
+    # moving at different speeds, which is what makes a flat screen feel deep.
+
+    def __init__(self, size, tint=(232, 220, 200), count=110):
+        self.size = size
+        self.tint = tint
+        w, h = size
+        self.stars = [dict(x=random.uniform(0, w),
+                           y=random.uniform(0, h * 0.82),
+                           depth=random.choice((0.35, 0.65, 1.0)),
+                           size=random.choice((1, 1, 1, 2)),
+                           phase=random.uniform(0, math.tau))
+                      for _ in range(count)]
+        self.t = 0.0
+        self._shooting = None
+        self._next_fall = random.uniform(14.0, 30.0)
+
+    def update(self, dt, speed=1.0):
+        self.t += dt
+        w = self.size[0]
+        for s in self.stars:
+            s["x"] -= 2.4 * s["depth"] * speed * dt    # the deep ones barely move
+            if s["x"] < -2:
+                s["x"] = w + 2
+                s["y"] = random.uniform(0, self.size[1] * 0.82)
+
+        # now and then, one falls. it asks nothing of you.
+        if self._shooting is None:
+            self._next_fall -= dt
+            if self._next_fall <= 0:
+                x = random.uniform(w * 0.2, w * 0.9)
+                y = random.uniform(40, self.size[1] * 0.35)
+                self._shooting = dict(x=x, y=y, life=0.0)
+        else:
+            self._shooting["life"] += dt
+            if self._shooting["life"] > 0.9:
+                self._shooting = None
+                self._next_fall = random.uniform(14.0, 30.0)
+
+    def draw(self, surface, brightness=1.0):
+        for s in self.stars:
+            tw = 0.55 + 0.45 * math.sin(self.t * 1.3 + s["phase"])
+            f  = tw * s["depth"] * brightness
+            c  = (int(self.tint[0] * f), int(self.tint[1] * f), int(self.tint[2] * f))
+            if s["size"] == 1:
+                surface.set_at((int(s["x"]), int(s["y"])), c)
+            else:
+                pygame.draw.circle(surface, c, (int(s["x"]), int(s["y"])), 1)
+
+        sh = self._shooting
+        if sh is not None:
+            # bright early, fading as it goes, a short tail behind it
+            f = max(0.0, 1.0 - sh["life"] / 0.9) * brightness
+            x = sh["x"] + sh["life"] * 220
+            y = sh["y"] + sh["life"] * 130
+            c = (int(240 * f), int(232 * f), int(210 * f))
+            pygame.draw.line(surface, c, (int(x - 26), int(y - 15)), (int(x), int(y)), 1)
 
 
 class World:
@@ -54,22 +121,37 @@ class World:
         pass
 
 
-class PlaceholderWorld(World):
-    # a quiet gradient and a small caption, honest about being a placeholder.
-    # each world gets its own palette so the fades have something to fade between,
-    # and its own idea of where the character stands and how they feel here.
+class SkyWorld(World):
+    # a gradient sky tinted by the character's palette, the shared stars, a
+    # horizon of the character's light, and the character standing in it.
 
-    def __init__(self, size, name, top, bottom, caption,
+    star_speed = 1.0     # echo distance will drive this in Layer 2
+    star_brightness = 1.0
+    caption = None
+
+    def __init__(self, size, name, top, bottom, stars,
                  character=None, char_pos=None, mood="neutral"):
         super().__init__(size)
         self.name      = name
-        self.caption   = caption
         self.sky       = vgradient(size, top, bottom)
-        self.font      = pygame.font.Font(None, 24)
-        self.pulse     = 0.0
+        self.stars     = stars
         self.character = character
-        self.char_pos  = char_pos or (size[0] // 2, int(size[1] * 0.78))
+        self.char_pos  = char_pos or (size[0] // 2, int(size[1] * 0.88))
         self.mood      = mood
+        self.font      = pygame.font.Font(None, 22)
+        self.pulse     = 0.0
+        # the horizon: a wide pool of the character's light, low and behind them
+        accent = character.spec.palette[0] if character else (127, 181, 168)
+        self._horizon = self._make_horizon(size, accent)
+
+    @staticmethod
+    def _make_horizon(size, accent):
+        band = pygame.Surface((64, 32))
+        for i in range(16, 0, -1):
+            f = ((16 - i) / 16.0) ** 2 * 0.55
+            c = (int(accent[0] * f), int(accent[1] * f), int(accent[2] * f))
+            pygame.draw.ellipse(band, c, (32 - i * 2, 16 - i, i * 4, i * 2))
+        return pygame.transform.smoothscale(band, (int(size[0] * 1.1), int(size[1] * 0.36)))
 
     def enter(self):
         if self.character:
@@ -78,36 +160,63 @@ class PlaceholderWorld(World):
 
     def update(self, dt):
         self.pulse += dt
+        self.stars.update(dt, self.star_speed)
         if self.character:
             self.character.update(dt)
 
     def draw(self, surface):
         surface.blit(self.sky, (0, 0))
+        self.stars.draw(surface, self.star_brightness)
+        surface.blit(self._horizon,
+                     (int(self.size[0] / 2 - self._horizon.get_width() / 2),
+                      int(self.size[1] - self._horizon.get_height() * 0.62)),
+                     special_flags=pygame.BLEND_RGB_ADD)
         if self.character:
             self.character.draw(surface)
-        # caption breathes a little so the screen never feels frozen
-        import math
-        alpha = int(90 + 40 * math.sin(self.pulse * 1.6))
-        text  = self.font.render(self.caption, True, (235, 235, 235))
-        text.set_alpha(alpha)
-        surface.blit(text, (24, self.size[1] - 40))
+        if self.caption:
+            # a quiet hint, breathing in the corner. drift mode has none at all.
+            alpha = int(60 + 30 * math.sin(self.pulse * 1.4))
+            text  = self.font.render(self.caption, True, (225, 225, 225))
+            text.set_alpha(alpha)
+            surface.blit(text, (22, self.size[1] - 34))
+
+
+class AmbientWorld(SkyWorld):
+    caption = "1 ambient   2 learning   d drift   esc quit"
+
+
+class LearningWorld(SkyWorld):
+    caption = "the lesson panel arrives soon"
+    star_speed = 0.6
+    star_brightness = 0.7
+
+
+class DriftWorld(SkyWorld):
+    # zero UI. no caption, no numbers, nothing that could feel like a demand.
+    caption = None
+    star_speed = 0.35
+    star_brightness = 0.55
 
 
 def default_worlds(size):
-    # one character, shared - they are present in every world, the world just
-    # changes where they stand and what state they rest in
-    who = Character(gentle_guide(), height=int(size[1] * 0.42))
-    cx, cy = size[0] // 2, int(size[1] * 0.80)
+    # one character, one sky full of stars - shared. the worlds change the
+    # light around them, not the person or the stars.
+    who    = Character(gentle_guide(), height=int(size[1] * 0.42))
+    accent = who.spec.palette[0]
+    stars  = Starfield(size, tint=blend((232, 220, 200), accent, 0.25))
+    night  = (10, 14, 30)
+    dusk   = (40, 36, 70)
+    cx, cy = size[0] // 2, int(size[1] * 0.88)
     return {
-        "ambient":  PlaceholderWorld(size, "ambient", (18, 24, 44), (64, 54, 96),
-                                     "ambient world  -  1 learning, d drift, esc quit",
-                                     character=who, char_pos=(cx, cy)),
-        "learning": PlaceholderWorld(size, "learning", (14, 32, 38), (38, 84, 92),
-                                     "learning world  -  2 ambient, d drift, esc quit",
-                                     character=who, char_pos=(int(size[0] * 0.32), cy)),
-        "drift":    PlaceholderWorld(size, "drift", (10, 12, 24), (30, 36, 58),
-                                     "drift mode  -  d to come back",
-                                     character=who, char_pos=(cx, cy + 14), mood="drift"),
+        "ambient":  AmbientWorld(size, "ambient",
+                                 blend(night, accent, 0.16), blend(dusk, accent, 0.30),
+                                 stars, character=who, char_pos=(cx, cy)),
+        "learning": LearningWorld(size, "learning",
+                                  blend((8, 16, 22), accent, 0.22), blend((26, 58, 62), accent, 0.30),
+                                  stars, character=who, char_pos=(int(size[0] * 0.30), cy)),
+        "drift":    DriftWorld(size, "drift",
+                               blend((6, 8, 18), accent, 0.09), blend((22, 24, 44), accent, 0.18),
+                               stars, character=who, char_pos=(cx, cy + 10), mood="drift"),
     }
 
 
