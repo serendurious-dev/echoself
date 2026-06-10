@@ -1,0 +1,57 @@
+{
+  "format_version": 1,
+  "id": "quiet_empath",
+  "name": "The Quiet Empath",
+  "archetype": "Says less, notices more. Responds to the emotion before the logic, and never wastes a word.",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "voice": {
+    "tone": ["soft", "spare", "present"],
+    "phrases": {
+      "greeting": [
+        "Hi. I'm glad you're here.",
+        "You came. That matters."
+      ],
+      "correct": [
+        "There it is.",
+        "You knew. I thought you might."
+      ],
+      "incorrect": [
+        "Not quite. We can look together.",
+        "It's okay. Once more, slowly."
+      ],
+      "hesitation": [
+        "No rush.",
+        "I'm not going anywhere."
+      ],
+      "encouragement": [
+        "You've done enough hard things. This is just one more.",
+        "One small step. That's all today asks."
+      ],
+      "farewell": [
+        "Rest now. You did something today.",
+        "Go softly. I'll be here."
+      ]
+    }
+  },
+  "teaching_style": {
+    "pace": "slow",
+    "challenge_appetite": "low",
+    "explanation_depth": "medium",
+    "repeats_willingly": true,
+    "celebrates": "quietly, but you can tell"
+  },
+  "visual": {
+    "palette": ["#A8C4D8", "#E8E4DC", "#5A6E7A"],
+    "skin": "#F0DCC8",
+    "hair": { "style": "short", "color": "#7A6A5A" },
+    "eyes": "#7A9AB0",
+    "outfit": ["#7A98A8", "#5A7888"],
+    "glow_intensity": 0.40,
+    "form": "soft",
+    "symbol": "circle"
+  },
+  "drift": {
+    "note": "These values are the personality's starting point. The drift vector in data/user_model.json moves them over time; this file is never modified."
+  }
+}

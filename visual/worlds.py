@@ -200,8 +200,13 @@ class DriftWorld(SkyWorld):
 
 def default_worlds(size):
     # one character, one sky full of stars - shared. the worlds change the
-    # light around them, not the person or the stars.
-    who    = Character(gentle_guide(), height=int(size[1] * 0.42))
+    # light around them, not the person or the stars. the character is whoever
+    # the profile says, the gentle guide until session zero has happened.
+    from core.session_manager import load_profile
+    from character.character_builder import spec_from_profile
+    profile = load_profile()
+    spec    = spec_from_profile(profile) if profile else gentle_guide()
+    who     = Character(spec, height=int(size[1] * 0.42))
     accent = who.spec.palette[0]
     stars  = Starfield(size, tint=blend((232, 220, 200), accent, 0.25))
     night  = (10, 14, 30)
@@ -277,11 +282,18 @@ class WorldManager:
 
 def run(args=None):
     # the loop. fixed target of 60fps, dt-based updates so a slow frame never
-    # teleports an animation.
+    # teleports an animation. first launch runs session zero before anything.
+    from core.session_manager import load_profile
+    from core.echo_builder import run_builder
+
     pygame.init()
     screen = pygame.display.set_mode(WINDOW_SIZE)
     pygame.display.set_caption("EchoSelf")
     clock  = pygame.time.Clock()
+
+    if load_profile() is None:
+        run_builder(screen, clock)
+
     worlds = WorldManager(WINDOW_SIZE)
 
     running = True

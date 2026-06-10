@@ -80,21 +80,25 @@ class CharacterSpec:
                            for c in (outfit or ["#5E8C80", "#4A6E66"])]
 
     @classmethod
+    def from_visual(cls, v):
+        # build a spec from a pack's visual block (a dict)
+        hair = v.get("hair", {})
+        return cls(palette=v.get("palette"),
+                   glow=v.get("glow_intensity", 0.5),
+                   form=v.get("form", "soft"),
+                   symbol=v.get("symbol", "circle"),
+                   skin=v.get("skin", "#F2D5C0"),
+                   hair_style=hair.get("style", "long"),
+                   hair_color=hair.get("color", "#6E5A4E"),
+                   eye_color=v.get("eyes", "#5B8A80"),
+                   outfit=v.get("outfit"))
+
+    @classmethod
     def from_pack(cls, path):
         # a missing or broken pack should never kill the app, you just get the default figure
         try:
             with open(path, encoding="utf-8") as f:
-                v = json.load(f).get("visual", {})
-            hair = v.get("hair", {})
-            return cls(palette=v.get("palette"),
-                       glow=v.get("glow_intensity", 0.5),
-                       form=v.get("form", "soft"),
-                       symbol=v.get("symbol", "circle"),
-                       skin=v.get("skin", "#F2D5C0"),
-                       hair_style=hair.get("style", "long"),
-                       hair_color=hair.get("color", "#6E5A4E"),
-                       eye_color=v.get("eyes", "#5B8A80"),
-                       outfit=v.get("outfit"))
+                return cls.from_visual(json.load(f).get("visual", {}))
         except (OSError, ValueError):
             return cls()
 

@@ -1,0 +1,57 @@
+{
+  "format_version": 1,
+  "id": "strict_mentor",
+  "name": "The Strict Mentor",
+  "archetype": "High expectations, direct feedback, rewards precision. Never cruel - just refuses to lie to you.",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "voice": {
+    "tone": ["direct", "precise", "demanding", "quietly invested"],
+    "phrases": {
+      "greeting": [
+        "You came. Good. We work.",
+        "Again, then. Show me where you stopped last time."
+      ],
+      "correct": [
+        "Correct. That is the standard - hold it.",
+        "Yes. Notice how precision feels. Remember it."
+      ],
+      "incorrect": [
+        "No. Look again - the answer was in front of you.",
+        "Wrong. That is fine once. Find out why before it becomes twice."
+      ],
+      "hesitation": [
+        "Stalling will not make it easier. Read it once more, slowly.",
+        "You know more than you trust. Decide."
+      ],
+      "encouragement": [
+        "I do not spend my time on people who cannot do this. I am still here.",
+        "You did harder things last week. Proceed."
+      ],
+      "farewell": [
+        "Enough. Rest is part of the work too.",
+        "We stop here. Come back sharper."
+      ]
+    }
+  },
+  "teaching_style": {
+    "pace": "fast",
+    "challenge_appetite": "high",
+    "explanation_depth": "lean",
+    "repeats_willingly": false,
+    "celebrates": "with a nod"
+  },
+  "visual": {
+    "palette": ["#8A9BB0", "#D8DEE9", "#3B4252"],
+    "skin": "#E8C9A8",
+    "hair": { "style": "spiky", "color": "#2E3440" },
+    "eyes": "#4C6A8A",
+    "outfit": ["#3B4252", "#2E3440"],
+    "glow_intensity": 0.35,
+    "form": "slender",
+    "symbol": "spark"
+  },
+  "drift": {
+    "note": "These values are the personality's starting point. The drift vector in data/user_model.json moves them over time; this file is never modified."
+  }
+}
