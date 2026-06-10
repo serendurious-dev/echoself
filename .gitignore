@@ -28,3 +28,6 @@ desktop.ini
 
 # Challenge workspace (user's in-progress solutions live outside the repo's tracked files)
 workspace/
+
+# dev render artifacts
+_preview_*.png

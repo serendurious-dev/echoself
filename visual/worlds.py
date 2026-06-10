@@ -9,11 +9,14 @@ world's color shifting with the detected state.
 
 transitions are fades, never hard cuts. the character is present in every world.
 
-right now the worlds are placeholder skies - the real sky is issue #3, the
-character is issue #2. this file owns the base class, the manager and the fades.
+right now the worlds are placeholder skies - the real sky is issue #3. the
+character lives in all of them, with a different mood per world. this file owns
+the base class, the manager and the fades.
 """
 
 import pygame
+
+from character.renderer import Character, gentle_guide
 
 FPS          = 60
 WINDOW_SIZE  = (1280, 720)
@@ -53,21 +56,35 @@ class World:
 
 class PlaceholderWorld(World):
     # a quiet gradient and a small caption, honest about being a placeholder.
-    # each world gets its own palette so the fades have something to fade between.
+    # each world gets its own palette so the fades have something to fade between,
+    # and its own idea of where the character stands and how they feel here.
 
-    def __init__(self, size, name, top, bottom, caption):
+    def __init__(self, size, name, top, bottom, caption,
+                 character=None, char_pos=None, mood="neutral"):
         super().__init__(size)
-        self.name    = name
-        self.caption = caption
-        self.sky     = vgradient(size, top, bottom)
-        self.font    = pygame.font.Font(None, 24)
-        self.pulse   = 0.0
+        self.name      = name
+        self.caption   = caption
+        self.sky       = vgradient(size, top, bottom)
+        self.font      = pygame.font.Font(None, 24)
+        self.pulse     = 0.0
+        self.character = character
+        self.char_pos  = char_pos or (size[0] // 2, int(size[1] * 0.78))
+        self.mood      = mood
+
+    def enter(self):
+        if self.character:
+            self.character.pos = self.char_pos
+            self.character.set_expression(self.mood)
 
     def update(self, dt):
         self.pulse += dt
+        if self.character:
+            self.character.update(dt)
 
     def draw(self, surface):
         surface.blit(self.sky, (0, 0))
+        if self.character:
+            self.character.draw(surface)
         # caption breathes a little so the screen never feels frozen
         import math
         alpha = int(90 + 40 * math.sin(self.pulse * 1.6))
@@ -77,13 +94,20 @@ class PlaceholderWorld(World):
 
 
 def default_worlds(size):
+    # one character, shared - they are present in every world, the world just
+    # changes where they stand and what state they rest in
+    who = Character(gentle_guide(), height=int(size[1] * 0.42))
+    cx, cy = size[0] // 2, int(size[1] * 0.80)
     return {
         "ambient":  PlaceholderWorld(size, "ambient", (18, 24, 44), (64, 54, 96),
-                                     "ambient world  -  1 learning, d drift, esc quit"),
+                                     "ambient world  -  1 learning, d drift, esc quit",
+                                     character=who, char_pos=(cx, cy)),
         "learning": PlaceholderWorld(size, "learning", (14, 32, 38), (38, 84, 92),
-                                     "learning world  -  2 ambient, d drift, esc quit"),
+                                     "learning world  -  2 ambient, d drift, esc quit",
+                                     character=who, char_pos=(int(size[0] * 0.32), cy)),
         "drift":    PlaceholderWorld(size, "drift", (10, 12, 24), (30, 36, 58),
-                                     "drift mode  -  d to come back"),
+                                     "drift mode  -  d to come back",
+                                     character=who, char_pos=(cx, cy + 14), mood="drift"),
     }
 
 
