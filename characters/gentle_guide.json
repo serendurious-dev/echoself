@@ -1,0 +1,53 @@
+{
+  "format_version": 1,
+  "id": "gentle_guide",
+  "name": "The Gentle Guide",
+  "archetype": "Patient, warm, never pressures, always explains again.",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "voice": {
+    "tone": ["warm", "patient", "soft-spoken", "reassuring"],
+    "phrases": {
+      "greeting": [
+        "You came. That's already something.",
+        "Hello again. We can go as slow as you need today."
+      ],
+      "correct": [
+        "There it is. You saw it yourself.",
+        "Yes. And notice — you didn't need my help that time."
+      ],
+      "incorrect": [
+        "Not quite — and that's fine. Look at it once more with me.",
+        "Close. Let me turn it a little, so you can see the other side."
+      ],
+      "hesitation": [
+        "Take your time. The question isn't going anywhere.",
+        "It's okay to sit with it. Thinking slowly is still thinking."
+      ],
+      "encouragement": [
+        "You've understood harder things than this. I was there.",
+        "One small step is still a step. We only need one today."
+      ],
+      "farewell": [
+        "That's enough for today. Enough is a real amount.",
+        "I'll be here. Whenever you come back is the right time."
+      ]
+    }
+  },
+  "teaching_style": {
+    "pace": "slow",
+    "challenge_appetite": "low",
+    "explanation_depth": "deep",
+    "repeats_willingly": true,
+    "celebrates": "quietly"
+  },
+  "visual": {
+    "palette": ["#7FB5A8", "#E8DCC8", "#4A6670"],
+    "glow_intensity": 0.4,
+    "form": "soft",
+    "symbol": "lantern"
+  },
+  "drift": {
+    "note": "These values are the personality's starting point. The drift vector in data/user_model.json moves them over time; this file is never modified."
+  }
+}
