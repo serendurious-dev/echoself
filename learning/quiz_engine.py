@@ -16,7 +16,10 @@ import pygame
 
 from learning import codepath, progress_tracker
 
-HESITATION_S = 14.0    # how long before the character gently notices
+HESITATION_S = 14.0    # the default, before the psychology layer has a say
+
+DEFAULT_PLAN = dict(state=None, mode=None, expression="neutral",
+                    opening_slot="greeting", hesitation_s=HESITATION_S)
 
 
 def wrap_text(font, text, width):
@@ -41,10 +44,11 @@ class LessonSession:
     # one user working through one track, lesson by lesson. the world owns
     # drawing the sky and the character, this owns the panel and the flow.
 
-    def __init__(self, track, character, voice):
+    def __init__(self, track, character, voice, plan=None):
         self.track     = track
         self.character = character
         self.voice     = voice
+        self.plan      = dict(DEFAULT_PLAN, **(plan or {}))
         self.lesson    = codepath.next_lesson(track)
         self.state     = "reading" if self.lesson else "track_done"
         self.typed     = ""
@@ -52,6 +56,13 @@ class LessonSession:
         self.feedback  = None
         self.shown_at  = time.monotonic()
         self.nudged    = False
+
+        # the psychology layer's plan, acted on: her resting face for the day,
+        # and the line that opens the session - her own memory of you when the
+        # state asks for it, her voice otherwise
+        self.character.set_expression(self.plan["expression"])
+        self.opening = (self.plan.get("memory_line") or self.plan.get("mirror_line")
+                        or random.choice(self.voice[self.plan["opening_slot"]]))
 
         self.font      = pygame.font.Font(None, 26)
         self.font_big  = pygame.font.Font(None, 34)
@@ -139,9 +150,10 @@ class LessonSession:
     # -- time -----------------------------------------------------------------
 
     def update(self, dt):
-        # hesitation: noticed once, gently, never repeated for the same question
+        # hesitation: noticed once, gently, never repeated for the same
+        # question. the window is the plan's - drift has already shaped it.
         if (self.state == "question" and not self.nudged
-                and time.monotonic() - self.shown_at > HESITATION_S):
+                and time.monotonic() - self.shown_at > self.plan["hesitation_s"]):
             self.nudged   = True
             self.feedback = self._line("hesitation")
             self.character.set_expression("patient")
@@ -177,14 +189,22 @@ class LessonSession:
         y = self._text(surface, self.font_big, lesson["title"], x, y, inner, (232, 234, 240))
         y += 12
 
+        if self.state == "reading" and self.opening:
+            y = self._text(surface, self.font_soft, '"' + self.opening + '"', x, y, inner,
+                           (186, 178, 156))
+            y += 10
+
         if self.state == "reading":
             y = self._text(surface, self.font, lesson["concept"], x, y, inner, (208, 216, 226))
             y += 10
             y = self._text(surface, self.font, lesson["explanation"], x, y, inner, (178, 188, 200))
             y += 14
             y = self._code(surface, lesson["code_example"], x, y, inner)
-            self._text(surface, self.font_soft, "enter - try the question", x,
-                       panel.bottom - 40, inner, (140, 150, 162))
+            footer = "enter - try the question"
+            if self.plan.get("offer_drift"):
+                footer += "      (or tab, then d - the sky is there if today is heavy)"
+            self._text(surface, self.font_soft, footer, x, panel.bottom - 40, inner,
+                       (140, 150, 162))
         else:
             quiz = lesson["quiz"]
             y = self._text(surface, self.font, quiz["question"], x, y, inner, (214, 220, 230))

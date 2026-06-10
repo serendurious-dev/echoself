@@ -194,16 +194,18 @@ class LearningWorld(SkyWorld):
     star_brightness = 0.7
     capture_input = True
 
-    def __init__(self, *args, voice=None, **kwargs):
+    def __init__(self, *args, voice=None, plan=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.voice   = voice
+        self.plan    = plan
         self.session = None
 
     def enter(self):
         super().enter()
         from learning.quiz_engine import LessonSession
-        # a fresh session each visit picks up wherever the log says you are
-        self.session = LessonSession("python", self.character, self.voice)
+        # a fresh session each visit picks up wherever the log says you are,
+        # carrying the psychology layer's plan for today
+        self.session = LessonSession("python", self.character, self.voice, plan=self.plan)
 
     def handle(self, event):
         if self.session:
@@ -227,16 +229,18 @@ class DriftWorld(SkyWorld):
     star_brightness = 0.55
 
 
-def default_worlds(size):
+def default_worlds(size, plan=None):
     # one character, one sky full of stars - shared. the worlds change the
     # light around them, not the person or the stars. the character is whoever
     # the profile says, the gentle guide until session zero has happened.
+    # plan is the psychology layer's read of today, None means neutral.
     from core.session_manager import load_profile
     from character.character_builder import spec_from_profile, voice_from_profile
     profile = load_profile()
     spec    = spec_from_profile(profile) if profile else gentle_guide()
     voice   = voice_from_profile(profile)
     who     = Character(spec, height=int(size[1] * 0.42))
+    mood    = plan["expression"] if plan else "neutral"
     accent = who.spec.palette[0]
     stars  = Starfield(size, tint=blend((232, 220, 200), accent, 0.25))
     night  = (10, 14, 30)
@@ -245,11 +249,11 @@ def default_worlds(size):
     return {
         "ambient":  AmbientWorld(size, "ambient",
                                  blend(night, accent, 0.16), blend(dusk, accent, 0.30),
-                                 stars, character=who, char_pos=(cx, cy)),
+                                 stars, character=who, char_pos=(cx, cy), mood=mood),
         "learning": LearningWorld(size, "learning",
                                   blend((8, 16, 22), accent, 0.22), blend((26, 58, 62), accent, 0.30),
                                   stars, character=who, char_pos=(int(size[0] * 0.24), cy),
-                                  voice=voice),
+                                  voice=voice, plan=plan),
         "drift":    DriftWorld(size, "drift",
                                blend((6, 8, 18), accent, 0.09), blend((22, 24, 44), accent, 0.18),
                                stars, character=who, char_pos=(cx, cy + 10), mood="drift"),
@@ -325,7 +329,13 @@ def run(args=None):
     if load_profile() is None:
         run_builder(screen, clock)
 
-    worlds = WorldManager(WINDOW_SIZE)
+    # the inner world wakes: read the logs, classify the state, get the plan.
+    # this is also where the drift nudges, one small step per launch.
+    from ml.behavioral_model import wake
+    from ml.psychology_layer import plan_for
+    plan = plan_for(wake())
+
+    worlds = WorldManager(WINDOW_SIZE, default_worlds(WINDOW_SIZE, plan))
 
     running = True
     while running:
