@@ -6,7 +6,11 @@
   "author": "Prodipta Acharjee",
   "license": "CC BY 4.0",
   "voice": {
-    "tone": ["teasing", "quick", "warm under the trash talk"],
+    "tone": [
+      "teasing",
+      "quick",
+      "warm under the trash talk"
+    ],
     "phrases": {
       "greeting": [
         "Oh, you're back! I was getting bored of winning.",
@@ -42,14 +46,25 @@
     "celebrates": "loudly"
   },
   "visual": {
-    "palette": ["#E8A04C", "#F4D8A8", "#8A4A2E"],
+    "palette": [
+      "#E8A04C",
+      "#F4D8A8",
+      "#8A4A2E"
+    ],
     "skin": "#D9A878",
-    "hair": { "style": "spiky", "color": "#A83A2A" },
+    "hair": {
+      "style": "spiky",
+      "color": "#A83A2A"
+    },
     "eyes": "#C8642A",
-    "outfit": ["#B85C38", "#8A4A2E"],
+    "outfit": [
+      "#B85C38",
+      "#8A4A2E"
+    ],
     "glow_intensity": 0.55,
     "form": "soft",
-    "symbol": "star"
+    "symbol": "star",
+    "gender": "male"
   },
   "drift": {
     "note": "These values are the personality's starting point. The drift vector in data/user_model.json moves them over time; this file is never modified."

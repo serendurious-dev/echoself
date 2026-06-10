@@ -16,7 +16,8 @@ PACK_IDS = ["gentle_guide", "strict_mentor", "playful_rival",
 
 # the dials Session Zero offers. small on purpose - enough to make them yours,
 # not enough to stall you at a menu on day one.
-HAIR_STYLES = ["long", "short", "spiky"]
+BUILDS      = ["female", "male"]
+HAIR_STYLES = ["long", "short", "fluffy", "spiky"]
 SKIN_TONES  = ["#F7E0CC", "#F2D5C0", "#D9A878", "#A8714A", "#6B4A35"]
 
 
@@ -29,13 +30,15 @@ def all_packs():
     return [load_pack(p) for p in PACK_IDS]
 
 
-def spec_from_pack(pack, hair_style=None, skin=None):
+def spec_from_pack(pack, hair_style=None, skin=None, build=None):
     # the preset's look, with the user's choices laid over it
     spec = CharacterSpec.from_visual(pack.get("visual", {}))
     if hair_style:
         spec.hair_style = hair_style
     if skin:
         spec.skin = CharacterSpec.from_visual({"skin": skin}).skin
+    if build:
+        spec.gender = build
     return spec
 
 
@@ -46,7 +49,8 @@ def spec_from_profile(profile):
         c = profile["character"]
         return spec_from_pack(load_pack(c["pack"]),
                               hair_style=c.get("hair_style"),
-                              skin=c.get("skin"))
+                              skin=c.get("skin"),
+                              build=c.get("build"))
     except (KeyError, TypeError, OSError, ValueError):
         return spec_from_pack(load_pack("gentle_guide"))
 

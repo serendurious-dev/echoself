@@ -6,7 +6,12 @@
   "author": "Prodipta Acharjee",
   "license": "CC BY 4.0",
   "voice": {
-    "tone": ["warm", "patient", "soft-spoken", "reassuring"],
+    "tone": [
+      "warm",
+      "patient",
+      "soft-spoken",
+      "reassuring"
+    ],
     "phrases": {
       "greeting": [
         "You came. That's already something.",
@@ -42,14 +47,25 @@
     "celebrates": "quietly"
   },
   "visual": {
-    "palette": ["#7FB5A8", "#E8DCC8", "#4A6670"],
+    "palette": [
+      "#7FB5A8",
+      "#E8DCC8",
+      "#4A6670"
+    ],
     "skin": "#F2D5C0",
-    "hair": { "style": "long", "color": "#6E5A4E" },
+    "hair": {
+      "style": "long",
+      "color": "#6E5A4E"
+    },
     "eyes": "#5B8A80",
-    "outfit": ["#5E8C80", "#4A6E66"],
+    "outfit": [
+      "#5E8C80",
+      "#4A6E66"
+    ],
     "glow_intensity": 0.4,
     "form": "soft",
-    "symbol": "lantern"
+    "symbol": "lantern",
+    "gender": "female"
   },
   "drift": {
     "note": "These values are the personality's starting point. The drift vector in data/user_model.json moves them over time; this file is never modified."

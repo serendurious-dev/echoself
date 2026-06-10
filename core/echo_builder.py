@@ -158,20 +158,25 @@ def _pick_character(stage):
 
 
 def _customize(stage, pack):
-    # make them yours. two quiet dials - hair, then skin - shown live on the
-    # figure. small on purpose, day one should not be a settings menu.
-    hair_idx = 0
-    skin_idx = 1
+    # make them yours. three quiet dials - build, hair, skin - shown live on
+    # the figure. small on purpose, day one should not be a settings menu.
+    builds   = character_builder.BUILDS
     styles   = character_builder.HAIR_STYLES
     tones    = character_builder.SKIN_TONES
-    base     = pack["visual"]["hair"]["style"]
-    if base in styles:
-        hair_idx = styles.index(base)
-    for stage_name, hint in (("hair", "left and right for their hair   enter when it's them"),
+    build_idx = builds.index(pack["visual"].get("gender", "female"))
+    hair_idx  = styles.index(pack["visual"]["hair"]["style"]) \
+        if pack["visual"]["hair"]["style"] in styles else 0
+    skin_idx  = 1
+    idx = {"build": build_idx, "hair": hair_idx, "skin": skin_idx}
+    sizes = {"build": len(builds), "hair": len(styles), "skin": len(tones)}
+    for stage_name, hint in (("build", "left and right for their build   enter when it's them"),
+                             ("hair", "left and right for their hair   enter when it's them"),
                              ("skin", "left and right for their skin   enter when it's them")):
         while True:
-            spec = character_builder.spec_from_pack(pack, hair_style=styles[hair_idx],
-                                                    skin=tones[skin_idx])
+            spec = character_builder.spec_from_pack(pack,
+                                                    hair_style=styles[idx["hair"]],
+                                                    skin=tones[idx["skin"]],
+                                                    build=builds[idx["build"]])
             who  = Character(spec, pos=(stage.size[0] // 2, int(stage.size[1] * 0.82)),
                              height=int(stage.size[1] * 0.42))
             who.t = stage.t
@@ -180,15 +185,9 @@ def _customize(stage, pack):
             for e in events:
                 if e.type == pygame.KEYDOWN:
                     if e.key in (pygame.K_LEFT, pygame.K_a):
-                        if stage_name == "hair":
-                            hair_idx = (hair_idx - 1) % len(styles)
-                        else:
-                            skin_idx = (skin_idx - 1) % len(tones)
+                        idx[stage_name] = (idx[stage_name] - 1) % sizes[stage_name]
                     elif e.key in (pygame.K_RIGHT, pygame.K_e):
-                        if stage_name == "hair":
-                            hair_idx = (hair_idx + 1) % len(styles)
-                        else:
-                            skin_idx = (skin_idx + 1) % len(tones)
+                        idx[stage_name] = (idx[stage_name] + 1) % sizes[stage_name]
                     elif e.key == pygame.K_RETURN:
                         done = True
             who.update(dt)
@@ -198,7 +197,7 @@ def _customize(stage, pack):
             pygame.display.flip()
             if done:
                 break
-    return styles[hair_idx], tones[skin_idx]
+    return builds[idx["build"]], styles[idx["hair"]], tones[idx["skin"]]
 
 
 def _closing(stage, pack, profile):
@@ -232,8 +231,8 @@ def run_builder(screen, clock):
         signal["key"]  = key
         signals.append(signal)
 
-    pack             = _pick_character(stage)
-    hair, skin       = _customize(stage, pack)
+    pack              = _pick_character(stage)
+    build, hair, skin = _customize(stage, pack)
 
     profile = {
         "created":   datetime.date.today().isoformat(),
@@ -247,7 +246,7 @@ def run_builder(screen, clock):
             "name":  answers["shadow_name"],
             "trait": answers["shadow_trait"],
         },
-        "character": {"pack": pack["id"], "hair_style": hair, "skin": skin},
+        "character": {"pack": pack["id"], "build": build, "hair_style": hair, "skin": skin},
         "session_zero_signals": signals,
     }
     session_manager.save_profile(profile)
