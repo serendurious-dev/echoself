@@ -1,20 +1,22 @@
 """procedural character renderer.
 
-a real 2.5d character, drawn entirely by code - no PNGs, no sprite sheets.
-the figure is built from layered vector shapes (back hair, robe, arms, head,
-face, fringe), every layer drawn fresh each frame at 2x resolution and scaled
-down so the edges come out clean. layers move independently - the chest rises
-with the breath, the head bobs a beat behind it, the hair follows the head -
-which is what makes flat shapes read as someone standing there.
+a 2.5d character in the style of visual-novel apps - semi-realistic
+proportions, a shaped face with a jaw and chin, almond eyes with lashes and
+an iris you can fall into, real lips, layered hair with a shine. drawn
+entirely by code, no PNGs, no sprite sheets - every shape is a polygon or a
+curve computed each frame at 2x resolution and scaled down so the lines come
+out clean.
 
-the look is parameters all the way down: skin tone, hair style and color, eye
-color, outfit colors, accent palette, form, the chest symbol. they come from a
+the layering is the 2.5d: back hair, body, face, front hair are separate
+passes with separate motion - the chest rises with the breath, the head lags
+half a beat behind, the hair follows the head. translucent shading (the jaw
+shadow, the hair shine, the skirt folds) is blitted, never drawn, so it
+blends instead of punching holes in the alpha.
+
+the look is parameters all the way down: skin tone, hair style and color,
+eye color, outfit colors, accent palette, form, the chest symbol - from a
 personality pack's visual block (characters/*.json) or the custom builder.
-expressions are parameter targets (eyes, brows, mouth, posture, aura) that the
-expression engine drives, the renderer just eases toward whatever is asked.
-
-a soft aura glows behind the figure so they still belong to the EchoSelf sky,
-but the character themselves is solid. presence, not a ghost.
+expressions are parameter targets the expression engine drives.
 
 preview without the rest of the app:  python -m character.renderer
 """
@@ -35,19 +37,19 @@ SS = 2   # supersampling factor. draw big, scale down, edges stay smooth
 EXPRESSIONS = {
     "neutral":     dict(eye_open=1.00, eye_curve=0.00, mouth=0.25, brow=0.00,
                         glow=1.00, breath=1.00, sway=1.00, motes=1.00, tilt=0.00),
-    "happy":       dict(eye_open=0.65, eye_curve=0.70, mouth=0.90, brow=0.45,
+    "happy":       dict(eye_open=0.70, eye_curve=0.70, mouth=0.90, brow=0.45,
                         glow=1.25, breath=1.10, sway=1.00, motes=1.60, tilt=0.10),
     "patient":     dict(eye_open=0.85, eye_curve=0.25, mouth=0.45, brow=0.25,
                         glow=0.90, breath=0.80, sway=0.70, motes=0.80, tilt=0.18),
-    "thinking":    dict(eye_open=0.75, eye_curve=0.00, mouth=0.05, brow=-0.50,
+    "thinking":    dict(eye_open=0.78, eye_curve=0.00, mouth=0.05, brow=-0.50,
                         glow=0.95, breath=1.00, sway=0.40, motes=0.70, tilt=-0.22),
-    "celebrating": dict(eye_open=0.55, eye_curve=0.90, mouth=1.35, brow=0.70,
+    "celebrating": dict(eye_open=0.60, eye_curve=0.90, mouth=1.35, brow=0.70,
                         glow=1.50, breath=1.30, sway=1.20, motes=2.40, tilt=0.00),
     "drift":       dict(eye_open=0.55, eye_curve=0.20, mouth=0.30, brow=0.10,
                         glow=0.75, breath=0.65, sway=0.50, motes=0.50, tilt=0.12),
 }
 
-FORMS = {"soft": 1.00, "slender": 0.86, "broad": 1.14}   # body width factor
+FORMS = {"soft": 1.00, "slender": 0.90, "broad": 1.12}   # body width factor
 
 
 def hex_to_rgb(value):
@@ -58,6 +60,21 @@ def hex_to_rgb(value):
 def shade(color, f):
     # darker (f<1) or lighter (f>1) version of a color
     return tuple(max(0, min(255, int(c * f))) for c in color)
+
+
+def mix(a, b, t):
+    return tuple(int(a[i] + (b[i] - a[i]) * t) for i in range(3))
+
+
+def bezier(p0, p1, p2, n=14):
+    # quadratic bezier, sampled. enough for every curve in the figure.
+    pts = []
+    for i in range(n):
+        t = i / (n - 1)
+        u = 1 - t
+        pts.append((u * u * p0[0] + 2 * u * t * p1[0] + t * t * p2[0],
+                    u * u * p0[1] + 2 * u * t * p1[1] + t * t * p2[1]))
+    return pts
 
 
 class CharacterSpec:
@@ -105,7 +122,7 @@ class CharacterSpec:
 
 class Character:
     # the figure itself. update(dt) moves the breath, the blink, the motes,
-    # draw(surface) paints it. pos is where the base of the figure sits.
+    # draw(surface) paints it. pos is where the figure's feet land.
 
     def __init__(self, spec=None, pos=(640, 540), height=300):
         self.spec   = spec or CharacterSpec()
@@ -119,7 +136,7 @@ class Character:
         self._next_blink  = random.uniform(2.0, 5.0)
         self._cache       = {}                         # glow sprites for aura, motes, symbol
 
-        cw, chh     = int(height * 0.95), int(height * 1.08)
+        cw, chh     = int(height * 0.72), int(height * 1.04)
         self._cw    = cw
         self._chh   = chh
         self.canvas = pygame.Surface((cw * SS, chh * SS), pygame.SRCALPHA)
@@ -127,7 +144,7 @@ class Character:
 
         # the motes: little lights that live around the figure
         self.motes = [dict(a=random.uniform(0, math.tau),
-                           r=random.uniform(0.34, 0.62) * height,
+                           r=random.uniform(0.30, 0.55) * height,
                            speed=random.uniform(0.08, 0.30) * random.choice((-1, 1)),
                            size=random.randint(2, 4),
                            phase=random.uniform(0, math.tau))
@@ -193,34 +210,44 @@ class Character:
 
     def _pt(self, x, y):
         return (int((self._cw / 2 + x * self.h) * SS),
-                int((self._chh - 0.02 * self.h - y * self.h) * SS))
+                int((self._chh - 0.015 * self.h - y * self.h) * SS))
 
     def _len(self, f):
         return max(1, int(f * self.h * SS))
 
-    def _ellipse(self, color, center, rx, ry, outline=None):
+    def _poly(self, color, pts_units):
+        pygame.draw.polygon(self.canvas, color, [self._pt(*p) for p in pts_units])
+
+    def _ell(self, color, center, rx, ry):
         x, y = self._pt(*center)
-        w, hh = self._len(rx), self._len(ry)
-        if outline:
-            o = max(2, SS * 2)
-            pygame.draw.ellipse(self.canvas, outline, (x - w - o, y - hh - o, 2 * (w + o), 2 * (hh + o)))
-        pygame.draw.ellipse(self.canvas, color, (x - w, y - hh, 2 * w, 2 * hh))
+        w, h = self._len(rx), self._len(ry)
+        pygame.draw.ellipse(self.canvas, color, (x - w, y - h, 2 * w, 2 * h))
 
-    def _capsule(self, color, a, b, thickness):
-        pa, pb = self._pt(*a), self._pt(*b)
-        t = self._len(thickness)
-        pygame.draw.line(self.canvas, color, pa, pb, t)
-        pygame.draw.circle(self.canvas, color, pa, t // 2)
-        pygame.draw.circle(self.canvas, color, pb, t // 2)
+    def _strip(self, color, path_units, w_from, w_to):
+        # a tapered ribbon along a path - arms, brows, strands
+        path = [self._pt(*p) for p in path_units]
+        left, right = [], []
+        n = len(path)
+        for i, (x, y) in enumerate(path):
+            t  = i / (n - 1)
+            w  = (w_from + (w_to - w_from) * t) * self.h * SS / 2
+            if i < n - 1:
+                dx, dy = path[i + 1][0] - x, path[i + 1][1] - y
+            else:
+                dx, dy = x - path[i - 1][0], y - path[i - 1][1]
+            d = math.hypot(dx, dy) or 1
+            nx, ny = -dy / d, dx / d
+            left.append((x + nx * w, y + ny * w))
+            right.append((x - nx * w, y - ny * w))
+        pygame.draw.polygon(self.canvas, color, left + right[::-1])
 
-    def _polygon(self, color, points, outline=None):
-        pts = [self._pt(*p) for p in points]
-        if outline:
-            cx = sum(p[0] for p in pts) / len(pts)
-            cy = sum(p[1] for p in pts) / len(pts)
-            grown = [(int(cx + (px - cx) * 1.035), int(cy + (py - cy) * 1.035)) for px, py in pts]
-            pygame.draw.polygon(self.canvas, outline, grown)
-        pygame.draw.polygon(self.canvas, color, pts)
+    def _tell(self, rgba, center, rx, ry):
+        # translucent ellipse, blitted so it blends instead of replacing alpha
+        w, h = self._len(rx), self._len(ry)
+        temp = pygame.Surface((2 * w, 2 * h), pygame.SRCALPHA)
+        pygame.draw.ellipse(temp, rgba, temp.get_rect())
+        x, y = self._pt(*center)
+        self.canvas.blit(temp, (x - w, y - h))
 
     # -- the figure ------------------------------------------------------------
 
@@ -228,160 +255,282 @@ class Character:
         spec    = self.spec
         breath  = math.sin(self.t * math.tau / 4.2)
         sway    = math.sin(self.t * 0.31) * self.expr["sway"]
-        width   = FORMS.get(spec.form, 1.0)
+        W       = FORMS.get(spec.form, 1.0)
         tilt    = self.expr["tilt"]
 
-        # layer offsets, in units of h. this is the 2.5d: the chest rises with
-        # the breath, the head lags half a beat behind, the hair follows the head
-        body_dy = 0.006 * breath
-        head_dx = sway * 0.012 + tilt * 0.018
-        head_dy = 0.008 * math.sin(self.t * math.tau / 4.2 - 0.6)
+        body_dy = 0.005 * breath                                  # the chest rises
+        hx      = sway * 0.010 + tilt * 0.012                     # the head lags and leans
+        hy      = 0.906 + 0.006 * math.sin(self.t * math.tau / 4.2 - 0.6)
 
         # -- aura, additive, behind everything --------------------------------
-        light = (0.55 + spec.glow * 0.9) * self.expr["glow"]
+        light  = (0.55 + spec.glow * 0.9) * self.expr["glow"]
         accent = spec.palette[0]
         self._aura.fill((0, 0, 0))
-        self._add_to(self._aura, self._glow(self.h * 0.34, accent, 0.30 * light),
-                     (self._cw / 2, self._chh - 0.50 * self.h))
-        self._add_to(self._aura, self._glow(self.h * 0.22, accent, 0.16 * light),
+        self._add_to(self._aura, self._glow(self.h * 0.30, accent, 0.26 * light),
+                     (self._cw / 2, self._chh - 0.55 * self.h))
+        self._add_to(self._aura, self._glow(self.h * 0.20, accent, 0.14 * light),
                      (self._cw / 2, self._chh - 0.04 * self.h))
-        # the figure's feet land exactly on pos
         top_left = (int(self.pos[0] - self._cw / 2),
-                    int(self.pos[1] - self._chh + 0.02 * self.h))
+                    int(self.pos[1] - self._chh + 0.015 * self.h))
         surface.blit(self._aura, top_left, special_flags=pygame.BLEND_RGB_ADD)
 
-        # -- the solid figure, supersampled ------------------------------------
+        # -- palette ------------------------------------------------------------
+        skin    = spec.skin
+        skin_dk = shade(skin, 0.78)
+        hair    = spec.hair_color
+        hair_dk = shade(hair, 0.66)
+        hair_lt = shade(hair, 1.30)
+        top_c   = spec.outfit[0]
+        skirt_c = spec.outfit[1] if len(spec.outfit) > 1 else shade(top_c, 0.88)
+        lip     = mix(skin, (186, 92, 96), 0.62)
+
         self.canvas.fill((0, 0, 0, 0))
 
-        skin     = spec.skin
-        hair     = spec.hair_color
-        robe     = spec.outfit[0]
-        sleeve   = spec.outfit[1] if len(spec.outfit) > 1 else shade(robe, 0.85)
-        hair_dk  = shade(hair, 0.62)
-        robe_dk  = shade(robe, 0.55)
-        skin_dk  = shade(skin, 0.68)
-
-        head_c = (head_dx, 0.76 + head_dy)
-        head_r = 0.115
-
-        # back hair, behind everything
+        # -- back hair -----------------------------------------------------------
         if spec.hair_style != "none":
-            self._ellipse(hair, (head_c[0], head_c[1] + 0.01), 0.135, 0.145, outline=hair_dk)
-            if spec.hair_style == "long":
-                for side in (-1, 1):
-                    self._capsule(hair, (head_c[0] + side * 0.115, head_c[1] - 0.02),
-                                  (head_c[0] + side * 0.105, 0.50), 0.055)
+            self._back_hair(hx, hy, hair, hair_dk)
 
-        # the robe. shoulders, a soft waist, a hem that flares
-        sh = 0.145 * width
-        self._polygon(robe, [(-sh, 0.60 + body_dy), (sh, 0.60 + body_dy),
-                             (0.125 * width, 0.46 + body_dy), (0.115 * width, 0.30),
-                             (0.15 * width, 0.02), (-0.15 * width, 0.02),
-                             (-0.115 * width, 0.30), (-0.125 * width, 0.46 + body_dy)],
-                      outline=robe_dk)
-        # shoulder caps, so the silhouette is round where a person is round
-        for side in (-1, 1):
-            self._ellipse(robe, (side * 0.105 * width, 0.585 + body_dy), 0.048, 0.040)
-        # collar, a soft v in the darker tone
-        self._polygon(robe_dk, [(-0.052 * width, 0.60 + body_dy), (0.052 * width, 0.60 + body_dy),
-                                (0.0, 0.525 + body_dy)])
+        # -- the body ------------------------------------------------------------
+        sh_y, sh_w = 0.812 + body_dy, 0.080 * W
+        wa_y, wa_w = 0.630 + body_dy * 0.5, 0.054 * W
+        hp_w       = 0.080 * W
+        hem_w      = 0.108 * W
 
-        # arms: sleeves hanging at the sides, hands showing
-        for side in (-1, 1):
-            a = (side * 0.125 * width, 0.555 + body_dy)
-            b = (side * 0.150 * width + sway * 0.006, 0.315 + body_dy * 0.5)
-            self._capsule(sleeve, a, b, 0.054)
-            self._ellipse(skin, b, 0.024, 0.024)
+        # skirt: waist through hips, flaring to the hem, swaying a little
+        right = bezier((wa_w, wa_y), (hp_w + 0.012, 0.50), (hem_w + sway * 0.006, 0.022))
+        left  = bezier((-wa_w, wa_y), (-hp_w - 0.012, 0.50), (-hem_w + sway * 0.006, 0.022))
+        self._poly(skirt_c, right + [(right[-1][0], 0.018), (left[-1][0], 0.018)] + left[::-1])
+        # fold shadows down the skirt
+        for fx in (-0.45, 0.05, 0.5):
+            x0 = wa_w * fx
+            x1 = hem_w * fx * 1.1
+            self._strip((*shade(skirt_c, 0.84), 110),
+                        bezier((x0, wa_y - 0.02), ((x0 + x1) / 2, 0.36), (x1, 0.04)),
+                        0.004, 0.014)
 
-        # neck, then the head over it
-        self._capsule(skin, (head_dx, 0.66), (head_dx, 0.61 + body_dy), 0.045)
-        self._ellipse(skin, head_c, head_r, head_r * 1.06, outline=skin_dk)
+        # bodice: fitted, shoulders to waist
+        r = bezier((sh_w, sh_y), (sh_w + 0.006, 0.72), (wa_w, wa_y))
+        l = bezier((-sh_w, sh_y), (-sh_w - 0.006, 0.72), (-wa_w, wa_y))
+        self._poly(top_c, r + l[::-1])
+        # neckline
+        self._poly(skin, [(-0.023 * W, sh_y + 0.004), (0.023 * W, sh_y + 0.004), (0, 0.764 + body_dy)])
+        self._poly(shade(top_c, 0.8), [(-0.032 * W, sh_y + 0.006), (-0.024 * W, sh_y + 0.006),
+                                       (0, 0.762 + body_dy), (-0.004, 0.755 + body_dy)])
+        self._poly(shade(top_c, 0.8), [(0.032 * W, sh_y + 0.006), (0.024 * W, sh_y + 0.006),
+                                       (0.004, 0.755 + body_dy), (0, 0.762 + body_dy)])
+        # side shading on the bodice, hugging the edge
+        self._tell((*shade(top_c, 0.72), 44), (sh_w * 0.80, 0.715), 0.011, 0.080)
 
-        # -- the face -----------------------------------------------------------
-        blink = 1.0
-        if self._blink_phase is not None:
-            blink = max(0.0, 1.0 - math.sin(math.pi * min(self._blink_phase, 1.0)) * 1.4)
-        curve    = self.expr["eye_curve"]
-        openness = max(0.06, self.expr["eye_open"] * blink * (1 - curve * 0.30))
+        # arms: shoulder, a soft elbow, the hand. sleeves in the top's color.
+        for s in (-1, 1):
+            path = bezier((s * 0.072 * W, 0.800 + body_dy),
+                          (s * 0.094 * W, 0.650),
+                          (s * 0.082 * W + sway * 0.004, 0.487))
+            self._strip(top_c, path, 0.034, 0.020)
+            self._ell(skin, path[-1], 0.0125, 0.016)
 
-        eye_y  = head_c[1] - 0.002 + curve * 0.006
-        eye_dx = 0.048
-        ew, eh = 0.027, 0.024 * openness
-        for side in (-1, 1):
-            ec = (head_c[0] + side * eye_dx, eye_y + side * tilt * 0.006)
-            self._ellipse((250, 248, 240), ec, ew, eh)                     # sclera
-            if openness > 0.30:
-                self._ellipse(spec.eye_color, ec, 0.014, 0.014 * openness)  # iris
-                self._ellipse((30, 28, 34), ec, 0.0065, 0.0065 * openness)  # pupil
-                self._ellipse((255, 255, 255),
-                              (ec[0] - 0.005, ec[1] + 0.005), 0.0032, 0.0032)  # the spark of life
-            else:
-                self._capsule(skin_dk, (ec[0] - ew, ec[1]), (ec[0] + ew, ec[1]), 0.006)
+        # neck, then the face
+        self._poly(skin, [(-0.0185 + hx * 0.6, 0.822), (0.0185 + hx * 0.6, 0.822),
+                          (0.0165 + hx, hy - 0.052), (-0.0165 + hx, hy - 0.052)])
+        self._tell((*skin_dk, 50), (hx * 0.85, hy - 0.0585), 0.013, 0.006)   # under-jaw shadow
 
-        # brows. raised when warm, knit when focused
-        brow = self.expr["brow"]
-        for side in (-1, 1):
-            inner = (head_c[0] + side * 0.022, eye_y + 0.038 + (0.010 if brow < 0 else 0) * brow)
-            outer = (head_c[0] + side * 0.070, eye_y + 0.038 + brow * 0.012)
-            self._capsule(hair_dk, inner, outer, 0.009)
+        self._face(hx, hy, skin, skin_dk, lip)
 
-        # the mouth. flat to smile to open delight
-        mouth = self.expr["mouth"]
-        mx, my = head_c[0], head_c[1] - 0.062
-        if mouth > 1.1:
-            self._ellipse((120, 60, 64), (mx, my - 0.008), 0.020, 0.014)   # open smile
-            self._ellipse(skin, (mx, my - 0.022), 0.022, 0.010)
-        else:
-            # corners up, center down. the other way around is a frown.
-            pts = []
-            for i in range(9):
-                a = math.pi * (0.15 + 0.70 * i / 8)
-                pts.append(self._pt(mx + math.cos(a) * 0.026,
-                                    my + (1 - math.sin(a)) * 0.020 * mouth))
-            pygame.draw.lines(self.canvas, skin_dk, False, pts, max(2, SS * 2))
-
-        # a little color in the cheeks when they are happy
-        if curve > 0.3:
-            blush = pygame.Surface((self._len(0.025) * 2, self._len(0.014) * 2), pygame.SRCALPHA)
-            pygame.draw.ellipse(blush, (235, 130, 120, int(70 * curve)), blush.get_rect())
-            for side in (-1, 1):
-                px, py = self._pt(head_c[0] + side * 0.068, head_c[1] - 0.045)
-                self.canvas.blit(blush, (px - blush.get_width() // 2, py - blush.get_height() // 2))
-
-        # front hair, over the face
-        if spec.hair_style == "spiky":
-            for i in range(7):
-                a = math.pi * (0.12 + 0.76 * i / 6)
-                tip = (head_c[0] + math.cos(a) * 0.150, head_c[1] + math.sin(a) * 0.155 + 0.01)
-                base_l = (head_c[0] + math.cos(a + 0.22) * 0.095, head_c[1] + math.sin(a + 0.22) * 0.095)
-                base_r = (head_c[0] + math.cos(a - 0.22) * 0.095, head_c[1] + math.sin(a - 0.22) * 0.095)
-                self._polygon(hair, [base_l, tip, base_r])
-        elif spec.hair_style != "none":
-            # a soft cap high on the head, a fringe parted off-center. the face
-            # stays open - hair frames it, never hides it.
-            self._ellipse(hair, (head_c[0], head_c[1] + 0.085), 0.116, 0.048, outline=hair_dk)
-            self._ellipse(hair, (head_c[0] - 0.062, head_c[1] + 0.066), 0.055, 0.036)
-            self._ellipse(hair, (head_c[0] + 0.068, head_c[1] + 0.070), 0.046, 0.032)
-
-        # the chest symbol, a light worn over the heart - painted after the
-        # downscale so it can glow over the fabric
+        # -- front hair ------------------------------------------------------------
+        if spec.hair_style != "none":
+            self._front_hair(hx, hy, hair, hair_dk, hair_lt)
 
         # -- composite ----------------------------------------------------------
         figure = pygame.transform.smoothscale(self.canvas, (self._cw, self._chh))
         surface.blit(figure, top_left)
 
-        # symbol glow on top of the robe
-        sym_center = (self.pos[0] + sway * 0.004 * self.h, self.pos[1] - 0.49 * self.h)
-        self._draw_symbol(surface, sym_center, self.h * 0.030, spec.palette[1],
+        # symbol at the chest, over the fabric
+        sym = (self.pos[0] + sway * 0.004 * self.h, self.pos[1] - 0.70 * self.h)
+        self._draw_symbol(surface, sym, self.h * 0.024, spec.palette[1],
                           (0.50 + 0.10 * breath) * light)
 
         # the motes, drifting around the figure
         for m in self.motes:
             mx = self.pos[0] + math.cos(m["a"]) * m["r"] * 0.85
-            my = self.pos[1] - self.h * 0.45 + math.sin(m["a"] * 0.9 + m["phase"]) * m["r"] * 0.5
+            my = self.pos[1] - self.h * 0.52 + math.sin(m["a"] * 0.9 + m["phase"]) * m["r"] * 0.5
             twinkle = 0.35 + 0.30 * math.sin(self.t * 2.1 + m["phase"])
-            self._add_to(surface, self._glow(m["size"], spec.palette[1], twinkle * light * 0.55),
+            self._add_to(surface, self._glow(m["size"], spec.palette[1], twinkle * light * 0.5),
                          (mx, my))
+
+    # -- the face ---------------------------------------------------------------
+
+    def _face(self, hx, hy, skin, skin_dk, lip):
+        rx, chin = 0.0525, hy - 0.0700
+
+        # the face shape: a skull arc over a tapered jaw down to the chin
+        pts = []
+        for i in range(15):
+            a = math.pi * i / 14
+            pts.append((hx + math.cos(a) * rx, hy + 0.010 + math.sin(a) * 0.058))
+        pts = [(hx + rx, hy + 0.010)] + pts[::-1]  # right -> over the top -> left
+        jaw_l = bezier((hx - rx, hy + 0.008), (hx - rx + 0.006, hy - 0.046), (hx - 0.011, chin))
+        jaw_r = bezier((hx + 0.011, chin), (hx + rx - 0.006, hy - 0.046), (hx + rx, hy + 0.008))
+        self._poly(skin, pts[1:] + jaw_l + [(hx, chin - 0.0015)] + jaw_r)
+        # one soft shadow along the right of the face, for depth
+        self._tell((*skin_dk, 46), (hx + rx * 0.62, hy - 0.018), 0.016, 0.042)
+
+        curve    = self.expr["eye_curve"]
+        blink = 1.0
+        if self._blink_phase is not None:
+            blink = max(0.0, 1.0 - math.sin(math.pi * min(self._blink_phase, 1.0)) * 1.4)
+        openness = max(0.0, self.expr["eye_open"] * blink * (1 - curve * 0.28))
+
+        ey = hy - 0.007 + curve * 0.004
+        for s in (-1, 1):
+            self._eye((hx + s * 0.0245, ey + s * self.expr["tilt"] * 0.004), s, openness, curve)
+
+        # brows: thin, tapered, raised when warm, knit when focused
+        brow = self.expr["brow"]
+        for s in (-1, 1):
+            inner = (hx + s * 0.0110, ey + 0.0300 + (0.008 * brow if brow < 0 else 0))
+            mid   = (hx + s * 0.0260, ey + 0.0345 + brow * 0.009)
+            outer = (hx + s * 0.0390, ey + 0.0305 + brow * 0.012)
+            self._strip(shade(self.spec.hair_color, 0.55), [inner, mid, outer], 0.0036, 0.0012)
+
+        # the nose: one short line of shadow, nothing more
+        self._strip((*skin_dk, 150), [(hx + 0.0025, hy - 0.0195), (hx + 0.0045, hy - 0.0290),
+                                      (hx - 0.0015, hy - 0.0310)], 0.0022, 0.0028)
+
+        # lips: a darker upper, a fuller lower with a little light on it
+        mouth = self.expr["mouth"]
+        my    = hy - 0.0468
+        mw    = 0.0200
+        lift  = min(mouth, 1.0) * 0.0050
+        if mouth > 1.1:   # open delight
+            self._ell(shade(lip, 0.52), (hx, my - 0.003), 0.0125, 0.0085)
+            self._ell((252, 250, 246), (hx, my + 0.0012), 0.0085, 0.0028)
+        else:
+            top = bezier((hx - mw, my + lift), (hx, my - 0.0014 + mouth * 0.001), (hx + mw, my + lift))
+            self._strip(shade(lip, 0.82), top, 0.0026, 0.0026)
+            bot = bezier((hx - mw * 0.80, my + lift - 0.0010), (hx, my - 0.0054 + lift * 0.4),
+                         (hx + mw * 0.80, my + lift - 0.0010))
+            self._strip(lip, bot, 0.0030, 0.0030)
+            self._tell((255, 240, 238, 46), (hx, my - 0.0040 + lift * 0.4), 0.0042, 0.0011)
+
+        # a little color in the cheeks when they are happy
+        if curve > 0.3:
+            for s in (-1, 1):
+                self._tell((232, 128, 122, int(60 * curve)), (hx + s * 0.034, hy - 0.026),
+                           0.0125, 0.0070)
+
+    def _eye(self, center, side, openness, curve):
+        # built on its own little surface and clipped to the almond, so the
+        # iris can be big without spilling onto the face
+        ex, ey = center
+        hw     = 0.0195
+        top_h  = 0.0130 * max(openness, 0.05) + curve * 0.0015
+        bot_h  = 0.0085 * (0.55 + 0.45 * openness)
+
+        cx, cy = self._pt(ex, ey)
+        w_px   = self._len(hw * 2.4)
+        h_px   = self._len(0.06)
+        ox, oy = cx - w_px // 2, cy - h_px // 2
+
+        def local(pts):
+            return [(self._pt(*p)[0] - ox, self._pt(*p)[1] - oy) for p in pts]
+
+        lid_top = bezier((ex - hw, ey), (ex + side * 0.002, ey + top_h * 2), (ex + hw, ey + 0.001))
+        lid_bot = bezier((ex + hw, ey + 0.001), (ex, ey - bot_h * 2), (ex - hw, ey))
+        almond  = local(lid_top + lid_bot)
+
+        if openness < 0.16:
+            # closed: just the lash line, soft
+            self._strip((44, 32, 34), lid_top, 0.0030, 0.0030)
+            return
+
+        eye  = pygame.Surface((w_px, h_px), pygame.SRCALPHA)
+        mask = pygame.Surface((w_px, h_px), pygame.SRCALPHA)
+        pygame.draw.polygon(mask, (255, 255, 255, 255), almond)
+        pygame.draw.polygon(eye, (250, 247, 242), almond)
+
+        # iris, pupil, the lights in it
+        ic     = self.spec.eye_color
+        ir     = self._len(0.0105)
+        icx    = local([(ex, ey + 0.001)])[0]
+        pygame.draw.circle(eye, shade(ic, 0.55), icx, ir)
+        pygame.draw.circle(eye, ic, icx, int(ir * 0.82))
+        pygame.draw.circle(eye, shade(ic, 1.35), (icx[0], icx[1] + int(ir * 0.3)), int(ir * 0.45))
+        pygame.draw.circle(eye, (28, 24, 28), icx, int(ir * 0.42))
+        pygame.draw.circle(eye, (255, 255, 255), (icx[0] - int(ir * 0.35), icx[1] - int(ir * 0.35)),
+                           int(ir * 0.26))
+        pygame.draw.circle(eye, (255, 255, 255, 180), (icx[0] + int(ir * 0.40), icx[1] + int(ir * 0.42)),
+                           int(ir * 0.12))
+
+        eye.blit(mask, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+        self.canvas.blit(eye, (ox, oy))
+
+        # the lash line, heavier toward the outer corner, with a small wing
+        self._strip((40, 30, 32), lid_top, 0.0026, 0.0042)
+        wing_x = ex + side * hw
+        self._strip((40, 30, 32), [(wing_x, ey + 0.001), (wing_x + side * 0.0035, ey + 0.0035)],
+                    0.0030, 0.0008)
+
+    # -- hair ---------------------------------------------------------------------
+
+    def _back_hair(self, hx, hy, hair, hair_dk):
+        style = self.spec.hair_style
+        if style == "long":
+            crown = hy + 0.075
+            r = bezier((hx, crown), (hx + 0.085, hy + 0.020), (hx + 0.080, 0.74))
+            r += bezier((hx + 0.080, 0.74), (hx + 0.072, 0.62), (hx + 0.048, 0.555))
+            l = bezier((hx, crown), (hx - 0.085, hy + 0.020), (hx - 0.080, 0.74))
+            l += bezier((hx - 0.080, 0.74), (hx - 0.072, 0.62), (hx - 0.048, 0.555))
+            self._poly(hair_dk, r + [(hx + 0.020, 0.545), (hx - 0.020, 0.545)] + l[::-1])
+            self._ell(hair, (hx, hy + 0.020), 0.064, 0.066)
+        elif style == "short":
+            self._ell(hair_dk, (hx, hy + 0.004), 0.066, 0.072)
+            self._ell(hair, (hx, hy + 0.016), 0.061, 0.062)
+        elif style == "spiky":
+            for i in range(7):
+                a   = math.pi * (0.10 + 0.80 * i / 6)
+                tip = (hx + math.cos(a) * 0.085, hy + 0.012 + math.sin(a) * 0.088)
+                bl  = (hx + math.cos(a + 0.30) * 0.048, hy + 0.012 + math.sin(a + 0.30) * 0.050)
+                br  = (hx + math.cos(a - 0.30) * 0.048, hy + 0.012 + math.sin(a - 0.30) * 0.050)
+                self._poly(hair_dk, [bl, tip, br])
+            self._ell(hair, (hx, hy + 0.012), 0.056, 0.058)
+
+    def _front_hair(self, hx, hy, hair, hair_dk, hair_lt):
+        style = self.spec.hair_style
+        rx    = 0.0525
+        if style == "spiky":
+            for i in range(6):
+                a   = math.pi * (0.22 + 0.56 * i / 5)
+                tip = (hx + math.cos(a) * 0.066, hy + 0.018 + math.sin(a) * 0.068)
+                bl  = (hx + math.cos(a + 0.24) * 0.038, hy + 0.022 + math.sin(a + 0.24) * 0.040)
+                br  = (hx + math.cos(a - 0.24) * 0.038, hy + 0.022 + math.sin(a - 0.24) * 0.040)
+                self._poly(hair, [bl, tip, br])
+            self._tell((*hair_lt, 70), (hx - 0.012, hy + 0.052), 0.030, 0.012)
+            return
+
+        # a fringe swept across the forehead from an off-center part
+        part = (hx - 0.014, hy + 0.064)
+        sweep = bezier(part, (hx + 0.035, hy + 0.052), (hx + 0.0505, hy + 0.010))
+        hairline = bezier((hx + 0.0505, hy + 0.010), (hx + 0.010, hy + 0.030), (hx - 0.0505, hy + 0.014))
+        crown = bezier((hx - 0.0505, hy + 0.014), (hx - 0.058, hy + 0.052), (part[0], part[1]))
+        self._poly(hair, sweep + hairline + crown)
+        # a quiet shine across the crown, kept inside the hair
+        self._tell((*hair_lt, 50), (hx - 0.008, hy + 0.056), 0.024, 0.0075)
+
+        # strands framing the face
+        for s, ln in ((-1, 0.66), (1, 0.67)):
+            p = bezier((hx + s * rx * 0.96, hy + 0.018),
+                       (hx + s * (rx + 0.013), hy - 0.052),
+                       (hx + s * (rx + 0.004), ln))
+            self._strip(hair, p, 0.0175, 0.0070)
+        if style == "long":
+            # and the long fall over the shoulders, curving out then in
+            for s in (-1, 1):
+                p = bezier((hx + s * rx * 0.9, hy - 0.022),
+                           (hx + s * 0.088, 0.70),
+                           (hx + s * 0.052, 0.585))
+                self._strip(hair, p, 0.0190, 0.0100)
+
+    # -- symbol -------------------------------------------------------------------
 
     def _draw_symbol(self, surface, center, size, color, brightness):
         # a soft light over the heart. glow first, a dim shape inside it.
@@ -410,7 +559,7 @@ class Character:
 
 
 def gentle_guide():
-    # the default companion until the builder exists (issue #5)
+    # the default companion until session zero has happened
     return CharacterSpec.from_pack(os.path.join(PACK_DIR, "gentle_guide.json"))
 
 
@@ -427,7 +576,7 @@ if __name__ == "__main__":
     sky.set_at((0, 1), (52, 44, 80))
     sky = pygame.transform.smoothscale(sky, (900, 700))
 
-    who   = Character(gentle_guide(), pos=(450, 600), height=420)
+    who   = Character(gentle_guide(), pos=(450, 660), height=600)
     names = list(EXPRESSIONS)
     idx   = 0
 
