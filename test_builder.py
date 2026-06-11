@@ -43,6 +43,13 @@ class TestPacks(unittest.TestCase):
                      for p in character_builder.all_packs()]
         self.assertEqual(len(set(greetings)), 5)
 
+    def test_every_pack_has_both_voices(self):
+        # the AlterEgo two-voice concept: a teacher register and a friend register
+        for pack in character_builder.all_packs():
+            for slot in ("teacher", "friend"):
+                lines = pack["voice"]["phrases"].get(slot)
+                self.assertTrue(lines, f"{pack['id']} is missing the '{slot}' voice")
+
 
 class TestSpecs(unittest.TestCase):
 

@@ -36,6 +36,14 @@
       "farewell": [
         "Enough for today. Let it settle, like tea leaves.",
         "Go gently. The rest will keep."
+      ],
+      "teacher": [
+        "No - and naming the wrong turn is part of drawing the map.",
+        "That answer does not hold. The truth is kinder than a comfortable lie."
+      ],
+      "friend": [
+        "Yet you are exactly where the path is. Walk on.",
+        "The river does not scold the stone. Neither do I. Again."
       ]
     }
   },

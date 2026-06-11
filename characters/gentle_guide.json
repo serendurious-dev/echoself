@@ -36,6 +36,14 @@
       "farewell": [
         "That's enough for today. Enough is a real amount.",
         "I'll be here. Whenever you come back is the right time."
+      ],
+      "teacher": [
+        "The honest thing: that one isn't right yet. I won't pretend otherwise.",
+        "Here is the truth, said gently - you missed it. That's allowed."
+      ],
+      "friend": [
+        "And you're okay. We try it again, smaller this time.",
+        "Nothing about this says anything about you. I've got you."
       ]
     }
   },

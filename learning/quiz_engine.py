@@ -54,6 +54,7 @@ class LessonSession:
         self.typed     = ""
         self.hints     = 0
         self.feedback  = None
+        self.pair      = None     # the (teacher, friend) two-voice response, on a miss
         self.shown_at  = time.monotonic()
         self.nudged    = False
 
@@ -74,6 +75,11 @@ class LessonSession:
     def _line(self, slot):
         return random.choice(self.voice[slot])
 
+    def _voice_line(self, slot):
+        # teacher / friend banks may be missing on an old or sparse pack
+        lines = self.voice.get(slot)
+        return random.choice(lines) if lines else None
+
     # -- flow -----------------------------------------------------------------
 
     def _begin_question(self):
@@ -81,6 +87,7 @@ class LessonSession:
         self.typed    = ""
         self.hints    = 0
         self.feedback = None
+        self.pair     = None
         self.shown_at = time.monotonic()
         self.nudged   = False
         self.character.set_expression("neutral")
@@ -98,9 +105,13 @@ class LessonSession:
         if right:
             self.state    = "done"
             self.feedback = self._line("correct")
+            self.pair     = None
             self.character.set_expression("celebrating")
         else:
+            # the two voices answer together: the teacher's firm truth, then the
+            # friend's grounding. AlterEgo's idea, in the character's own voice.
             self.feedback = self._line("incorrect")
+            self.pair     = (self._voice_line("teacher"), self._voice_line("friend"))
             self.typed    = ""
             self.character.set_expression("patient")
 
@@ -128,6 +139,7 @@ class LessonSession:
             if event.key == pygame.K_h and self.hints < len(self.lesson["hints"]):
                 self.hints += 1
                 self.feedback = None
+                self.pair     = None
                 progress_tracker.log_event(self.track, self.lesson["cluster"],
                                            self.lesson["id"], "hint",
                                            hints_used=self.hints)
@@ -230,6 +242,15 @@ class LessonSession:
             if self.feedback:
                 y += 8
                 y = self._text(surface, self.font, self.feedback, x, y, inner, (210, 200, 170))
+            if self.pair:
+                # the two voices: the teacher's firm line, then the friend's warm one
+                teacher, friend = self.pair
+                if teacher:
+                    y += 8
+                    y = self._text(surface, self.font_soft, teacher, x, y, inner, (214, 198, 168))
+                if friend:
+                    y += 4
+                    y = self._text(surface, self.font_soft, friend, x, y, inner, (176, 200, 188))
             if self.state == "question":
                 left = len(lesson["hints"]) - self.hints
                 more = f"h - hint ({left} left)   " if left else ""

@@ -35,6 +35,14 @@
       "farewell": [
         "Same time tomorrow? I need a rematch.",
         "Fine, go. I'll just be here, being better at this."
+      ],
+      "teacher": [
+        "Yeah, no - that's wrong, and I'm not gonna let you off easy.",
+        "Busted. That answer doesn't hold up, and you know it."
+      ],
+      "friend": [
+        "But hey - off day, not a bad you. Run it back.",
+        "C'mon, one more. I believe in you, annoyingly."
       ]
     }
   },

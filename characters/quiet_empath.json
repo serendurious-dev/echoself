@@ -35,6 +35,14 @@
       "farewell": [
         "Rest now. You did something today.",
         "Go softly. I'll be here."
+      ],
+      "teacher": [
+        "That's not it. I won't pretend - you deserve the truth.",
+        "No. I'll always tell you straight."
+      ],
+      "friend": [
+        "And that's okay. Really.",
+        "Still here. We go again."
       ]
     }
   },

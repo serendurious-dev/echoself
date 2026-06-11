@@ -95,6 +95,19 @@ class TestSession(LessonTest):
         self.assertIn(s.feedback, self.voice["incorrect"])
         self.assertEqual(progress_tracker.read_learning_log()[-1]["correct"], "no")
 
+    def test_a_miss_brings_both_voices(self):
+        s = self.session()
+        s.handle(key(pygame.K_RETURN))
+        wrong = (s.lesson["quiz"]["answer_index"] + 1) % 4
+        s.handle(key(pygame.K_1 + wrong))
+        self.assertIsNotNone(s.pair)
+        teacher, friend = s.pair
+        self.assertIn(teacher, self.voice["teacher"])
+        self.assertIn(friend, self.voice["friend"])
+        # a hint clears the two-voice moment
+        s.handle(key(pygame.K_h, "h"))
+        self.assertIsNone(s.pair)
+
     def test_hints_reveal_one_at_a_time_and_stop_at_three(self):
         s = self.session()
         s.handle(key(pygame.K_RETURN))

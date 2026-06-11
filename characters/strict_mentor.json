@@ -36,6 +36,14 @@
       "farewell": [
         "Enough. Rest is part of the work too.",
         "We stop here. Come back sharper."
+      ],
+      "teacher": [
+        "Wrong. I will not soften that - softening it would insult you.",
+        "No. The standard is the standard, and you missed it. Now you know where."
+      ],
+      "friend": [
+        "...but I have watched you do harder. Once more.",
+        "You are not failing. You are mid-rep. Keep going."
       ]
     }
   },
