@@ -12,12 +12,22 @@ import csv
 import json
 import tempfile
 
+from osutil import FileLock
+
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 
 
 def data_path(name):
     os.makedirs(DATA_DIR, exist_ok=True)
     return os.path.join(DATA_DIR, name)
+
+
+def _lock():
+    # one lock for the whole data dir. the app and the companion daemon both
+    # take it before writing, so a write is never half-seen or lost. reads stay
+    # lock-free - atomic writes mean a reader sees the old file or the new one,
+    # never a torn one.
+    return FileLock(data_path(".data"))
 
 
 def atomic_write_text(path, text):
@@ -39,7 +49,8 @@ def atomic_write_text(path, text):
 
 
 def save_json(name, obj):
-    atomic_write_text(data_path(name), json.dumps(obj, indent=2, ensure_ascii=False))
+    with _lock():
+        atomic_write_text(data_path(name), json.dumps(obj, indent=2, ensure_ascii=False))
 
 
 def load_json(name, default=None):
@@ -52,13 +63,14 @@ def load_json(name, default=None):
 
 def append_csv(name, fieldnames, row):
     # first write brings the header with it, after that rows just append
-    path   = data_path(name)
-    is_new = not os.path.exists(path)
-    with open(path, "a", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        if is_new:
-            writer.writeheader()
-        writer.writerow(row)
+    path = data_path(name)
+    with _lock():
+        is_new = not os.path.exists(path)
+        with open(path, "a", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            if is_new:
+                writer.writeheader()
+            writer.writerow(row)
 
 
 def read_csv(name):

@@ -86,10 +86,17 @@ python main.py
 ## Usage
 
 ```
-python main.py              normal session
-python main.py --demo       a lived-in profile, ~35 days of history already there
-python main.py --timelapse  each session counts as a full day
+python main.py                 normal session
+python main.py --demo          a lived-in profile, ~35 days of history already there
+python main.py --timelapse     each session counts as a full day
+python main.py --doctor        prove the OS layer works (lock, atomic writes, daemon), then exit
+python main.py --daemon start  the companion daemon between sessions: start / stop / status
 ```
+
+EchoSelf is local-first with no server, so it does its own systems work: a file lock keeps the
+app and a background companion daemon from corrupting your data, writes are atomic (a crash
+leaves the old file or the new one, never half), and a launch audit cleans up after an unclean
+exit. `--doctor` proves all of it in one command.
 
 The `--demo` flag exists because the deepest features here — the drift, the Mirror Report,
 Dark Days — only emerge over weeks of real use. Demo mode lets you feel the lived-in

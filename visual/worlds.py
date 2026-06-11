@@ -321,6 +321,11 @@ def run(args=None):
     from core.session_manager import load_profile
     from core.echo_builder import run_builder
 
+    # clean up after any unclean exit before we touch the data
+    from osutil import recovery
+    from core.datastore import DATA_DIR
+    recovery.audit(DATA_DIR)
+
     pygame.init()
     screen = pygame.display.set_mode(WINDOW_SIZE)
     pygame.display.set_caption("EchoSelf")
