@@ -65,7 +65,8 @@
     "glow_intensity": 0.4,
     "form": "soft",
     "symbol": "lantern",
-    "gender": "female"
+    "gender": "female",
+    "art": "codel"
   },
   "drift": {
     "note": "These values are the personality's starting point. The drift vector in data/user_model.json moves them over time; this file is never modified."

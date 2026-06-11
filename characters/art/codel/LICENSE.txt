@@ -1,0 +1,16 @@
+Codel visual-novel sprite
+=========================
+
+Artwork by LisadiKaprio.
+Source: https://opengameart.org/content/codel-visual-novel-sprite
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+         https://creativecommons.org/licenses/by/4.0/
+
+Changes made for EchoSelf:
+- Of the original 12 expression PNGs, six were selected and renamed to match
+  EchoSelf's expression set (neutral, happy, patient, thinking, celebrating, drift).
+- Each was resized from 1078x2089 to 516x1000 to keep the repository light.
+No other modifications. The original PSD and full set remain at the source link above.
+
+This file satisfies the attribution required by CC BY 4.0. EchoSelf's own content
+is also licensed CC BY 4.0 (see ../../../LICENSE-CONTENT).

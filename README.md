@@ -46,8 +46,9 @@ Everything happens in one of three places, with one ML brain underneath all of t
 
 ## What it does
 
-- **A character drawn entirely by code.** No image assets exist in this repository. Form,
-  color, glow and expression are all parameters, the character is source code, breathing.
+- **A character, drawn two ways.** By default she's painted art - a layered, openly-licensed
+  pack the engine composites and animates. With no art pack, she's drawn entirely by code as a
+  fallback, every feature a parameter. Either way she breathes, blinks, and reacts.
 - **Five starting personalities** — the Strict Mentor, the Gentle Guide, the Playful Rival,
   the Philosophical Elder, the Quiet Empath. Or build your own.
 - **Personality drift.** Every session nudges the personality toward what works for you.
@@ -142,6 +143,11 @@ Code and creative writing have different legal needs. MIT keeps the engine maxim
 forkable, CC BY 4.0 makes sure the people who write characters and lessons are always
 credited. Dependencies and their licenses are listed in
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+The default character art is the Codel sprite by **LisadiKaprio** (CC BY 4.0), from
+[OpenGameArt](https://opengameart.org/content/codel-visual-novel-sprite); attribution and the
+changes I made are in [characters/art/codel/LICENSE.txt](characters/art/codel/LICENSE.txt). Swap
+in your own art any time - see [characters/art/README.md](characters/art/README.md).
 
 ## Roadmap
 

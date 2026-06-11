@@ -1,0 +1,13 @@
+{
+  "name": "Codel",
+  "credit": "Codel sprite by LisadiKaprio, CC BY 4.0. See LICENSE.txt.",
+  "feet": [0.5, 0.99],
+  "layers": [
+    {"image": "neutral.png",     "z": 0, "motion": "body", "pose": "default"},
+    {"image": "happy.png",       "z": 0, "motion": "body", "pose": ["happy"]},
+    {"image": "patient.png",     "z": 0, "motion": "body", "pose": ["patient"]},
+    {"image": "thinking.png",    "z": 0, "motion": "body", "pose": ["thinking"]},
+    {"image": "celebrating.png", "z": 0, "motion": "body", "pose": ["celebrating"]},
+    {"image": "drift.png",       "z": 0, "motion": "body", "pose": ["drift"]}
+  ]
+}

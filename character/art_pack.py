@@ -67,6 +67,9 @@ class ArtCharacter:
         self._next_blink  = random.uniform(2.0, 5.0)
         self._has_closed  = any(l.get("eyes") == "closed" for l, _ in self.layers)
         self._mouths      = {l.get("mouth") for l, _ in self.layers if l.get("mouth")}
+        # a "pose" pack is whole painted sprites, one per expression, mutually
+        # exclusive - the shape most real CC-BY/CC0 VN art comes in
+        self._poses       = [l for l, _ in self.layers if "pose" in l]
 
     # -- same interface as the procedural Character --------------------------
 
@@ -93,6 +96,19 @@ class ArtCharacter:
 
     def _blinking(self):
         return self._blink_phase is not None and 0.2 < self._blink_phase < 0.8
+
+    def _chosen_pose(self):
+        # the one whole-sprite that matches the expression, else the default
+        if not self._poses:
+            return None
+        for layer in self._poses:
+            tags = layer["pose"]
+            if tags != "default" and self.expr_name in tags:
+                return layer
+        for layer in self._poses:
+            if layer["pose"] == "default":
+                return layer
+        return self._poses[0]
 
     def _mouth_for(self):
         want = _MOUTH.get(self.expr_name, "neutral")
@@ -130,11 +146,15 @@ class ArtCharacter:
     def draw(self, surface):
         scale = self.h / self.src_h
         mouth = self._mouth_for()
+        chosen_pose = self._chosen_pose()
         # feet of the (unscaled) frame -> where pos is
         fx = self.feet[0] * self.layers[0][1].get_width() * scale
         fy = self.feet[1] * self.src_h * scale
         for layer, img in self.layers:
-            if not self._visible(layer, mouth):
+            if "pose" in layer:
+                if layer is not chosen_pose:      # only the matching sprite shows
+                    continue
+            elif not self._visible(layer, mouth):
                 continue
             scaled = pygame.transform.smoothscale(
                 img, (int(img.get_width() * scale), int(img.get_height() * scale)))

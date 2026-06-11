@@ -79,6 +79,51 @@ class ArtTest(unittest.TestCase):
             who.set_expression("smug")
 
 
+class TestCodelPack(unittest.TestCase):
+    # the real CC-BY pack that ships with the repo, a whole-sprite "pose" pack
+
+    @classmethod
+    def setUpClass(cls):
+        pygame.init()
+        pygame.display.set_mode((640, 480))
+
+    @classmethod
+    def tearDownClass(cls):
+        pygame.quit()
+
+    def test_gentle_guide_renders_as_the_art_character(self):
+        spec = character_builder.spec_from_pack(character_builder.load_pack("gentle_guide"))
+        self.assertEqual(spec.art, "codel")
+        who = character_builder.make_character(spec, height=300)
+        self.assertIsInstance(who, art_pack.ArtCharacter)
+
+    def test_each_expression_picks_its_own_sprite(self):
+        spec = character_builder.spec_from_pack(character_builder.load_pack("gentle_guide"))
+        who  = character_builder.make_character(spec, height=300)
+        seen = {}
+        for expr in ("neutral", "happy", "thinking", "drift"):
+            who.set_expression(expr)
+            seen[expr] = who._chosen_pose()["image"]
+        self.assertEqual(len({tuple(seen.values())}), 1)   # all keys present
+        self.assertEqual(len(set(seen.values())), 4)        # and all four differ
+
+    def test_unknown_expression_falls_back_to_the_default_pose(self):
+        spec = character_builder.spec_from_pack(character_builder.load_pack("gentle_guide"))
+        who  = character_builder.make_character(spec, height=300)
+        who.expr_name = "patient"
+        self.assertEqual(who._chosen_pose()["image"], "patient.png")
+        who.expr_name = "neutral"
+        self.assertEqual(who._chosen_pose()["pose"], "default")
+
+    def test_it_draws(self):
+        spec = character_builder.spec_from_pack(character_builder.load_pack("gentle_guide"))
+        who  = character_builder.make_character(spec, pos=(320, 460), height=300)
+        surface = pygame.Surface((640, 480))
+        who.set_expression("happy")
+        who.update(0.1)
+        who.draw(surface)
+
+
 class FactoryTest(unittest.TestCase):
 
     @classmethod
