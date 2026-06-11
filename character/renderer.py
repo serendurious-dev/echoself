@@ -85,7 +85,8 @@ class CharacterSpec:
 
     def __init__(self, palette=None, glow=0.5, form="soft", symbol="circle",
                  skin="#F2D5C0", hair_style="long", hair_color="#6E5A4E",
-                 eye_color="#5B8A80", outfit=None, gender="female"):
+                 eye_color="#5B8A80", outfit=None, gender="female", art=None):
+        self.art        = art       # an art-pack id under characters/art/, or None
         self.palette    = [hex_to_rgb(c) if isinstance(c, str) else tuple(c)
                            for c in (palette or ["#7FB5A8", "#E8DCC8", "#4A6670"])]
         self.glow       = glow
@@ -111,7 +112,8 @@ class CharacterSpec:
                    hair_style=hair.get("style", "long"),
                    hair_color=hair.get("color", "#6E5A4E"),
                    eye_color=v.get("eyes", "#5B8A80"),
-                   outfit=v.get("outfit"))
+                   outfit=v.get("outfit"),
+                   art=v.get("art"))
 
     @classmethod
     def from_pack(cls, path):

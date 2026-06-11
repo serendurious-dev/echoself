@@ -31,3 +31,6 @@ workspace/
 
 # dev render artifacts
 _preview_*.png
+
+# generated placeholder art pack (run tools/make_placeholder_art.py to recreate)
+characters/art/_placeholder/

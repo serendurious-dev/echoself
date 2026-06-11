@@ -131,8 +131,8 @@ def _pick_character(stage):
     cast  = []
     for i, pack in enumerate(packs):
         x = int(w * (0.5 + (i - 2) * 0.17))
-        cast.append(Character(character_builder.spec_from_pack(pack),
-                              pos=(x, row_y), height=int(stage.size[1] * 0.30)))
+        cast.append(character_builder.make_character(character_builder.spec_from_pack(pack),
+                                                     pos=(x, row_y), height=int(stage.size[1] * 0.30)))
     idx = 0
     while True:
         dt, events = stage.frame()
@@ -177,8 +177,9 @@ def _customize(stage, pack):
                                                     hair_style=styles[idx["hair"]],
                                                     skin=tones[idx["skin"]],
                                                     build=builds[idx["build"]])
-            who  = Character(spec, pos=(stage.size[0] // 2, int(stage.size[1] * 0.82)),
-                             height=int(stage.size[1] * 0.42))
+            who  = character_builder.make_character(
+                spec, pos=(stage.size[0] // 2, int(stage.size[1] * 0.82)),
+                height=int(stage.size[1] * 0.42))
             who.t = stage.t
             done = False
             dt, events = stage.frame()
@@ -203,8 +204,9 @@ def _customize(stage, pack):
 def _closing(stage, pack, profile):
     # the chosen one says hello, properly this time. a breath, then the world.
     spec = character_builder.spec_from_profile(profile)
-    who  = Character(spec, pos=(stage.size[0] // 2, int(stage.size[1] * 0.84)),
-                     height=int(stage.size[1] * 0.44))
+    who  = character_builder.make_character(
+        spec, pos=(stage.size[0] // 2, int(stage.size[1] * 0.84)),
+        height=int(stage.size[1] * 0.44))
     who.set_expression("happy")
     waited = 0.0
     while waited < 3.2:

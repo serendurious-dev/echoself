@@ -9,7 +9,8 @@ file itself is never modified - your character is the pack plus you.
 import os
 import json
 
-from character.renderer import CharacterSpec, PACK_DIR
+from character.renderer import CharacterSpec, PACK_DIR, Character
+from character import art_pack
 
 PACK_IDS = ["gentle_guide", "strict_mentor", "playful_rival",
             "philosophical_elder", "quiet_empath"]
@@ -53,6 +54,19 @@ def spec_from_profile(profile):
                               build=c.get("build"))
     except (KeyError, TypeError, OSError, ValueError):
         return spec_from_pack(load_pack("gentle_guide"))
+
+
+def make_character(spec, pos=(640, 540), height=300):
+    # the factory the rest of the app calls. if the chosen character has a real
+    # art pack on disk, you get the layered ArtCharacter; otherwise the
+    # procedural figure. either one honors the same interface, so callers never
+    # branch on it. a broken pack never crashes the app - it falls back.
+    if art_pack.pack_dir(getattr(spec, "art", None)):
+        try:
+            return art_pack.ArtCharacter(spec, pos=pos, height=height)
+        except (OSError, ValueError, KeyError):
+            pass
+    return Character(spec, pos=pos, height=height)
 
 
 def voice_from_profile(profile):

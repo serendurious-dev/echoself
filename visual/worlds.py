@@ -235,11 +235,11 @@ def default_worlds(size, plan=None):
     # the profile says, the gentle guide until session zero has happened.
     # plan is the psychology layer's read of today, None means neutral.
     from core.session_manager import load_profile
-    from character.character_builder import spec_from_profile, voice_from_profile
+    from character.character_builder import spec_from_profile, voice_from_profile, make_character
     profile = load_profile()
     spec    = spec_from_profile(profile) if profile else gentle_guide()
     voice   = voice_from_profile(profile)
-    who     = Character(spec, height=int(size[1] * 0.42))
+    who     = make_character(spec, height=int(size[1] * 0.42))
     mood    = plan["expression"] if plan else "neutral"
     accent = who.spec.palette[0]
     stars  = Starfield(size, tint=blend((232, 220, 200), accent, 0.25))
