@@ -179,10 +179,14 @@ class LessonSession:
         inner = panel.w - 56
 
         if self.state == "track_done":
+            from core import enough
             y = self._text(surface, self.font_big, "that is everything i have for now.",
                            x, y + 40, inner, (230, 232, 238))
-            self._text(surface, self.font, self._line("farewell"), x, y + 14, inner,
-                       (188, 196, 208))
+            y = self._text(surface, self.font, self._line("farewell"), x, y + 14, inner,
+                           (188, 196, 208))
+            # the day's "enough" verdict, in the character's keeping
+            y = self._text(surface, self.font, enough.verdict()["line"], x, y + 16, inner,
+                           (206, 198, 172))
             return
 
         lesson = self.lesson

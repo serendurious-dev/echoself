@@ -26,6 +26,20 @@ def _hex(rgb):
     return "#%02x%02x%02x" % tuple(rgb)
 
 
+def _wrap(font, text, width):
+    words, lines, line = text.split(), [], ""
+    for w in words:
+        trial = (line + " " + w).strip()
+        if font.size(trial)[0] <= width:
+            line = trial
+        else:
+            lines.append(line)
+            line = w
+    if line:
+        lines.append(line)
+    return lines
+
+
 def _fig_to_surface(fig):
     fig.canvas.draw()
     size = fig.canvas.get_width_height()
@@ -98,13 +112,14 @@ def timeline_surface(rows, accent=(127, 181, 168), size=(760, 300)):
 def show_echo_distance(screen, clock, profile, accent=(127, 181, 168)):
     # a quiet full-screen view: the radar, the timeline, and the mirror report
     # if the week has earned one. any key returns to the sky.
-    from core import narrative_engine
+    from core import narrative_engine, enough
     w, h   = screen.get_size()
     dist   = echo_distance.compute(profile)
     radar  = radar_surface(dist, accent, px=min(440, h // 2))
     line   = timeline_surface(echo_distance.history(30), accent,
                               size=(min(760, w - 80), 280))
     report = narrative_engine.mirror_report(profile)
+    today  = enough.verdict(profile)["line"]      # the day's "enough" verdict
     sky    = pygame.Surface((w, h))
     sky.fill((10, 14, 28))
     font   = pygame.font.Font(None, 24)
@@ -123,8 +138,13 @@ def show_echo_distance(screen, clock, profile, accent=(127, 181, 168)):
         screen.blit(radar, (40, 80))
         screen.blit(line, (40 + radar.get_width() + 30, 80))
         ry = 80 + line.get_height() + 24
+        rx = 40 + radar.get_width() + 30
         for i, ln in enumerate(report.split("\n")):
-            screen.blit(font.render(ln, True, (188, 196, 208)),
-                        (40 + radar.get_width() + 30, ry + i * 26))
+            screen.blit(font.render(ln, True, (188, 196, 208)), (rx, ry + i * 26))
+        # the day's "enough" verdict, set a little apart, below the radar
+        ey = 80 + radar.get_height() + 18
+        screen.blit(font.render("today:", True, FAINT), (40, ey))
+        for i, ln in enumerate(_wrap(font, today, radar.get_width() + 10)):
+            screen.blit(font.render(ln, True, (206, 198, 172)), (40, ey + 26 + i * 26))
         screen.blit(font.render("any key - back to the sky", True, FAINT), (40, h - 40))
         pygame.display.flip()
