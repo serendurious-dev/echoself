@@ -290,7 +290,7 @@ class Character:
             self._back_hair(hx, hy, hair, hair_dk, male)
 
         # -- the body ------------------------------------------------------------
-        sh_w = (0.090 if male else 0.080) * W
+        sh_w = (0.082 if male else 0.070) * W   # narrower shoulders = the head reads bigger
         sh_y = 0.812 + body_dy
         wa_w = (0.062 if male else 0.054) * W
         wa_y = 0.630 + body_dy * 0.5
@@ -377,23 +377,27 @@ class Character:
                          (mx, my))
 
     # -- the face ---------------------------------------------------------------
+    # the proportions that make it read like the reference art and not like a
+    # mannequin: a short round face with a small chin, eyes nearly twice the
+    # "realistic" size sitting at the face's center, lashes only on top, brows
+    # thin and high. measured against the art, not against anatomy.
 
     def _face(self, hx, hy, skin, skin_dk, lip, male):
-        rx   = 0.0545 if male else 0.0525
-        chin = hy - (0.0660 if male else 0.0700)
-        c_w  = 0.0175 if male else 0.0110     # a wider chin on the male face
+        rx   = 0.0590 if male else 0.0575     # wide at the cheekbones
+        chin = hy - (0.0640 if male else 0.0615)   # and short to the chin
+        c_w  = 0.0170 if male else 0.0085
 
-        # one continuous loop: up the right jaw, over the skull, down the left
-        # jaw, across the chin. anything self-crossing makes pygame's scanline
-        # fill bleed a seam straight through the eyes.
+        # one continuous loop: over the skull, down the left jaw, across the
+        # chin, up the right jaw. anything self-crossing makes pygame's
+        # scanline fill bleed a seam straight through the eyes.
         arc = []
         for i in range(15):
             a = math.pi * i / 14
-            arc.append((hx + math.cos(a) * rx, hy + 0.010 + math.sin(a) * 0.058))
-        jaw_l = bezier((hx - rx, hy + 0.008), (hx - rx + 0.005, hy - 0.044), (hx - c_w, chin))
-        jaw_r = bezier((hx + c_w, chin), (hx + rx - 0.005, hy - 0.044), (hx + rx, hy + 0.008))
-        self._poly(skin, arc + jaw_l + [(hx, chin - 0.0015)] + jaw_r)
-        self._tell((*skin_dk, 46), (hx + rx * 0.62, hy - 0.018), 0.016, 0.042)
+            arc.append((hx + math.cos(a) * rx, hy + 0.012 + math.sin(a) * 0.056))
+        jaw_l = bezier((hx - rx, hy + 0.010), (hx - rx + 0.004, hy - 0.038), (hx - c_w, chin))
+        jaw_r = bezier((hx + c_w, chin), (hx + rx - 0.004, hy - 0.038), (hx + rx, hy + 0.010))
+        self._poly(skin, arc + jaw_l + [(hx, chin - 0.0012)] + jaw_r)
+        self._tell((*skin_dk, 36), (hx + rx * 0.66, hy - 0.014), 0.014, 0.038)
 
         curve = self.expr["eye_curve"]
         blink = 1.0
@@ -401,225 +405,235 @@ class Character:
             blink = max(0.0, 1.0 - math.sin(math.pi * min(self._blink_phase, 1.0)) * 1.4)
         openness = max(0.0, self.expr["eye_open"] * blink * (1 - curve * 0.28))
 
-        ey = hy - 0.007 + curve * 0.004
+        ey = hy - 0.0105 + curve * 0.004
         for s in (-1, 1):
-            self._eye((hx + s * 0.0245, ey + s * self.expr["tilt"] * 0.004), s,
+            self._eye((hx + s * 0.0290, ey + s * self.expr["tilt"] * 0.004), s,
                       openness, curve, male)
 
-        # brows: hers thin and arched, his thicker and straighter
+        # brows: thin, high, a soft arch. expression moves them, never anger
+        # by default.
         brow = self.expr["brow"]
-        b_y  = 0.0270 if male else 0.0300
-        b_w  = (0.0052, 0.0016) if male else (0.0036, 0.0012)
-        arch = 0.0030 if male else 0.0045
+        b_y  = 0.0335 if male else 0.0365
+        b_w  = (0.0042, 0.0014) if male else (0.0026, 0.0010)
+        arch = 0.0026 if male else 0.0040
         for s in (-1, 1):
-            inner = (hx + s * 0.0110, ey + b_y + (0.008 * brow if brow < 0 else 0))
-            mid   = (hx + s * 0.0260, ey + b_y + arch + brow * 0.009)
-            outer = (hx + s * 0.0390, ey + b_y + 0.0005 + brow * 0.012)
-            self._strip(shade(self.spec.hair_color, 0.55), [inner, mid, outer], b_w[0], b_w[1])
+            inner = (hx + s * 0.0130, ey + b_y + (0.008 * brow if brow < 0 else 0))
+            mid   = (hx + s * 0.0290, ey + b_y + arch + brow * 0.009)
+            outer = (hx + s * 0.0435, ey + b_y + 0.0002 + brow * 0.012)
+            self._strip(shade(self.spec.hair_color, 0.60), [inner, mid, outer], b_w[0], b_w[1])
 
-        # the nose: one short line of shadow, nothing more
-        self._strip((*skin_dk, 150), [(hx + 0.0025, hy - 0.0195), (hx + 0.0045, hy - 0.0290),
-                                      (hx - 0.0015, hy - 0.0310)], 0.0022, 0.0028)
+        # the nose: barely there. a small soft stroke, not a mark.
+        self._strip((*skin_dk, 85), [(hx + 0.0022, hy - 0.0300), (hx - 0.0008, hy - 0.0345)],
+                    0.0018, 0.0024)
 
-        # the mouth. hers is two lips, his is nearly a line
+        # the mouth: small and soft, sitting low on the short face
         mouth = self.expr["mouth"]
-        my    = hy - 0.0468
-        mw    = 0.0200
-        lift  = min(mouth, 1.0) * 0.0050
+        my    = hy - 0.0455
+        mw    = 0.0130
+        lift  = min(mouth, 1.0) * 0.0042
         if mouth > 1.1:
-            self._ell(shade(lip, 0.52), (hx, my - 0.003), 0.0125, 0.0085)
-            self._ell((252, 250, 246), (hx, my + 0.0012), 0.0085, 0.0028)
+            self._ell(shade(lip, 0.55), (hx, my - 0.0025), 0.0100, 0.0070)
+            self._ell((252, 250, 246), (hx, my + 0.0010), 0.0068, 0.0022)
         elif male:
-            line = bezier((hx - mw * 0.9, my + lift), (hx, my - 0.0012 + mouth * 0.001),
-                          (hx + mw * 0.9, my + lift))
-            self._strip(shade(lip, 0.72), line, 0.0026, 0.0026)
-            self._tell((*skin_dk, 38), (hx, my - 0.0050 + lift * 0.4), 0.0062, 0.0012)
+            line = bezier((hx - mw, my + lift), (hx, my - 0.0010 + mouth * 0.001),
+                          (hx + mw, my + lift))
+            self._strip(shade(lip, 0.72), line, 0.0024, 0.0024)
         else:
-            top = bezier((hx - mw, my + lift), (hx, my - 0.0014 + mouth * 0.001), (hx + mw, my + lift))
-            self._strip(shade(lip, 0.82), top, 0.0026, 0.0026)
-            bot = bezier((hx - mw * 0.80, my + lift - 0.0010), (hx, my - 0.0054 + lift * 0.4),
-                         (hx + mw * 0.80, my + lift - 0.0010))
-            self._strip(lip, bot, 0.0030, 0.0030)
-            self._tell((255, 240, 238, 46), (hx, my - 0.0040 + lift * 0.4), 0.0042, 0.0011)
+            top = bezier((hx - mw, my + lift), (hx, my - 0.0012 + mouth * 0.001),
+                         (hx + mw, my + lift))
+            self._strip(shade(lip, 0.85), top, 0.0024, 0.0024)
+            bot = bezier((hx - mw * 0.72, my + lift - 0.0008), (hx, my - 0.0048 + lift * 0.4),
+                         (hx + mw * 0.72, my + lift - 0.0008))
+            self._strip(lip, bot, 0.0028, 0.0028)
+            self._tell((255, 240, 238, 50), (hx, my - 0.0036 + lift * 0.4), 0.0036, 0.0010)
 
-        # color in the cheeks: hers is always faintly there, deepens with joy
-        blush_a = int((26 if not male else 0) + 52 * max(0.0, curve - 0.1))
+        # color in the cheeks, just under the eyes like the reference. hers is
+        # always faintly there, his only shows when genuinely delighted.
+        blush_a = int((30 if not male else 0) + 55 * max(0.0, curve - 0.1))
         if blush_a > 0:
             for s in (-1, 1):
-                self._tell((232, 128, 122, blush_a), (hx + s * 0.034, hy - 0.026),
-                           0.0125, 0.0070)
+                self._tell((236, 140, 130, blush_a), (hx + s * 0.040, hy - 0.0285),
+                           0.0130, 0.0062)
 
     def _eye(self, center, side, openness, curve, male):
+        # nearly twice "realistic" size - this is where the style lives. a big
+        # iris under a heavy top lash, no outline anywhere else, light inside.
         ex, ey = center
-        hw     = 0.0185 if male else 0.0195
-        top_h  = (0.0118 if male else 0.0142) * max(openness, 0.05) + curve * 0.0015
-        bot_h  = 0.0085 * (0.55 + 0.45 * openness)
+        hw     = 0.0245 if male else 0.0265
+        top_h  = (0.0165 if male else 0.0205) * max(openness, 0.05) + curve * 0.0015
+        bot_h  = 0.0105 * (0.55 + 0.45 * openness)
 
         cx, cy = self._pt(ex, ey)
-        w_px   = self._len(hw * 2.4)
-        h_px   = self._len(0.062)
+        w_px   = self._len(hw * 2.6)
+        h_px   = self._len(0.095)
         ox, oy = cx - w_px // 2, cy - h_px // 2
 
         def local(pts):
             return [(self._pt(*p)[0] - ox, self._pt(*p)[1] - oy) for p in pts]
 
-        lid_top = bezier((ex - hw, ey), (ex + side * 0.002, ey + top_h * 2), (ex + hw, ey + 0.001))
-        lid_bot = bezier((ex + hw, ey + 0.001), (ex, ey - bot_h * 2), (ex - hw, ey))
+        lid_top = bezier((ex - hw, ey + 0.002 * side), (ex + side * 0.002, ey + top_h * 2),
+                         (ex + hw, ey + 0.003))
+        lid_bot = bezier((ex + hw, ey + 0.003), (ex, ey - bot_h * 2), (ex - hw, ey + 0.002 * side))
         almond  = local(lid_top + lid_bot)
 
         if openness < 0.16:
-            self._strip((44, 32, 34), lid_top, 0.0030, 0.0030)
+            self._strip((52, 38, 38), lid_top, 0.0030, 0.0030)
             return
 
         eye  = pygame.Surface((w_px, h_px), pygame.SRCALPHA)
         mask = pygame.Surface((w_px, h_px), pygame.SRCALPHA)
         pygame.draw.polygon(mask, (255, 255, 255, 255), almond)
-        pygame.draw.polygon(eye, (250, 247, 242), almond)
+        pygame.draw.polygon(eye, (252, 250, 246), almond)
 
-        # the iris: a dark rim, the color, light pooling at the bottom, the
-        # pupil, one big catchlight and two small ones. this is where the
-        # reference art lives or dies.
+        # the iris: big enough to touch both lids, dark rim, light pooling low,
+        # one big soft catchlight and a small answering one
         ic  = self.spec.eye_color
-        ir  = self._len(0.0118 if not male else 0.0106)
-        icx = local([(ex, ey + 0.0005)])[0]
-        pygame.draw.circle(eye, shade(ic, 0.45), icx, ir)
-        pygame.draw.circle(eye, ic, icx, int(ir * 0.84))
-        pygame.draw.circle(eye, shade(ic, 1.45), (icx[0], icx[1] + int(ir * 0.34)), int(ir * 0.50))
-        pygame.draw.circle(eye, (26, 22, 26), icx, int(ir * 0.40))
-        pygame.draw.circle(eye, (255, 255, 255), (icx[0] - int(ir * 0.36), icx[1] - int(ir * 0.34)),
-                           int(ir * 0.27))
-        pygame.draw.circle(eye, (255, 255, 255, 200), (icx[0] + int(ir * 0.42), icx[1] + int(ir * 0.40)),
-                           int(ir * 0.13))
-        pygame.draw.circle(eye, (255, 255, 255, 150), (icx[0] + int(ir * 0.10), icx[1] - int(ir * 0.55)),
-                           int(ir * 0.08))
-        # the upper lid's shadow falling on the eye
+        ir  = self._len(0.0175 if not male else 0.0150)
+        icx = local([(ex, ey - 0.0008)])[0]
+        pygame.draw.circle(eye, shade(ic, 0.40), icx, ir)
+        pygame.draw.circle(eye, ic, icx, int(ir * 0.86))
+        pygame.draw.circle(eye, shade(ic, 1.50), (icx[0], icx[1] + int(ir * 0.38)), int(ir * 0.52))
+        pygame.draw.circle(eye, (24, 20, 24), icx, int(ir * 0.38))
+        pygame.draw.circle(eye, (255, 255, 255), (icx[0] - int(ir * 0.34), icx[1] - int(ir * 0.36)),
+                           int(ir * 0.30))
+        pygame.draw.circle(eye, (255, 255, 255, 210), (icx[0] + int(ir * 0.44), icx[1] + int(ir * 0.42)),
+                           int(ir * 0.14))
+        # the upper lid's soft shadow across the top of the eye
         sh = pygame.Surface((w_px, h_px), pygame.SRCALPHA)
-        pygame.draw.polygon(sh, (50, 38, 40, 70),
-                            local(lid_top + [(ex + hw, ey + top_h * 0.9), (ex - hw, ey + top_h * 0.9)]))
+        pygame.draw.polygon(sh, (60, 44, 46, 55),
+                            local(lid_top + [(ex + hw, ey + top_h * 1.1), (ex - hw, ey + top_h * 1.1)]))
         eye.blit(sh, (0, 0))
 
         eye.blit(mask, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
         self.canvas.blit(eye, (ox, oy))
 
-        # lashes: heavier toward the outer corner, a small wing. the crease
-        # above, one quiet line. a hint of lower lash at the outer edge.
-        lash_w = (0.0022, 0.0034) if male else (0.0026, 0.0046)
-        self._strip((40, 30, 32), lid_top, *lash_w)
-        wing_x = ex + side * hw
-        self._strip((40, 30, 32), [(wing_x, ey + 0.001), (wing_x + side * 0.0038, ey + 0.0038)],
-                    0.0030, 0.0008)
-        self._strip((70, 52, 54), [(ex + side * hw * 0.55, ey - bot_h * 1.7),
-                                   (ex + side * hw * 0.95, ey - bot_h * 1.1)], 0.0014, 0.0008)
+        # the lash: top only, soft, swelling toward the outer corner. no
+        # outline anywhere else - outlines all around are what made them scary.
+        lash = (52, 38, 38)
+        if side > 0:
+            self._strip(lash, lid_top, 0.0022, 0.0052 if not male else 0.0040)
+        else:
+            self._strip(lash, lid_top[::-1], 0.0022, 0.0052 if not male else 0.0040)
+        if not male:
+            wing_x = ex + side * hw
+            self._strip(lash, [(wing_x, ey + 0.003), (wing_x + side * 0.0030, ey + 0.0052)],
+                        0.0024, 0.0007)
 
     # -- hair ---------------------------------------------------------------------
 
     def _back_hair(self, hx, hy, hair, hair_dk, male):
+        # volume is the whole secret: the hair rises well above the skull and
+        # swells past the cheeks, or it reads as a swim cap.
         style = self.spec.hair_style
         if style == "long":
-            crown = hy + 0.078
-            # the dark base: a big falling shape with an s-curve to the sides
-            r = bezier((hx, crown), (hx + 0.092, hy + 0.022), (hx + 0.082, 0.72))
-            r += bezier((hx + 0.082, 0.72), (hx + 0.092, 0.60), (hx + 0.046, 0.530))
-            l = bezier((hx, crown), (hx - 0.092, hy + 0.022), (hx - 0.082, 0.72))
-            l += bezier((hx - 0.082, 0.72), (hx - 0.092, 0.60), (hx - 0.046, 0.530))
-            self._poly(hair_dk, r + [(hx + 0.018, 0.522), (hx - 0.018, 0.522)] + l[::-1])
-            # the body of the hair: wide ribbons that overlap into one mass
-            for fx, w, ln in ((-0.058, 0.042, 0.575), (-0.020, 0.046, 0.560),
-                              (0.020, 0.046, 0.565), (0.058, 0.042, 0.580)):
-                self._strip(hair, bezier((hx + fx * 0.5, hy + 0.050),
-                                         (hx + fx * 1.3, hy - 0.060),
+            crown = hy + 0.100
+            # the dark base: a big falling mass with an s-curve to the sides
+            r = bezier((hx, crown), (hx + 0.112, hy + 0.030), (hx + 0.106, 0.74))
+            r += bezier((hx + 0.106, 0.74), (hx + 0.118, 0.62), (hx + 0.058, 0.520))
+            l = bezier((hx, crown), (hx - 0.112, hy + 0.030), (hx - 0.106, 0.74))
+            l += bezier((hx - 0.106, 0.74), (hx - 0.118, 0.62), (hx - 0.058, 0.520))
+            self._poly(hair_dk, r + [(hx + 0.020, 0.512), (hx - 0.020, 0.512)] + l[::-1])
+            # the body: wide ribbons overlapping into one flowing mass
+            for fx, w, ln in ((-0.072, 0.052, 0.565), (-0.026, 0.056, 0.548),
+                              (0.026, 0.056, 0.555), (0.072, 0.052, 0.570)):
+                self._strip(hair, bezier((hx + fx * 0.45, hy + 0.062),
+                                         (hx + fx * 1.35, hy - 0.060),
                                          (hx + fx, ln)), w, w * 0.5)
-            self._ell(hair, (hx, hy + 0.022), 0.066, 0.066)
+            self._ell(hair, (hx, hy + 0.034), 0.084, 0.072)
         elif style == "short":
-            # a bob: rounded, curling in at the jaw
-            self._ell(hair_dk, (hx, hy + 0.002), 0.070, 0.076)
-            self._ell(hair, (hx, hy + 0.016), 0.064, 0.064)
+            # a full bob, curling in at the jaw
+            self._ell(hair_dk, (hx, hy + 0.006), 0.084, 0.088)
+            self._ell(hair, (hx, hy + 0.022), 0.077, 0.074)
             for s in (-1, 1):
-                self._strip(hair, bezier((hx + s * 0.058, hy + 0.020),
-                                         (hx + s * 0.072, hy - 0.030),
-                                         (hx + s * 0.040, hy - 0.062)), 0.024, 0.012)
+                self._strip(hair, bezier((hx + s * 0.068, hy + 0.024),
+                                         (hx + s * 0.084, hy - 0.030),
+                                         (hx + s * 0.046, hy - 0.066)), 0.030, 0.013)
         elif style == "fluffy":
             # a soft full mass, wolf-cut-ish, tufts breaking the edge
-            self._ell(hair_dk, (hx, hy + 0.006), 0.074, 0.080)
-            self._ell(hair, (hx, hy + 0.018), 0.067, 0.068)
+            self._ell(hair_dk, (hx, hy + 0.010), 0.086, 0.092)
+            self._ell(hair, (hx, hy + 0.024), 0.078, 0.077)
             for s in (-1, 1):
-                # sides reaching past the ears, the nape behind the neck
-                self._strip(hair, bezier((hx + s * 0.060, hy + 0.024),
-                                         (hx + s * 0.078, hy - 0.024),
-                                         (hx + s * 0.052, hy - 0.058)), 0.026, 0.010)
-            self._ell(hair_dk, (hx, hy - 0.040), 0.040, 0.024)
+                self._strip(hair, bezier((hx + s * 0.068, hy + 0.028),
+                                         (hx + s * 0.088, hy - 0.026),
+                                         (hx + s * 0.058, hy - 0.064)), 0.030, 0.011)
+            self._ell(hair_dk, (hx, hy - 0.044), 0.044, 0.026)
         elif style == "spiky":
             for i in range(7):
                 a   = math.pi * (0.10 + 0.80 * i / 6)
-                tip = (hx + math.cos(a) * 0.088, hy + 0.012 + math.sin(a) * 0.092)
-                bl  = (hx + math.cos(a + 0.30) * 0.048, hy + 0.012 + math.sin(a + 0.30) * 0.050)
-                br  = (hx + math.cos(a - 0.30) * 0.048, hy + 0.012 + math.sin(a - 0.30) * 0.050)
+                tip = (hx + math.cos(a) * 0.100, hy + 0.016 + math.sin(a) * 0.104)
+                bl  = (hx + math.cos(a + 0.30) * 0.054, hy + 0.016 + math.sin(a + 0.30) * 0.056)
+                br  = (hx + math.cos(a - 0.30) * 0.054, hy + 0.016 + math.sin(a - 0.30) * 0.056)
                 self._poly(hair_dk, [bl, tip, br])
-            self._ell(hair, (hx, hy + 0.012), 0.058, 0.060)
+            self._ell(hair, (hx, hy + 0.016), 0.066, 0.068)
 
     def _front_hair(self, hx, hy, hair, hair_dk, hair_lt, male):
         style = self.spec.hair_style
-        rx    = 0.0525
+        rx    = 0.0575
 
         # the fringe casts a whisper of shadow high on the forehead
-        self._tell((*shade(self.spec.skin, 0.72), 24), (hx, hy + 0.040), 0.038, 0.0075)
+        self._tell((*shade(self.spec.skin, 0.72), 22), (hx, hy + 0.044), 0.040, 0.0070)
 
         if style == "spiky":
             for i in range(6):
                 a   = math.pi * (0.22 + 0.56 * i / 5)
-                tip = (hx + math.cos(a) * 0.068, hy + 0.018 + math.sin(a) * 0.070)
-                bl  = (hx + math.cos(a + 0.24) * 0.038, hy + 0.022 + math.sin(a + 0.24) * 0.040)
-                br  = (hx + math.cos(a - 0.24) * 0.038, hy + 0.022 + math.sin(a - 0.24) * 0.040)
+                tip = (hx + math.cos(a) * 0.078, hy + 0.020 + math.sin(a) * 0.080)
+                bl  = (hx + math.cos(a + 0.24) * 0.044, hy + 0.026 + math.sin(a + 0.24) * 0.046)
+                br  = (hx + math.cos(a - 0.24) * 0.044, hy + 0.026 + math.sin(a - 0.24) * 0.046)
                 self._poly(hair, [bl, tip, br])
-            self._tell((*hair_lt, 70), (hx - 0.012, hy + 0.052), 0.030, 0.012)
+            self._tell((*hair_lt, 70), (hx - 0.012, hy + 0.058), 0.034, 0.013)
             return
 
         if style == "fluffy":
             # choppy fringe pieces split off-center, staggered so the forehead
-            # breathes between them - a curtain would just be a bob
+            # breathes between them
             part = hx + 0.010
-            for fx, ln, w in ((-0.042, 0.030, 0.015), (-0.018, 0.044, 0.013),
-                              (0.008, 0.034, 0.012), (0.034, 0.028, 0.015)):
-                self._strip(hair, bezier((part, hy + 0.064),
-                                         (hx + fx * 1.2, hy + 0.052),
-                                         (hx + fx, hy + ln)), w, 0.0055)
+            for fx, ln, w in ((-0.048, 0.034, 0.017), (-0.020, 0.050, 0.015),
+                              (0.010, 0.038, 0.014), (0.040, 0.032, 0.017)):
+                self._strip(hair, bezier((part, hy + 0.072),
+                                         (hx + fx * 1.2, hy + 0.058),
+                                         (hx + fx, hy + ln)), w, 0.0060)
             for s in (-1, 1):
-                self._strip(hair, bezier((hx + s * 0.052, hy + 0.050),
-                                         (hx + s * 0.068, hy + 0.014),
-                                         (hx + s * 0.056, hy - 0.028)), 0.020, 0.009)
-            self._strip(hair_lt, bezier((hx - 0.030, hy + 0.064), (hx, hy + 0.071),
-                                        (hx + 0.026, hy + 0.062)), 0.005, 0.003)
+                self._strip(hair, bezier((hx + s * 0.058, hy + 0.056),
+                                         (hx + s * 0.078, hy + 0.014),
+                                         (hx + s * 0.062, hy - 0.030)), 0.024, 0.010)
+            self._strip(hair_lt, bezier((hx - 0.034, hy + 0.072), (hx, hy + 0.080),
+                                        (hx + 0.028, hy + 0.070)), 0.0055, 0.0030)
             return
 
-        # long and short share the curtain fringe, parted off-center
-        part = (hx - 0.012, hy + 0.066)
-        for s, reach, ln in ((1, 0.0500, hy + 0.006), (-1, 0.0505, hy + 0.010)):
-            sweep = bezier(part, (hx + s * 0.036, hy + 0.054), (hx + s * reach, ln))
-            back  = bezier((hx + s * reach, ln), (hx + s * 0.022, hy + 0.040), part)
+        # long and short: curtain fringe from a soft middle part, like the
+        # reference - two sweeps that open over the brow
+        part = (hx - 0.004, hy + 0.076)
+        for s in (-1, 1):
+            reach = rx * (0.94 if s > 0 else 0.97)
+            sweep = bezier(part, (hx + s * 0.044, hy + 0.064), (hx + s * reach, hy + 0.012))
+            back  = bezier((hx + s * reach, hy + 0.012), (hx + s * 0.026, hy + 0.052), part)
             self._poly(hair, sweep + back)
-        # the shine across the crown, kept inside the hair
-        self._tell((*hair_lt, 50), (hx - 0.008, hy + 0.058), 0.024, 0.0070)
-        self._strip(hair_lt, bezier((hx - 0.040, hy + 0.058), (hx - 0.010, hy + 0.068),
-                                    (hx + 0.024, hy + 0.058)), 0.0045, 0.0025)
+            # a finer piece breaking off each curtain, like the reference's
+            # little face-framing wisps
+            self._strip(hair, bezier((hx + s * 0.030, hy + 0.058),
+                                     (hx + s * 0.052, hy + 0.034),
+                                     (hx + s * 0.044, hy + 0.004)), 0.0085, 0.0035)
+        # the shine: a soft halo arc across the crown
+        self._strip(hair_lt, bezier((hx - 0.052, hy + 0.052), (hx - 0.004, hy + 0.086),
+                                    (hx + 0.046, hy + 0.054)), 0.0060, 0.0035)
 
-        # strands framing the face
-        for s, ln in ((-1, 0.70 if male else 0.66), (1, 0.71 if male else 0.67)):
-            p = bezier((hx + s * rx * 0.96, hy + 0.018),
-                       (hx + s * (rx + 0.013), hy - 0.052),
-                       (hx + s * (rx + 0.004), ln))
-            self._strip(hair, p, 0.0175, 0.0070)
+        # face-framing pieces, s-curved, in front of the cheeks
+        for s, ln in ((-1, 0.70 if male else 0.665), (1, 0.71 if male else 0.675)):
+            p = bezier((hx + s * rx * 0.98, hy + 0.022),
+                       (hx + s * (rx + 0.020), hy - 0.048),
+                       (hx + s * (rx + 0.002), ln))
+            self._strip(hair, p, 0.0200, 0.0080)
         if style == "long" and not male:
-            # the long fall in front of the shoulders is hers. his long hair
-            # stays gathered behind the back, only the frame shows.
+            # the long fall in front of the shoulders, s-curving out then in
             for s in (-1, 1):
-                p = bezier((hx + s * rx * 0.9, hy - 0.022),
-                           (hx + s * 0.090, 0.70),
-                           (hx + s * 0.052, 0.575))
-                self._strip(hair, p, 0.0190, 0.0100)
-                q = bezier((hx + s * rx * 0.7, hy - 0.030),
-                           (hx + s * 0.072, 0.72),
-                           (hx + s * 0.062, 0.640))
-                self._strip(hair_lt, q, 0.0050, 0.0028)
+                p = bezier((hx + s * rx * 0.92, hy - 0.020),
+                           (hx + s * 0.104, 0.69),
+                           (hx + s * 0.058, 0.560))
+                self._strip(hair, p, 0.0240, 0.0110)
+                q = bezier((hx + s * rx * 0.78, hy - 0.030),
+                           (hx + s * 0.086, 0.71),
+                           (hx + s * 0.070, 0.630))
+                self._strip(hair_lt, q, 0.0048, 0.0026)
 
     # -- symbol -------------------------------------------------------------------
 

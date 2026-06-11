@@ -53,3 +53,8 @@ def recent_entries(days):
     # the 30-day timeline both read through this.
     cutoff = (datetime.date.today() - datetime.timedelta(days=days)).isoformat()
     return [row for row in read_echo_log() if row["date"] >= cutoff]
+
+
+def logged_today():
+    today = datetime.date.today().isoformat()
+    return any(row["date"] == today for row in read_echo_log())

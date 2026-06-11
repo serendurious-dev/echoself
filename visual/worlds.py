@@ -182,7 +182,7 @@ class SkyWorld(World):
 
 
 class AmbientWorld(SkyWorld):
-    caption = "tab - learn   d - drift   esc - quit"
+    caption = "tab - learn   e - how far   d - drift   esc - quit"
 
 
 class LearningWorld(SkyWorld):
@@ -328,12 +328,26 @@ def run(args=None):
 
     if load_profile() is None:
         run_builder(screen, clock)
+    profile = load_profile()
+
+    # the one thing we ask directly, once a day: a word and a number.
+    from core.session_manager import logged_today
+    if not logged_today():
+        from core.daily import capture_mood
+        capture_mood(screen, clock, profile)
 
     # the inner world wakes: read the logs, classify the state, get the plan.
     # this is also where the drift nudges, one small step per launch.
     from ml.behavioral_model import wake
     from ml.psychology_layer import plan_for
+    from core.narrative_engine import dark_days_active
     plan = plan_for(wake())
+
+    # a low-mood streak overrides everything toward presence - no pushing.
+    if dark_days_active():
+        plan["expression"]  = "drift"
+        plan["offer_drift"] = True
+        plan["dark_days"]   = True
 
     worlds = WorldManager(WINDOW_SIZE, default_worlds(WINDOW_SIZE, plan))
 
@@ -353,6 +367,11 @@ def run(args=None):
                     worlds.switch("ambient" if worlds.current.name == "learning" else "learning")
                 elif event.key == pygame.K_d and not captured:
                     worlds.toggle_drift()
+                elif event.key == pygame.K_e and not captured:
+                    # the Echo Distance view - radar, timeline, the mirror report
+                    from visual.analytics_charts import show_echo_distance
+                    accent = worlds.current.character.spec.palette[0]
+                    show_echo_distance(screen, clock, profile, accent)
                 else:
                     worlds.handle(event)
             else:
