@@ -182,7 +182,53 @@ class SkyWorld(World):
 
 
 class AmbientWorld(SkyWorld):
-    caption = "tab - learn   e - how far   d - drift   esc - quit"
+    caption = "tab learn   e how far   l letters   v vault   d drift   esc quit"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._moment   = None     # the Echo Moment sentence currently surfacing
+        self._wait     = 9.0      # until the first one
+        self._show     = 0.0
+        self._momfont  = pygame.font.Font(None, 30)
+
+    def update(self, dt):
+        super().update(dt)
+        if self._moment is None:
+            self._wait -= dt
+            if self._wait <= 0:
+                from core import echo_exchange
+                self._moment = echo_exchange.random_sentence()
+                self._show   = 8.0
+                if self._moment is None:
+                    self._wait = 30.0
+        else:
+            self._show -= dt
+            if self._show <= 0:
+                self._moment = None
+                self._wait   = random.uniform(32, 55)
+
+    def draw(self, surface):
+        super().draw(surface)
+        if not self._moment:
+            return
+        # an Echo Moment: a community sentence fading softly in and out
+        fade  = min(1.0, (8.0 - self._show) / 1.5, self._show / 1.5)
+        alpha = int(160 * max(0.0, fade))
+        words, lines, line = self._moment.split(), [], ""
+        for word in words:
+            trial = (line + " " + word).strip()
+            if self._momfont.size(trial)[0] <= self.size[0] * 0.6:
+                line = trial
+            else:
+                lines.append(line)
+                line = word
+        lines.append(line)
+        y = int(self.size[1] * 0.17)
+        for ln in lines:
+            surf = self._momfont.render(ln, True, (216, 210, 226))
+            surf.set_alpha(alpha)
+            surface.blit(surf, (self.size[0] // 2 - surf.get_width() // 2, y))
+            y += 34
 
 
 class LearningWorld(SkyWorld):
@@ -321,10 +367,19 @@ def run(args=None):
     from core.session_manager import load_profile
     from core.echo_builder import run_builder
 
+    # --demo runs in a sandboxed data_demo/ dir, seeded with a lived-in month,
+    # so the slow features have something to show. --timelapse adds a day each run.
+    if getattr(args, "demo", False):
+        from core import demo_mode
+        demo_mode.use_demo_dir()
+        demo_mode.ensure_seeded()
+        if getattr(args, "timelapse", False):
+            demo_mode.advance_day()
+
     # clean up after any unclean exit before we touch the data
     from osutil import recovery
-    from core.datastore import DATA_DIR
-    recovery.audit(DATA_DIR)
+    from core import datastore
+    recovery.audit(datastore.DATA_DIR)
 
     pygame.init()
     screen = pygame.display.set_mode(WINDOW_SIZE)
@@ -354,7 +409,19 @@ def run(args=None):
         plan["offer_drift"] = True
         plan["dark_days"]   = True
 
+    # the monthly letter, written quietly so it's waiting when you look for it
+    from core import letters
+    if letters.due():
+        letters.write_monthly(profile)
+
     worlds = WorldManager(WINDOW_SIZE, default_worlds(WINDOW_SIZE, plan))
+
+    # the soundscape: a drone warmed by how close the Echo Distance is
+    from core import echo_distance
+    from audio.soundscape import Soundscape
+    sound = Soundscape()
+    sound.start()
+    sound.set_closeness(1.0 - sum(echo_distance.compute(profile).values()) / 4.0)
 
     running = True
     while running:
@@ -377,6 +444,14 @@ def run(args=None):
                     from visual.analytics_charts import show_echo_distance
                     accent = worlds.current.character.spec.palette[0]
                     show_echo_distance(screen, clock, profile, accent)
+                elif event.key == pygame.K_l and not captured:
+                    from visual.screens import show_letters
+                    show_letters(screen, clock, profile)
+                elif event.key == pygame.K_v and not captured:
+                    from visual.screens import open_vault
+                    open_vault(screen, clock)
+                elif event.key == pygame.K_m and not captured:
+                    sound.toggle_mute()
                 else:
                     worlds.handle(event)
             else:
@@ -385,5 +460,6 @@ def run(args=None):
         worlds.draw(screen)
         pygame.display.flip()
 
+    sound.stop()
     pygame.quit()
     return 0
