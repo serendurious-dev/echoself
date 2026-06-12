@@ -1,10 +1,4 @@
-"""small full-screen views that pause the worlds: the Letters, the Vault.
-
-these are quiet, text-only places. they take over the screen, do one calm
-thing, and hand control back. the Vault screen is the one that touches the
-encrypted diary - and even here, nothing is decrypted until the user types the
-passphrase that only they know.
-"""
+"""full-screen views that pause the worlds: the challenge, the Letters, the Vault."""
 
 import os
 import random

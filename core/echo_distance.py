@@ -1,14 +1,4 @@
-"""the four-axis Echo Distance: how far the current self is from the ideal self.
-
-Mental, Behavioral, Emotional, Learning. each is 0..1, where 0 means arrived
-and 1 means far. all four are read from what the logs already know - the
-brain's recent read of you, whether you have been showing up, your moods, and
-how the learning is going - so the gap is measured, never asked.
-
-the original three axes (mental, behavioral, emotional) come from the first
-EchoSelf. learning is the fourth axis CodePath added: the gap closes not just
-emotionally but intellectually.
-"""
+"""the four-axis Echo Distance (mental/behavioral/emotional/learning), read from the logs."""
 
 from core import session_manager, datastore
 from learning import codepath, progress_tracker

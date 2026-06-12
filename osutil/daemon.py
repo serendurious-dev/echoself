@@ -1,15 +1,4 @@
-"""the companion daemon - presence between sessions.
-
-a detached background process that does almost nothing on purpose: it beats a
-heartbeat so the app knows it is there, and once a day it leaves one gentle
-reminder. it never nags, never pops a modal box, never reaches the network. it
-exists so the companion is "around" even when EchoSelf is closed - presence
-over pressure, at the process level.
-
-run it:   python -m osutil.daemon run   --data <dir>
-stop it:  python -m osutil.daemon stop  --data <dir>
-or from the app: python main.py --daemon start / stop / status
-"""
+"""the companion daemon: a detached process that beats a heartbeat and leaves a daily note."""
 
 import os
 import sys

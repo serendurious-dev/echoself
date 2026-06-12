@@ -1,13 +1,4 @@
-"""the daily session spine: the profile, the mood log.
-
-three phases live here eventually: mood capture (one word, one number) ->
-pattern check (Dark Days or a normal session) -> save and reflect. this is
-the data half - the session flow itself arrives with the narrative engine.
-
-profile.json holds the ideal self, the Shadow Self and the character.
-echo_log.csv is one row per mood entry, the four echo distance columns stay
-empty until the brain starts filling them in Layer 2.
-"""
+"""the session spine: the profile, and the one-word one-number mood log."""
 
 import datetime
 

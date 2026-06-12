@@ -1,16 +1,4 @@
-"""EchoBuilder: first launch, Session Zero.
-
-it looks like onboarding - a few quiet questions in the sky, then you choose
-who walks with you and make them yours. it is also the ML brain's first
-calibration: how long you wait before you start typing, how long you take,
-how much you say. the signals ride along in profile.json for ml/ to read in
-Layer 2. we never ask how you feel. we watch how you answer.
-
-conversational pacing, not a form. one question at a time, the stars keep
-moving, nothing is timed out, nothing is required to be profound.
-
-writes data/profile.json
-"""
+"""Session Zero - first launch builds the ideal self, and quietly calibrates the brain."""
 
 import sys
 import math

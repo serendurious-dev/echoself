@@ -1,17 +1,4 @@
-"""the response engine. reads the detected state, decides who she is today.
-
-not a mood tracker. it determines, without asking, whether you need to be
-challenged or held - then hands the lesson session a small plan: the
-character's resting expression, which phrase bank opens the session, how
-long to wait before noticing hesitation, and the per-session drift nudge.
-
-    Flowing  -> Challenger   brisk, playful, lets you sweat a little
-    Pushing  -> Companion    empathy first, more patience, earlier hints
-    Drifting -> Presence     soft, no pressure, drift is offered not pushed
-    Avoiding -> Mirror       gentle confrontation, by name
-    Fading   -> Memory       shows you your own past wins. the evidence is
-                             already in the log, we just show it back.
-"""
+"""state -> character mode, and the session plan the lesson acts on. drives the drift."""
 
 from learning import progress_tracker
 from character import personality_drift

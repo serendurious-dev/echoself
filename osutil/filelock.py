@@ -1,17 +1,4 @@
-"""a file lock - one writer at a time across processes.
-
-built on os.open with O_CREAT | O_EXCL: the OS guarantees exactly one process
-creates the file, everyone else gets FileExistsError. that is the mutex. every
-read-modify-write on the shared data goes through it, so the app and the daemon
-never step on each other's writes.
-
-if the holder crashed without releasing, the lock goes stale after `stale`
-seconds and the next waiter reclaims it - otherwise a crash would lock the user
-out of their own data forever.
-
-windows raises PermissionError instead of FileExistsError mid-race, so both are
-treated the same: someone else holds it, wait and retry.
-"""
+"""a cross-process file lock on O_CREAT | O_EXCL, with stale-lock reclaim."""
 
 import os
 import time

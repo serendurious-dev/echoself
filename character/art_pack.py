@@ -1,21 +1,4 @@
-"""layered art characters - the socket real art plugs into.
-
-a character can be drawn two ways. the procedural one in renderer.py is the
-fallback, drawn entirely by code. this is the other one: stacked PNG layers
-composited and animated the way a visual-novel app does it, so painted art -
-a clean open-licensed pack, or your own - can be the body instead.
-
-an art pack is a folder under characters/art/<id>/ with a manifest.json and
-its layer images. the manifest lists layers back-to-front, each tagged with how
-it moves (body / head / hair) and, where it matters, which eye state or mouth
-shape it is. the engine picks the right eyes for the blink and the right mouth
-for the expression, and bobs each layer on its own beat so flat images breathe.
-the manifest format is documented in characters/art/README.md.
-
-ArtCharacter matches the procedural Character's interface exactly - same
-__init__, set_expression, update, draw, .pos, .h, .spec - so the rest of the
-app never knows or cares which one it got.
-"""
+"""layered art characters: painted PNG packs composited and animated. the socket for real art."""
 
 import os
 import json

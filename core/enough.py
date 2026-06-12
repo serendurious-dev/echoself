@@ -1,13 +1,4 @@
-"""the "enough" judgment - did today count, measured against today's capacity.
-
-this is the heart of my AlterEgo project, brought into EchoSelf. the idea: a
-day is not measured against a perfect day, it is measured against how much you
-had to give that day. showing up on a heavy day is enough. doing what the day
-had room for is enough. the system already knows your mood and what you did, so
-it can tell you - honestly - that it was enough, and mean it.
-
-presence over pressure, made into a verdict the character can say out loud.
-"""
+"""the 'enough' judgment (from AlterEgo): effort measured against the day's capacity."""
 
 import datetime
 

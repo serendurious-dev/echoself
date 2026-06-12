@@ -1,11 +1,4 @@
-"""tracks and lessons: loading them, knowing which one is next.
-
-lessons live in lessons/<track>/*.json (CC BY 4.0), one concept each, voice
-neutral - the character's personality colors the delivery, not the content.
-ordering comes from the cluster and lesson numbers inside the files, not
-from filenames, so contributors cannot break the sequence by naming things
-creatively.
-"""
+"""the track: lessons, challenges, projects, what comes next - including spaced repetition."""
 
 import os
 import json

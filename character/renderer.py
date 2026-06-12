@@ -1,28 +1,4 @@
-"""procedural character renderer.
-
-a 2.5d character in the style of visual-novel apps - semi-realistic
-proportions, a shaped face, almond eyes with a lit-up iris, layered hair
-built from strand ribbons in three tones (a dark base, the body, the
-highlights), real lips, soft shading. drawn entirely by code, no PNGs - every
-shape is a polygon or a sampled bezier computed each frame at 2x resolution
-and scaled down so the lines come out clean.
-
-characters have a build: female and male figures differ in the shoulders,
-the jaw, the brows, the lips, the clothes. EchoSelf is not just for girls.
-
-the layering is the 2.5d: back hair, body, face, front hair are separate
-passes with separate motion - the chest rises with the breath, the head lags
-half a beat behind, the hair follows the head. translucent shading (the
-forehead shadow under the fringe, the jaw shadow, the skirt folds) is
-blitted, never drawn, so it blends instead of punching holes in the alpha.
-
-everything comes from a personality pack's visual block (characters/*.json)
-or the custom builder: skin, hair style and color, eye color, outfit,
-palette, form, gender, the chest symbol. expressions are parameter targets
-the expression engine drives.
-
-preview without the rest of the app:  python -m character.renderer
-"""
+"""procedural 2.5D character, drawn entirely by code - the fallback when no art pack is set."""
 
 import os
 import json

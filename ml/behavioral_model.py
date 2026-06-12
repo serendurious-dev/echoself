@@ -1,17 +1,4 @@
-"""the ML brain. sklearn over passive behavioral signals, nothing asked.
-
-every wake() rebuilds the training set - the synthetic archetypes plus the
-user's own past sessions (pseudo-labeled by the heuristic teacher, weighted
-heavier because they are real) - fits the classifier, and reads the most
-recent session. that is the incremental learning: the more history exists,
-the more the model is about this person and not about the archetypes.
-
-signals only, no questions - people hide their real state or report what
-sounds acceptable. behavior is honest.
-
-reads data/echo_log.csv + data/learning_log.csv via the trackers
-writes data/user_model.json
-"""
+"""the ML brain: an sklearn classifier over passive signals -> one of five states."""
 
 import datetime
 

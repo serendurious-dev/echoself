@@ -1,13 +1,4 @@
-"""the Letter System - monthly letters between you and your ideal self.
-
-once a month the ideal self writes you a letter, in their voice, looking back
-over the month the logs remember - the days you came, the weight of them, the
-work you did. it is saved as plain text in data/letters/ and never overwritten,
-so the letters pile up into a record of a year you can actually read back. you
-can write one back; that is saved beside it.
-
-these are .txt on purpose. a letter should outlive the program that wrote it.
-"""
+"""the Letter System: a monthly letter from the ideal self, saved as plain .txt."""
 
 import os
 import datetime

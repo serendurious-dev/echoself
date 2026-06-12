@@ -1,20 +1,4 @@
-"""synthetic archetypes, the honest answer to the cold-start problem.
-
-a classifier with no data is a guess. so before the first real session we
-generate labeled synthetic sessions describing how each of the five states
-plausibly looks in the behavioral features - a Fading user's sessions thin
-out and their gaps grow, a Flowing user answers fast and right, an Avoiding
-user shows up with energy and does almost nothing with it. the model
-pretrains on these, then the real user's history takes over incrementally.
-
-features, in order:
-    accuracy        share of quiz answers that were right (0..1)
-    avg_duration    mean seconds spent per quiz answer
-    hints_rate      hints used per quiz
-    events          how much happened in the session at all
-    lessons_done    lessons finished that session
-    gap_days        days since the previous session
-"""
+"""synthetic behavioral archetypes - the cold-start training set, plus a heuristic teacher."""
 
 import random
 

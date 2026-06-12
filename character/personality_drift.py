@@ -1,20 +1,4 @@
-"""personality drift. the soul of the project, made technical.
-
-three axes, all starting at zero, all bounded to [-1, 1]:
-
-    challenge   how much pressure actually works on this user
-    warmth      how much reassurance they need to keep going
-    pace        how fast the sessions want to move
-
-every session, the detected state nudges the axes a little toward what is
-working - a user who keeps Flowing under challenge drifts the character
-toward Challenger, a user who keeps Pushing drifts them toward softness.
-nothing is ever announced. after ~30 sessions the numbers have genuinely
-moved, and with them the character's patience, their opening words, their
-timing. the preset in characters/*.json is never modified - the drift lives
-in data/user_model.json, in the space between who they started as and who
-you needed.
-"""
+"""personality drift: three bounded axes nudged each session toward what works. silent."""
 
 from core import datastore
 

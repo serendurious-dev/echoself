@@ -1,10 +1,4 @@
-"""--doctor: prove the OS layer actually works, in one command.
-
-acquires the lock and confirms a second acquirer is blocked, performs an
-atomic write and reads it back, checks the daemon heartbeat channel, and runs
-the crash-recovery audit. prints a line per check. this is the one command that
-demonstrates the whole systems layer is real and not just described.
-"""
+"""--doctor: prove the OS layer works (lock, atomic write, heartbeat, audit) in one command."""
 
 import os
 

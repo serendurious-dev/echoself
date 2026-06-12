@@ -1,8 +1,4 @@
-"""renders the character expression sheet to _preview_character.png.
-
-dev tool, headless - for checking how the figure looks without opening the app.
-    python make_preview.py
-"""
+"""dev tool: render the character expression sheet to a preview png."""
 
 import os
 

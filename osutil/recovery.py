@@ -1,11 +1,4 @@
-"""crash recovery: clean up after an unclean exit, never lose good data.
-
-run once at launch. it sweeps the data dir for the debris a crash leaves -
-leftover temp files from an interrupted atomic write, a lock whose holder died,
-a daemon pid with no heartbeat behind it - and it quarantines a corrupt
-profile or model file instead of letting the app choke on it. a quarantined
-file is moved aside, never deleted, so nothing is ever truly lost.
-"""
+"""crash recovery: a launch audit that clears debris and quarantines corrupt files."""
 
 import os
 import time

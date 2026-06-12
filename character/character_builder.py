@@ -1,10 +1,4 @@
-"""packs in, specs out - and the user's own touches on top.
-
-the five preset personalities live in characters/ as JSON packs. this module
-loads them, turns a pack into a renderable CharacterSpec, and applies the
-choices the user made in Session Zero (hair, skin) over the preset. the pack
-file itself is never modified - your character is the pack plus you.
-"""
+"""packs in, specs out - presets plus the user's Session Zero choices."""
 
 import os
 import json

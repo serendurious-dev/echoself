@@ -1,16 +1,4 @@
-"""procedural ambient soundscape. numpy makes the sound, pygame.mixer plays it.
-
-like the character, the sound is computed, not sampled - there are no audio
-files anywhere. a low drone with a few harmonics, breathing slowly in and out.
-as the Echo Distance closes the drone grows warmer and fuller; when the gap is
-wide it thins out and quiets. one number, closeness (0..1), shapes the whole
-thing.
-
-the buffer is sized to loop seamlessly (a whole number of breaths and base
-cycles), so it can repeat forever without a click. everything that touches the
-audio device is guarded - no speakers, or a headless machine, just means silence,
-never a crash.
-"""
+"""procedural ambient soundscape: a numpy drone that warms as the Echo Distance closes."""
 
 import numpy as np
 

@@ -1,18 +1,4 @@
-"""real coding, in the user's own editor.
-
-the hybrid we locked: quizzes happen inside the world, but the actual coding -
-the micro-challenges and the mini projects - happens in real files. EchoSelf
-writes a starter .py into a workspace/ folder, you solve it in whatever editor
-you love, and this runner executes your file against the challenge's test cases
-in a separate process (with a timeout, so an infinite loop can't hang the app).
-no fake in-game editor. real code, real tools, and the character reacts the
-moment the tests go green.
-
-a challenge is JSON (lessons/<track>/*.json, kind "challenge" or "project"):
-  function  the function name your code must define
-  starter   the code we write into the file for you to finish
-  cases     [{args: [...], expect: ...}, ...] - what it must return
-"""
+"""editor-handoff coding: write a starter .py, the user solves it, we run it vs the cases."""
 
 import os
 import sys

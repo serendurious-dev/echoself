@@ -1,11 +1,4 @@
-"""data primitives: the data/ dir, atomic json, csv append and read.
-
-everything the user generates goes through here and only here. local files,
-gitignored, never transmitted - see SECURITY.md. json writes are atomic
-(write temp -> fsync -> replace), a crash leaves the old file or the new
-one, never a half-written one. csv logs are append-only by design, history
-does not get rewritten.
-"""
+"""data primitives: the data/ dir, atomic json, append-only csv, all under one lock."""
 
 import os
 import csv

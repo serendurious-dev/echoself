@@ -1,12 +1,4 @@
-"""the lesson session: the glowing panel, the question, the reactions.
-
-a small state machine - reading -> question -> done -> the next lesson. the
-character reacts live through their expressions and their own phrase bank
-(the chosen personality's voice), three hints reveal one at a time, every
-answer and hint lands in learning_log.csv as both progress and behavioral
-signal. hesitation is noticed, never punished: wait long enough on a
-question and the character only says something kind.
-"""
+"""the lesson session: the glowing panel, the quiz, the live reactions, the two voices."""
 
 import time
 import math

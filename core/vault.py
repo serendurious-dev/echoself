@@ -1,22 +1,4 @@
-"""the Vault - a locally encrypted private writing space.
-
-the one place in EchoSelf the system promises never to read. it is encrypted at
-rest with the user's own passphrase, and nothing - not the ML brain, not the
-logs, not the narrative - ever sees the plaintext. the system holds it. it does
-not look at it (see SECURITY.md).
-
-stdlib only, no third-party crypto, which is a deliberate constraint from the
-original concept ("local encryption: hashlib, os"). the scheme:
-
-  key      = PBKDF2-HMAC-SHA256(passphrase, salt, 200k iterations)
-  keystream= SHA-256(key || nonce || counter) blocks, XORed into the plaintext
-  mac      = HMAC-SHA256(key, nonce || ciphertext)   -- encrypt-then-MAC
-
-the MAC is checked before anything is decrypted, so a wrong passphrase or a
-tampered file fails loudly instead of returning garbage. this is honest local
-encryption for a single user's diary; it is not claiming to be AES, and the
-docstring says so on purpose.
-"""
+"""the Vault: locally encrypted private writing the system never reads. stdlib crypto."""
 
 import os
 import json

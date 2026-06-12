@@ -1,17 +1,4 @@
-"""the three worlds, in pygame.
-
-Ambient: the living sky. the character's palette bleeds into the gradient and
-the stars, a horizon of their light sits low behind them, stars drift slowly
-and sometimes one falls. Drift Mode is the same sky gone darker and slower -
-zero UI, nothing asked, the character just sits and breathes.
-
-Learning: the focused environment. its glowing lesson panel lands with issue
-#6, for now it is the tinted sky with the character standing to one side.
-
-one starfield is shared by all three worlds, so crossing between them feels
-like the light changed, not the place. transitions are fades, never hard cuts.
-the star drift speed will couple to the Echo Distance in Layer 2.
-"""
+"""the three worlds (ambient / learning / drift), the fade between them, and the main loop."""
 
 import math
 import random

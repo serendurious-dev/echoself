@@ -1,11 +1,4 @@
-"""EchoSelf entry point.
-
-python main.py                 normal session
-python main.py --demo          lived-in profile, ~35 days of history already there
-python main.py --timelapse     each session counts as a full day
-python main.py --doctor        prove the OS layer works, then exit
-python main.py --daemon start  the companion daemon: start / stop / status
-"""
+"""EchoSelf entry point. flags: --demo, --timelapse, --doctor, --daemon."""
 
 import argparse
 import sys

@@ -1,10 +1,4 @@
-"""narrative: the Dark Days Protocol and the Mirror Report.
-
-the arcs and Echo Moments are roadmap. what lives here now is the part that
-matters most - the system noticing when someone is having a hard stretch and
-easing off, and the weekly letter the ideal self writes back. presence over
-pressure is enforced here more than anywhere.
-"""
+"""narrative: the Dark Days Protocol and the weekly Mirror Report."""
 
 import datetime
 

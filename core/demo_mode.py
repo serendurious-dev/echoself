@@ -1,18 +1,4 @@
-"""demo and time-lapse modes.
-
---demo lets you feel the lived-in version of EchoSelf immediately, instead of
-waiting weeks for the slow features (drift, the Mirror Report, the Dark Days
-Protocol, the 30-day timeline, the monthly Letter) to have anything to show. it
-seeds about 35 days of synthetic history - a believable arc, a rough stretch
-that recovers - into a SEPARATE data_demo/ directory, so it never touches or
-mixes with your real data.
-
---timelapse appends one more synthetic day each launch, so you can watch the
-drift and the timeline move in minutes instead of weeks.
-
-the seeded month is honest about being synthetic; it is a demo, clearly labeled,
-sandboxed in its own folder.
-"""
+"""--demo seeds a lived-in month into a sandboxed data_demo/; --timelapse adds a day a run."""
 
 import os
 import datetime

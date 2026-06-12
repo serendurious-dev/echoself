@@ -1,11 +1,4 @@
-"""the daily check-in: one word, one number, minimal friction.
-
-shown once a day on launch, before the worlds open. it is the only thing
-EchoSelf ever asks directly, and even then it asks about the day, not about
-you. the number feeds the emotional axis and the Dark Days check; the word is
-just yours. after the check-in the four-axis Echo Distance is recomputed and
-saved alongside the mood, so the timeline has a point for today.
-"""
+"""the daily check-in: one word, one number - the only thing EchoSelf asks directly."""
 
 import pygame
 

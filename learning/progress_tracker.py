@@ -1,10 +1,4 @@
-"""learning_log.csv and what can be read out of it.
-
-one row per learning event - lesson done, quiz answered, challenge tried,
-hint used. the ML brain reads these as behavioral signal, the Learning axis
-of the Echo Distance reads them as progress, and the spaced repetition
-memory reads them to know what to bring back.
-"""
+"""learning_log.csv: what's done, quiz accuracy, the missed-question pool."""
 
 import datetime
 

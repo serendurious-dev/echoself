@@ -1,13 +1,4 @@
-"""the Echo Distance, drawn. matplotlib rendered onto pygame surfaces.
-
-a four-axis radar (Mental, Behavioral, Emotional, Learning) showing the gap
-between who you are and who you want to be, and a 30-day timeline of all four.
-matplotlib runs on the Agg backend and the figure is blitted into pygame, so
-this works headless too.
-
-the charts plot closeness, not distance - the axis fills toward the edge as
-the gap closes, because watching it grow is the point.
-"""
+"""the Echo Distance drawn: a four-axis radar and a 30-day timeline (matplotlib -> pygame)."""
 
 import matplotlib
 matplotlib.use("Agg")               # no window, render to a buffer

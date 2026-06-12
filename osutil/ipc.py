@@ -1,11 +1,4 @@
-"""file-based IPC between the app and the companion daemon. no sockets.
-
-three little files in the data dir do all the talking. the daemon writes its
-pid when it starts and a heartbeat every tick; the app reads them to know if
-the companion is alive. the app writes a stop-flag; the daemon polls it and
-exits cleanly when it appears. that is the whole protocol - plain files, which
-is the most portable IPC there is.
-"""
+"""file-based IPC between app and daemon: a pid, a heartbeat, a stop flag. no sockets."""
 
 import os
 import time

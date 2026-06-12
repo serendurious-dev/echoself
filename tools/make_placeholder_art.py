@@ -1,13 +1,4 @@
-"""generate a placeholder art pack so the layered-art pipeline can be seen and
-tested without real art.
-
-these are flat shapes, deliberately plain - they only prove the socket works:
-the layers stack, the eyes blink, the mouth changes with the expression, every
-layer breathes on its own beat. drop a real CC0 pack in to replace them, same
-folder layout and manifest (see characters/art/README.md).
-
-    python tools/make_placeholder_art.py        # writes characters/art/_placeholder/
-"""
+"""dev tool: generate a plain placeholder art pack to exercise the layered-art pipeline."""
 
 import os
 import json
