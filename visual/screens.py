@@ -269,6 +269,64 @@ def daily_checkin(screen, clock, character, profile):
     daily.log_checkin(conv, profile)
 
 
+def show_mastery(screen, clock, character):
+    # how far you've come - the don't-give-up dashboard. per-topic progress, the
+    # single next step, momentum without guilt, a welcome back if you've been away.
+    from learning import mastery
+    w, h    = screen.get_size()
+    title   = _font(38)
+    font    = _font(26)
+    soft    = _font(20)
+    big     = _font(30)
+    accent  = character.spec.palette[0]
+    report  = mastery.report()
+    while True:
+        dt = clock.tick(60) / 1000.0
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                return
+            if e.type == pygame.KEYDOWN:
+                if e.key in (pygame.K_ESCAPE, pygame.K_RETURN, pygame.K_q):
+                    return
+        character.update(dt)
+        screen.fill(BG)
+        character.pos = (int(w * 0.84), int(h * 1.02))
+        character.draw(screen)
+
+        screen.blit(title.render("how far you've come", True, INK), (60, 44))
+        y = 122
+        # the topic bars
+        bar_w = int(w * 0.46)
+        for c in report["clusters"]:
+            screen.blit(font.render(c["title"], True, INK), (60, y))
+            screen.blit(soft.render(f"{c['done']}/{c['total']}", True, SOFT),
+                        (60 + bar_w + 16, y + 2))
+            track = pygame.Rect(60, y + 30, bar_w, 12)
+            pygame.draw.rect(screen, (40, 46, 58), track, border_radius=6)
+            fill = pygame.Rect(60, y + 30, int(bar_w * c["mastery"]), 12)
+            pygame.draw.rect(screen, accent, fill, border_radius=6)
+            y += 64
+
+        # the overall, a little brighter
+        y += 8
+        screen.blit(big.render(f"{int(report['overall'] * 100)}% of the way", True, WARM),
+                    (60, y))
+        y += 56
+
+        # the one next step, and the closer-than-it-feels line
+        screen.blit(font.render(report["next_line"], True, (206, 214, 224)), (60, y))
+        y += 40
+        screen.blit(soft.render(report["momentum"], True, SOFT), (60, y))
+        if report["welcome_back"]:
+            y += 30
+            for ln in _wrap(soft, report["welcome_back"], int(w * 0.7)):
+                screen.blit(soft.render(ln, True, (186, 200, 178)), (60, y))
+                y += soft.get_linesize()
+
+        screen.blit(soft.render("tab to learn  ·  esc to close", True, SOFT), (60, h - 44))
+        pygame.display.flip()
+
+
 def settings_screen(screen, clock):
     # the few choices that are the user's to make: whether she reaches out, and
     # whether her check-in stays general or leans on what she remembers.

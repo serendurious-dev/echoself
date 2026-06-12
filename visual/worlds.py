@@ -169,7 +169,7 @@ class SkyWorld(World):
 
 
 class AmbientWorld(SkyWorld):
-    caption = ("t talk   tab learn   c code   e how far   p memory   "
+    caption = ("t talk   tab learn   c code   e how far   g progress   p memory   "
                "l letters   v vault   s settings   d drift   esc quit")
 
     def __init__(self, *args, **kwargs):
@@ -454,6 +454,10 @@ def run(args=None):
                     # what she remembers about you - the portrait, yours to read and prune
                     from visual.screens import show_portrait
                     show_portrait(screen, clock)
+                elif event.key == pygame.K_g and not captured:
+                    # how far you've come - the don't-give-up dashboard
+                    from visual.screens import show_mastery
+                    show_mastery(screen, clock, worlds.current.character)
                 elif event.key == pygame.K_s and not captured:
                     # whether she reaches out, and how - the user's to decide
                     from visual.screens import settings_screen

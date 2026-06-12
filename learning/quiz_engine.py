@@ -6,7 +6,7 @@ import random
 
 import pygame
 
-from learning import codepath, progress_tracker
+from learning import codepath, progress_tracker, mastery
 
 HESITATION_S = 14.0    # the default, before the psychology layer has a say
 
@@ -68,6 +68,11 @@ class LessonSession:
         else:
             self.opening = (self.plan.get("memory_line") or self.plan.get("mirror_line")
                             or random.choice(self.voice[self.plan["opening_slot"]]))
+            # if you've been away a while, she welcomes you back first - no guilt,
+            # just glad you're here. presence over pressure, in the learning world too.
+            welcome = mastery.welcome_back_line(self.track)
+            if welcome:
+                self.opening = welcome + " " + self.opening
 
         self.font      = pygame.font.Font(None, 26)
         self.font_big  = pygame.font.Font(None, 34)
