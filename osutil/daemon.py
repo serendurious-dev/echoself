@@ -28,6 +28,32 @@ def _presence(data_dir):
     return True
 
 
+def _reach_out(data_dir):
+    # the once-a-day check-in - the companion actually speaking, not just beating.
+    # the decision (waking hours, not-already-here, opted-in) and the wording live
+    # in core.outreach; here we only enforce once-per-day and fire the toast. wrapped
+    # whole, because nothing the daemon does to be kind should ever crash it.
+    try:
+        from core import datastore, outreach, notify
+        datastore.DATA_DIR = data_dir
+        today  = datetime.date.today().isoformat()
+        marker = os.path.join(data_dir, "daemon.reached")
+        try:
+            with open(marker, encoding="utf-8") as f:
+                if f.read().strip() == today:
+                    return False
+        except OSError:
+            pass
+        if not outreach.should_reach():
+            return False
+        notify.notify("EchoSelf", outreach.compose())
+        with open(marker, "w", encoding="utf-8") as f:
+            f.write(today)
+        return True
+    except Exception:
+        return False
+
+
 def daemon_run(data_dir, interval=30.0, max_ticks=None, presence=True):
     # the loop. installs signal handlers when it can (only works on the main
     # thread, so tests that call this on a worker just skip them), beats, checks
@@ -58,6 +84,7 @@ def daemon_run(data_dir, interval=30.0, max_ticks=None, presence=True):
                 break
             if presence:
                 _presence(data_dir)
+                _reach_out(data_dir)
             ticks += 1
             if max_ticks is not None and ticks >= max_ticks:
                 break

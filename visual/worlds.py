@@ -170,7 +170,7 @@ class SkyWorld(World):
 
 class AmbientWorld(SkyWorld):
     caption = ("t talk   tab learn   c code   e how far   p memory   "
-               "l letters   v vault   d drift   esc quit")
+               "l letters   v vault   s settings   d drift   esc quit")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -451,6 +451,10 @@ def run(args=None):
                     # what she remembers about you - the portrait, yours to read and prune
                     from visual.screens import show_portrait
                     show_portrait(screen, clock)
+                elif event.key == pygame.K_s and not captured:
+                    # whether she reaches out, and how - the user's to decide
+                    from visual.screens import settings_screen
+                    settings_screen(screen, clock)
                 elif event.key == pygame.K_m and not captured:
                     sound.toggle_mute()
                 else:

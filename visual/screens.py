@@ -253,6 +253,47 @@ def talk(screen, clock, character):
             pygame.display.flip()
 
 
+def settings_screen(screen, clock):
+    # the few choices that are the user's to make: whether she reaches out, and
+    # whether her check-in stays general or leans on what she remembers.
+    from core import settings
+    w, h   = screen.get_size()
+    title  = _font(38)
+    font   = _font(28)
+    soft   = _font(20)
+    while True:
+        s = settings.load()
+        clock.tick(60)
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                return
+            if e.type == pygame.KEYDOWN:
+                if e.key in (pygame.K_ESCAPE, pygame.K_RETURN, pygame.K_q):
+                    return
+                if e.key == pygame.K_1:
+                    settings.toggle_outreach()
+                elif e.key == pygame.K_2:
+                    settings.toggle_style()
+        on    = s["outreach"]
+        style = s["outreach_style"]
+        screen.fill(BG)
+        screen.blit(title.render("settings", True, INK), (60, 48))
+        rows = [
+            ("1.  she reaches out:  " + ("on" if on else "off"),
+             "a gentle check-in once a day, only when you haven't come by."),
+            ("2.  her check-in:  " + ("proactive" if style == "personal" else "general"),
+             "general asks how your day was; proactive leans on what she remembers."),
+        ]
+        y = 140
+        for line, note in rows:
+            screen.blit(font.render(line, True, WARM), (60, y))
+            screen.blit(soft.render(note, True, SOFT), (60, y + 36))
+            y += 96
+        screen.blit(soft.render("press a number to change it   ·   esc to close", True, SOFT),
+                    (60, h - 44))
+        pygame.display.flip()
+
+
 _KIND_LABEL = {"weight": "weighs on you", "lift": "lifts you", "person": "someone",
                "goal": "reaching for", "pattern": "a pattern", "note": "noted"}
 
