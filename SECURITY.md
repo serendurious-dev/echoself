@@ -13,6 +13,8 @@ write honestly into something they do not trust.
   analyzes or trains on its contents. The system holds it. It does not look at it.
 - The ML model trains on interaction metadata only — timing, session length, quiz accuracy.
   Never on the text of anything you wrote privately.
+- **Your data is yours to take or to erase.** `python main.py --export` zips all of it; `python
+  main.py --forget` permanently deletes it. There is no copy anywhere else to worry about.
 
 ## Supported versions
 

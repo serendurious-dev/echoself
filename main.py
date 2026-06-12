@@ -1,4 +1,4 @@
-"""EchoSelf entry point. flags: --demo, --timelapse, --doctor, --daemon."""
+"""EchoSelf entry point. flags: --demo, --timelapse, --doctor, --daemon, --export, --forget."""
 
 import argparse
 import sys
@@ -19,6 +19,10 @@ def parse_args(argv=None):
                         help="run the OS-layer self-diagnostic and exit")
     parser.add_argument("--daemon", choices=["start", "stop", "status"],
                         help="control the companion daemon")
+    parser.add_argument("--export", action="store_true",
+                        help="export all your local data to a zip, and exit")
+    parser.add_argument("--forget", action="store_true",
+                        help="permanently delete all your local data, and exit")
     parser.add_argument("--version", action="version", version=f"EchoSelf {__version__}")
     return parser.parse_args(argv)
 
@@ -40,6 +44,22 @@ def main(argv=None):
         else:
             s = daemon.status(DATA_DIR)
             print(f"running={s['running']}  pid={s['pid']}  last_beat={s['last_beat']}")
+        return 0
+
+    if args.export:
+        from core import data_control
+        print("your data, zipped and yours:", data_control.export())
+        return 0
+
+    if args.forget:
+        from core import data_control
+        print("This permanently deletes all your local EchoSelf data — profile, logs, letters,")
+        print("the Vault. It cannot be undone. (Nothing was ever sent anywhere; this is all of it.)")
+        if input("Type DELETE to confirm: ").strip() == "DELETE":
+            removed = data_control.forget()
+            print(f"removed {len(removed)} item(s). nothing kept.")
+        else:
+            print("cancelled. nothing was touched.")
         return 0
 
     from visual.worlds import run
