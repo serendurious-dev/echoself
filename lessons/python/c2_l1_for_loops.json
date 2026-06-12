@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "track": "python",
+  "cluster": 2,
+  "lesson": 1,
+  "id": "py-c2-l1-for",
+  "title": "For loops - doing a thing to each thing",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A for loop runs its body once for each item in a sequence, with the item bound to a name you choose.",
+  "explanation": "for mood in moods: reads almost like English - 'for each mood in moods, do this'. The name (mood) is yours; each time around the loop it points at the next item. range(n) gives you the numbers 0 to n-1 when you want to count instead of walk a list.",
+  "code_example": "total = 0\nfor n in [3, 5, 2]:\n    total = total + n\nprint(total)",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": ["3", "10", "0", "[3, 5, 2]"],
+    "answer_index": 1
+  },
+  "hints": [
+    "Walk the loop by hand: what is total after each pass?",
+    "3, then 3+5, then 3+5+2.",
+    "The three numbers add up to 10."
+  ]
+}

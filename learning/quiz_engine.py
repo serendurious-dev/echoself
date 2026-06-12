@@ -49,7 +49,16 @@ class LessonSession:
         self.character = character
         self.voice     = voice
         self.plan      = dict(DEFAULT_PLAN, **(plan or {}))
-        self.lesson    = codepath.next_lesson(track)
+        # spaced repetition: a question missed in an earlier session comes back
+        # first, in the character's voice, before any new lesson. if there's
+        # nothing owed, we go straight to the next lesson.
+        self.reviewing = False
+        review = codepath.review_lesson(track)
+        if review is not None:
+            self.reviewing = True
+            self.lesson    = review
+        else:
+            self.lesson = codepath.next_lesson(track)
         self.state     = "reading" if self.lesson else "track_done"
         self.typed     = ""
         self.hints     = 0
@@ -62,8 +71,11 @@ class LessonSession:
         # and the line that opens the session - her own memory of you when the
         # state asks for it, her voice otherwise
         self.character.set_expression(self.plan["expression"])
-        self.opening = (self.plan.get("memory_line") or self.plan.get("mirror_line")
-                        or random.choice(self.voice[self.plan["opening_slot"]]))
+        if self.reviewing:
+            self.opening = "you missed this one before. let's try it again - I remembered."
+        else:
+            self.opening = (self.plan.get("memory_line") or self.plan.get("mirror_line")
+                            or random.choice(self.voice[self.plan["opening_slot"]]))
 
         self.font      = pygame.font.Font(None, 26)
         self.font_big  = pygame.font.Font(None, 34)
@@ -102,7 +114,18 @@ class LessonSession:
         progress_tracker.log_event(self.track, self.lesson["cluster"], self.lesson["id"],
                                    "quiz", correct="yes" if right else "no",
                                    hints_used=self.hints, duration_s=elapsed)
-        if right:
+        if right and self.reviewing:
+            # the missed question is mended; the wrong answer that haunted the
+            # log is now answered right, so it leaves the review pool. straight
+            # on to the real next lesson, no second "lesson done" logged.
+            self.reviewing = False
+            self.pair      = None
+            self.lesson    = codepath.next_lesson(self.track)
+            self.state     = "reading" if self.lesson else "track_done"
+            self.feedback  = None
+            self.opening   = "there. that one's yours now. onward."
+            self.character.set_expression("happy")
+        elif right:
             self.state    = "done"
             self.feedback = self._line("correct")
             self.pair     = None

@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "track": "python",
+  "cluster": 2,
+  "kind": "project",
+  "id": "py-c2-project",
+  "title": "FizzBuzz, returned",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "prompt": "Build fizzbuzz(n): return a list of length n. For each number 1..n, the entry is \"Fizz\" if divisible by 3, \"Buzz\" if by 5, \"FizzBuzz\" if by both, otherwise the number itself (as an int). This is the classic - it pulls together loops, the modulo, and the if/elif chain.",
+  "function": "fizzbuzz",
+  "starter": "def fizzbuzz(n):\n    # your code here\n    pass\n",
+  "cases": [
+    {"args": [5], "expect": [1, 2, "Fizz", 4, "Buzz"]},
+    {"args": [3], "expect": [1, 2, "Fizz"]},
+    {"args": [15], "expect": [1, 2, "Fizz", 4, "Buzz", "Fizz", 7, 8, "Fizz", "Buzz", 11, "Fizz", 13, 14, "FizzBuzz"]},
+    {"args": [0], "expect": []}
+  ],
+  "hints": [
+    "Make an empty list, loop 1..n, decide each entry, append it.",
+    "Check both-divisible (15) FIRST, before checking 3 or 5 alone.",
+    "if i % 15 == 0: 'FizzBuzz'  elif i % 3 == 0: 'Fizz'  elif i % 5 == 0: 'Buzz'  else: i"
+  ]
+}

@@ -44,6 +44,12 @@ def completed_lessons(track):
             if row["track"] == track and row["event"] == "lesson_done"}
 
 
+def completed_extras(track):
+    # ids of the challenges and mini projects that have been passed
+    return {row["lesson"] for row in read_learning_log()
+            if row["track"] == track and row["event"] == "challenge_done"}
+
+
 def quiz_accuracy(track, last_n=20):
     # accuracy over the recent quiz answers, None when there is nothing yet.
     # the brain reads the trend of this, not the number itself.

@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "track": "python",
+  "cluster": 3,
+  "lesson": 1,
+  "id": "py-c3-l1-dicts",
+  "title": "Dictionaries - looking things up by name",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A dict maps keys to values. You store and fetch by key, not by position.",
+  "explanation": "Where a list answers 'what's at position 2', a dict answers 'what's the value for this name'. ages = {\"Aria\": 30} then ages[\"Aria\"] gives 30. Assigning to a key that isn't there creates it. Dicts are how you model anything with named fields.",
+  "code_example": "counts = {\"a\": 1}\ncounts[\"b\"] = 2\ncounts[\"a\"] = counts[\"a\"] + 1\nprint(counts[\"a\"], len(counts))",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": ["1 1", "2 2", "2 1", "1 2"],
+    "answer_index": 1
+  },
+  "hints": [
+    "Track the dict after each line.",
+    "'a' starts at 1 then becomes 2; 'b' is added.",
+    "counts['a'] is 2, and there are 2 keys: 2 2."
+  ]
+}

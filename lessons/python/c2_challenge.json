@@ -1,0 +1,25 @@
+{
+  "format_version": 1,
+  "track": "python",
+  "cluster": 2,
+  "kind": "challenge",
+  "id": "py-c2-challenge",
+  "title": "Sum to n",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "prompt": "Write sum_to(n): return the sum of all whole numbers from 1 to n (so sum_to(3) is 1+2+3 = 6). If n is 0 or negative, return 0. Use a loop - this is what loops are for.",
+  "function": "sum_to",
+  "starter": "def sum_to(n):\n    # your code here\n    pass\n",
+  "cases": [
+    {"args": [3], "expect": 6},
+    {"args": [1], "expect": 1},
+    {"args": [5], "expect": 15},
+    {"args": [0], "expect": 0},
+    {"args": [-4], "expect": 0}
+  ],
+  "hints": [
+    "Start a total at 0, then loop and add each number to it.",
+    "range(1, n + 1) gives you 1 through n.",
+    "total = 0; for i in range(1, n + 1): total += i; return total"
+  ]
+}

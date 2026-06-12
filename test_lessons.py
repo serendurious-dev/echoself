@@ -50,8 +50,10 @@ class TestCodepath(LessonTest):
 
     def test_track_loads_in_teaching_order(self):
         lessons = codepath.load_track("python")
-        self.assertEqual(len(lessons), 5)
-        self.assertEqual([l["lesson"] for l in lessons], [1, 2, 3, 4, 5])
+        self.assertEqual(len(lessons), 15)        # three clusters of five
+        keys = [(l["cluster"], l["lesson"]) for l in lessons]
+        self.assertEqual(keys, sorted(keys))       # ordered by cluster then lesson
+        self.assertEqual(keys[0], (1, 1))
 
     def test_next_lesson_respects_the_log(self):
         first = codepath.next_lesson("python")
@@ -116,6 +118,23 @@ class TestSession(LessonTest):
             self.assertEqual(s.hints, expected)
         hint_rows = [r for r in progress_tracker.read_learning_log() if r["event"] == "hint"]
         self.assertEqual(len(hint_rows), 3)
+
+    def test_a_missed_question_comes_back_next_session(self):
+        # miss lesson one's quiz, then leave (as if quitting mid-session)
+        s = self.session()
+        s.handle(key(pygame.K_RETURN))
+        wrong = (s.lesson["quiz"]["answer_index"] + 1) % 4
+        s.handle(key(pygame.K_1 + wrong))
+        missed_id = s.lesson["id"]
+        # a fresh session: the character brings the missed one back first
+        s2 = self.session()
+        self.assertTrue(s2.reviewing)
+        self.assertEqual(s2.lesson["id"], missed_id)
+        self.assertIn("missed this one before", s2.opening)
+        # answering it right mends it and moves on
+        s2.handle(key(pygame.K_RETURN))
+        s2.handle(key(pygame.K_1 + s2.lesson["quiz"]["answer_index"]))
+        self.assertFalse(s2.reviewing)
 
     def test_finishing_advances_to_the_next_lesson(self):
         s = self.session()

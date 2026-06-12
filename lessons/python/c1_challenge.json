@@ -1,0 +1,25 @@
+{
+  "format_version": 1,
+  "track": "python",
+  "cluster": 1,
+  "kind": "challenge",
+  "id": "py-c1-challenge",
+  "title": "Even or odd",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "prompt": "Write is_even(n): return True when n is even, False when it's odd. This is the first time you write real code in your own editor - take your time.",
+  "function": "is_even",
+  "starter": "def is_even(n):\n    # your code here\n    pass\n",
+  "cases": [
+    {"args": [4], "expect": true},
+    {"args": [7], "expect": false},
+    {"args": [0], "expect": true},
+    {"args": [-3], "expect": false},
+    {"args": [-8], "expect": true}
+  ],
+  "hints": [
+    "An even number divides by 2 with nothing left over.",
+    "The % operator gives you the remainder.",
+    "return n % 2 == 0"
+  ]
+}

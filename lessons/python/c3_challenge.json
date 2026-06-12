@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "track": "python",
+  "cluster": 3,
+  "kind": "challenge",
+  "id": "py-c3-challenge",
+  "title": "Word count",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "prompt": "Write word_count(text): return a dict mapping each word to how many times it appears. Split on spaces. An empty string returns an empty dict. This is dictionaries doing what they're best at.",
+  "function": "word_count",
+  "starter": "def word_count(text):\n    # your code here\n    pass\n",
+  "cases": [
+    {"args": ["a b a"], "expect": {"a": 2, "b": 1}},
+    {"args": ["one"], "expect": {"one": 1}},
+    {"args": [""], "expect": {}},
+    {"args": ["go go go go"], "expect": {"go": 4}}
+  ],
+  "hints": [
+    "text.split() gives you the list of words.",
+    "For each word, add 1 to its count in the dict.",
+    "counts[w] = counts.get(w, 0) + 1"
+  ]
+}

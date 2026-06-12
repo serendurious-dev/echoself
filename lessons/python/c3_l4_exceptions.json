@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "track": "python",
+  "cluster": 3,
+  "lesson": 4,
+  "id": "py-c3-l4-exceptions",
+  "title": "try / except - when things go wrong",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "Code that might fail goes in try; the response to failure goes in except. The program recovers instead of crashing.",
+  "explanation": "Some things you can't prevent - bad input, a missing key, dividing by zero. try lets you attempt anyway and catch the fall. The except block runs only if something in try raised an error. It's how a program meets the unexpected without falling apart - which, come to think of it, is a decent thing to learn in general.",
+  "code_example": "def safe_div(a, b):\n    try:\n        return a / b\n    except ZeroDivisionError:\n        return 0\n\nprint(safe_div(6, 2), safe_div(6, 0))",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": ["3.0 0", "3 0", "error", "3.0 error"],
+    "answer_index": 0
+  },
+  "hints": [
+    "6 / 2 is normal division - remember what / always returns.",
+    "6 / 0 would crash, but except catches it and returns 0.",
+    "3.0 (float division) and 0: '3.0 0'."
+  ]
+}

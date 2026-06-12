@@ -1,0 +1,25 @@
+{
+  "format_version": 1,
+  "track": "python",
+  "cluster": 3,
+  "kind": "project",
+  "id": "py-c3-project",
+  "title": "Bank account",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "prompt": "Build run_account(operations): start a balance at 0 and apply a list of operations, each a pair like [\"deposit\", 50] or [\"withdraw\", 20]. A withdrawal larger than the balance is refused (skipped, balance unchanged). Return the final balance. Write a small Account class inside if you like - then drive it from run_account. This is the capstone: state that changes over time, guarded by a rule.",
+  "function": "run_account",
+  "starter": "def run_account(operations):\n    # your code here\n    pass\n",
+  "cases": [
+    {"args": [[["deposit", 100], ["withdraw", 30]]], "expect": 70},
+    {"args": [[["deposit", 50], ["withdraw", 80]]], "expect": 50},
+    {"args": [[]], "expect": 0},
+    {"args": [[["deposit", 20], ["deposit", 5], ["withdraw", 25]]], "expect": 0},
+    {"args": [[["withdraw", 10]]], "expect": 0}
+  ],
+  "hints": [
+    "Track a balance. For each [kind, amount], deposit adds, withdraw subtracts.",
+    "Before a withdrawal, check it doesn't exceed the balance - if it does, skip it.",
+    "if kind == 'withdraw' and amount > balance: continue  (otherwise apply it)"
+  ]
+}

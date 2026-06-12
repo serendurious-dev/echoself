@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "track": "python",
+  "cluster": 3,
+  "lesson": 2,
+  "id": "py-c3-l2-tuples-sets",
+  "title": "Tuples and sets - fixed, and unique",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A tuple is an ordered group that can't be changed. A set is an unordered collection with no duplicates.",
+  "explanation": "Use a tuple when a group belongs together and shouldn't shift - (x, y) coordinates, a row. Use a set when you only care whether something is in it, and want duplicates gone automatically. set([1, 2, 2, 3]) is {1, 2, 3}. Asking 'is this in the set' is fast.",
+  "code_example": "seen = set()\nfor c in \"banana\":\n    seen.add(c)\nprint(len(seen))",
+  "quiz": {
+    "type": "predict_output",
+    "question": "How many unique letters are in 'banana'?",
+    "options": ["6", "3", "2", "5"],
+    "answer_index": 1
+  },
+  "hints": [
+    "A set drops repeats. Which distinct letters appear?",
+    "The letters used are b, a, n.",
+    "Three unique letters: 3."
+  ]
+}

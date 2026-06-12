@@ -1,0 +1,24 @@
+{
+  "format_version": 1,
+  "track": "python",
+  "cluster": 2,
+  "lesson": 3,
+  "id": "py-c2-l3-functions",
+  "title": "Functions - naming a piece of work",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "def names a block of work so you can run it again by calling it. return hands a value back to whoever called.",
+  "explanation": "A function is a verb you get to invent. def double(x): defines it; double(5) runs it. return is the door the answer comes back through - without a return, a function hands back None. That distinction (returning a value versus just doing something) is the one that trips everyone up first.",
+  "code_example": "def double(x):\n    return x * 2\n\nresult = double(double(3))\nprint(result)",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": ["6", "12", "9", "None"],
+    "answer_index": 1
+  },
+  "hints": [
+    "Work the inside call first: double(3).",
+    "double(3) is 6, and then double(6).",
+    "double(6) is 12."
+  ]
+}

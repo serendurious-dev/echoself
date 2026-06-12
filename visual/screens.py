@@ -6,6 +6,9 @@ encrypted diary - and even here, nothing is decrypted until the user types the
 passphrase that only they know.
 """
 
+import os
+import random
+
 import pygame
 
 BG   = (10, 14, 28)
@@ -124,6 +127,79 @@ def show_letters(screen, clock, profile):
         return
     body = letters.read(items[0][1])
     _scroll_text(screen, clock, f"Letter - {items[0][0]}", body)
+
+
+def run_challenge(screen, clock, character, voice):
+    # the editor-handoff coding challenge: write a starter file, the user solves
+    # it in their own editor, we run it and the character reacts.
+    from learning import codepath, challenge_runner, progress_tracker
+    item = codepath.next_challenge("python")
+    if item is None:
+        _scroll_text(screen, clock, "Nothing to code yet",
+                     "Finish a cluster's five lessons in the Learning World and its challenge "
+                     "unlocks here - real code, written in your own editor.\n\nKeep going (tab), "
+                     "then come back.")
+        return
+
+    path = challenge_runner.write_starter(item)
+    challenge_runner.open_in_editor(path)
+    w, h    = screen.get_size()
+    font    = _font(24)
+    big     = _font(34)
+    code    = pygame.font.SysFont("consolas,courier", 20)
+    hints   = 0
+    passed  = False
+    result  = None
+
+    while True:
+        clock.tick(60)
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                return
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_ESCAPE:
+                    return
+                if e.key == pygame.K_h and hints < len(item["hints"]):
+                    hints += 1
+                if e.key == pygame.K_r and not passed:
+                    passed, result = challenge_runner.run(item)
+                    if passed:
+                        progress_tracker.log_event("python", item["cluster"], item["id"],
+                                                   "challenge_done")
+                        character.set_expression("celebrating")
+                    else:
+                        character.set_expression("patient")
+                if e.key == pygame.K_RETURN and passed:
+                    return
+        character.update(1 / 60)
+
+        screen.fill(BG)
+        character.pos = (int(w * 0.17), int(h * 0.93))
+        character.draw(screen)
+        x, y, col = int(w * 0.38), 56, int(w * 0.56)
+        kind = "project" if item["kind"] == "project" else "challenge"
+        screen.blit(big.render(f"{kind}: {item['title']}", True, INK), (x, y)); y += 50
+        for ln in _wrap(font, item["prompt"], col):
+            screen.blit(font.render(ln, True, INK), (x, y)); y += font.get_linesize()
+        y += 12
+        screen.blit(font.render("your file (open it, solve it, save):", True, SOFT), (x, y)); y += 28
+        screen.blit(code.render(os.path.relpath(path), True, (190, 214, 200)), (x, y)); y += 40
+        for i in range(hints):
+            for ln in _wrap(font, "hint: " + item["hints"][i], col):
+                screen.blit(font.render(ln, True, (168, 180, 156)), (x, y)); y += font.get_linesize()
+        if result is not None:
+            y += 12
+            said = (random.choice(voice.get("correct", ["Yes. There it is."])) if passed
+                    else random.choice(voice.get("incorrect", ["Not yet. Look again."])))
+            for ln in _wrap(font, said, col):
+                screen.blit(font.render(ln, True, (150, 200, 160) if passed else (212, 190, 168)),
+                            (x, y)); y += font.get_linesize()
+            for ln in _wrap(code, result, col):
+                screen.blit(code.render(ln, True, (150, 160, 172)), (x, y)); y += 24
+        footer = ("passed - enter to return to the sky" if passed
+                  else "r to run   h for a hint   esc to step away")
+        screen.blit(font.render(footer, True, SOFT), (x, h - 44))
+        pygame.display.flip()
 
 
 def open_vault(screen, clock):

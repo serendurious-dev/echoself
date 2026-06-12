@@ -1,0 +1,25 @@
+{
+  "format_version": 1,
+  "track": "python",
+  "cluster": 1,
+  "kind": "project",
+  "id": "py-c1-project",
+  "title": "Grade tracker",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "prompt": "Build summarize(scores): given a list of test scores (0-100), return [average, letter] where average is rounded to one decimal and letter is the grade for that average (90+ A, 80+ B, 70+ C, 60+ D, else F). An empty list returns [0.0, \"F\"]. This pulls together everything in cluster one - lists, numbers, and the question behind every if.",
+  "function": "summarize",
+  "starter": "def summarize(scores):\n    # your code here\n    pass\n",
+  "cases": [
+    {"args": [[90, 100, 80]], "expect": [90.0, "A"]},
+    {"args": [[70, 75, 80]], "expect": [75.0, "C"]},
+    {"args": [[50, 60, 55]], "expect": [55.0, "F"]},
+    {"args": [[]], "expect": [0.0, "F"]},
+    {"args": [[65]], "expect": [65.0, "D"]}
+  ],
+  "hints": [
+    "Start with the average: sum(scores) / len(scores) - but guard the empty list first.",
+    "round(value, 1) gives one decimal place.",
+    "A chain of if / elif from 90 down, returning the letter, then return [avg, letter]."
+  ]
+}
