@@ -20,6 +20,16 @@ PACK_IDS = ["gentle_guide", "strict_mentor", "playful_rival",
 BUILDS      = ["female", "male"]
 HAIR_STYLES = ["long", "short", "fluffy", "spiky"]
 SKIN_TONES  = ["#F7E0CC", "#F2D5C0", "#D9A878", "#A8714A", "#6B4A35"]
+# a palette is [light, accent, deep]. it colors the character's aura and the sky
+# around them - your light - so it shows even when the body is painted art.
+PALETTES = [
+    ["#7FB5A8", "#E8DCC8", "#4A6670"],   # the gentle guide's own
+    ["#9B8AC4", "#D8CCE8", "#4A4458"],   # violet dusk
+    ["#E8A04C", "#F4D8A8", "#8A4A2E"],   # amber
+    ["#A8C4D8", "#E8E4DC", "#5A6E7A"],   # cool blue
+    ["#C77B8B", "#F0D8DC", "#5A3A44"],   # rose
+    ["#7AA86A", "#DCE8C8", "#3E5238"],   # green
+]
 
 
 def load_pack(pack_id):
@@ -31,7 +41,7 @@ def all_packs():
     return [load_pack(p) for p in PACK_IDS]
 
 
-def spec_from_pack(pack, hair_style=None, skin=None, build=None):
+def spec_from_pack(pack, hair_style=None, skin=None, build=None, palette=None):
     # the preset's look, with the user's choices laid over it
     spec = CharacterSpec.from_visual(pack.get("visual", {}))
     if hair_style:
@@ -40,6 +50,8 @@ def spec_from_pack(pack, hair_style=None, skin=None, build=None):
         spec.skin = CharacterSpec.from_visual({"skin": skin}).skin
     if build:
         spec.gender = build
+    if palette:
+        spec.palette = CharacterSpec.from_visual({"palette": palette}).palette
     return spec
 
 
@@ -51,7 +63,8 @@ def spec_from_profile(profile):
         return spec_from_pack(load_pack(c["pack"]),
                               hair_style=c.get("hair_style"),
                               skin=c.get("skin"),
-                              build=c.get("build"))
+                              build=c.get("build"),
+                              palette=c.get("palette"))
     except (KeyError, TypeError, OSError, ValueError):
         return spec_from_pack(load_pack("gentle_guide"))
 

@@ -142,7 +142,8 @@ workflow, [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) has the ground rules.
 Code and creative writing have different legal needs. MIT keeps the engine maximally
 forkable, CC BY 4.0 makes sure the people who write characters and lessons are always
 credited. Dependencies and their licenses are listed in
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). How a free project like this could still
+sustain itself - an Open Core model - is laid out in [BUSINESS.md](BUSINESS.md).
 
 The default character art is the Codel sprite by **LisadiKaprio** (CC BY 4.0), from
 [OpenGameArt](https://opengameart.org/content/codel-visual-novel-sprite); attribution and the

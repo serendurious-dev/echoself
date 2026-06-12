@@ -158,25 +158,29 @@ def _pick_character(stage):
 
 
 def _customize(stage, pack):
-    # make them yours. three quiet dials - build, hair, skin - shown live on
-    # the figure. small on purpose, day one should not be a settings menu.
+    # make them yours. four quiet dials - build, hair, skin, and the palette
+    # that becomes your light - shown live on the figure. small on purpose, day
+    # one should not be a settings menu.
     builds   = character_builder.BUILDS
     styles   = character_builder.HAIR_STYLES
     tones    = character_builder.SKIN_TONES
+    palettes = character_builder.PALETTES
     build_idx = builds.index(pack["visual"].get("gender", "female"))
     hair_idx  = styles.index(pack["visual"]["hair"]["style"]) \
         if pack["visual"]["hair"]["style"] in styles else 0
-    skin_idx  = 1
-    idx = {"build": build_idx, "hair": hair_idx, "skin": skin_idx}
-    sizes = {"build": len(builds), "hair": len(styles), "skin": len(tones)}
-    for stage_name, hint in (("build", "left and right for their build   enter when it's them"),
-                             ("hair", "left and right for their hair   enter when it's them"),
-                             ("skin", "left and right for their skin   enter when it's them")):
+    idx = {"build": build_idx, "hair": hair_idx, "skin": 1, "palette": 0}
+    sizes = {"build": len(builds), "hair": len(styles),
+             "skin": len(tones), "palette": len(palettes)}
+    for stage_name, hint in (("build",   "left and right for their build   enter when it's them"),
+                             ("hair",    "left and right for their hair   enter when it's them"),
+                             ("skin",    "left and right for their skin   enter when it's them"),
+                             ("palette", "left and right for their light   enter when it's them")):
         while True:
             spec = character_builder.spec_from_pack(pack,
                                                     hair_style=styles[idx["hair"]],
                                                     skin=tones[idx["skin"]],
-                                                    build=builds[idx["build"]])
+                                                    build=builds[idx["build"]],
+                                                    palette=palettes[idx["palette"]])
             who  = character_builder.make_character(
                 spec, pos=(stage.size[0] // 2, int(stage.size[1] * 0.82)),
                 height=int(stage.size[1] * 0.42))
@@ -198,7 +202,8 @@ def _customize(stage, pack):
             pygame.display.flip()
             if done:
                 break
-    return builds[idx["build"]], styles[idx["hair"]], tones[idx["skin"]]
+    return (builds[idx["build"]], styles[idx["hair"]], tones[idx["skin"]],
+            palettes[idx["palette"]])
 
 
 def _closing(stage, pack, profile):
@@ -234,7 +239,7 @@ def run_builder(screen, clock):
         signals.append(signal)
 
     pack              = _pick_character(stage)
-    build, hair, skin = _customize(stage, pack)
+    build, hair, skin, palette = _customize(stage, pack)
 
     profile = {
         "created":   datetime.date.today().isoformat(),
@@ -248,7 +253,8 @@ def run_builder(screen, clock):
             "name":  answers["shadow_name"],
             "trait": answers["shadow_trait"],
         },
-        "character": {"pack": pack["id"], "build": build, "hair_style": hair, "skin": skin},
+        "character": {"pack": pack["id"], "build": build, "hair_style": hair,
+                      "skin": skin, "palette": palette},
         "session_zero_signals": signals,
     }
     session_manager.save_profile(profile)

@@ -69,11 +69,17 @@ class TestSpecs(unittest.TestCase):
         self.assertEqual(spec.skin, (107, 74, 53))
         self.assertEqual(spec.form, "slender")          # the preset's own field survives
 
+    def test_palette_override_colors_the_light(self):
+        pack = character_builder.load_pack("gentle_guide")
+        spec = character_builder.spec_from_pack(pack, palette=["#C77B8B", "#F0D8DC", "#5A3A44"])
+        self.assertEqual(spec.palette[0], (199, 123, 139))   # the chosen light, not the preset's
+
     def test_spec_from_profile_and_fallback(self):
         profile = {"character": {"pack": "playful_rival", "hair_style": "spiky",
-                                 "skin": "#D9A878"}}
+                                 "skin": "#D9A878", "palette": ["#7AA86A", "#DCE8C8", "#3E5238"]}}
         spec = character_builder.spec_from_profile(profile)
         self.assertEqual(spec.symbol, "star")
+        self.assertEqual(spec.palette[0], (122, 168, 106))   # profile palette applied
         # garbage in, gentle guide out - never a crash
         self.assertEqual(character_builder.spec_from_profile(None).symbol, "lantern")
         self.assertEqual(character_builder.spec_from_profile({"character": {"pack": "gone"}}).symbol,
