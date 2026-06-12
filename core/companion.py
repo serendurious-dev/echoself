@@ -193,6 +193,14 @@ OPENERS = {
 }
 
 
+def _portrait_opener(fact):
+    # lead with the thing she's been holding for you, gently, in her voice
+    text = fact["text"]
+    if fact.get("kind") == "goal":
+        return f"before anything else — how's it going with {text}?"
+    return f"i've been thinking about you. how's {text} sitting today?"
+
+
 def respond(text, llm=None):
     # the orchestration. crisis overrides everything; otherwise read the emotion
     # and answer from its stance. `llm`, when given, is a callable(text, emotion,
@@ -244,7 +252,7 @@ class Conversation:
     # emotion, never the words, exactly as a single exchange would). crisis ends it
     # straight into real help and never reaches the model.
 
-    def __init__(self, llm=None, now=None):
+    def __init__(self, llm=None, distiller=None, now=None):
         self.history   = []      # (role, text, emotion) - RAM only, never persisted
         self._used     = set()   # lines already said, so she doesn't repeat herself
         self._awaiting = False   # she asked a follow-up and is waiting on the answer
@@ -253,19 +261,48 @@ class Conversation:
         self.ended     = False   # set on crisis; informational, doesn't gag her
         self.now       = now
         # the hybrid brain: auto-wire Claude when the user has opted in, else the
-        # offline library carries the whole conversation.
+        # offline library carries the whole conversation. the distiller is the
+        # part that writes a durable fact to the portrait - model-only, on purpose.
         if llm is None:
             from core import llm as llm_module
             if llm_module.available():
-                llm = llm_module.reply
-        self.llm = llm
+                llm      = llm_module.reply
+                distiller = distiller or llm_module.distill_facts
+        self.llm       = llm
+        self.distiller = distiller
 
     def open(self):
-        # the first thing she says, fit to the part of the user's day it is now
-        line = random.choice(OPENERS[timeofday.daypart(self.now)])
+        # the first thing she says. if she's holding something that weighs on you
+        # and it's still fresh, she leads with that - care before cleverness.
+        # otherwise she opens to the part of your day it actually is.
+        from core import portrait
+        fact = None
+        try:
+            fact = portrait.opener_hint(self.now)
+        except Exception:
+            pass
+        line = _portrait_opener(fact) if fact else random.choice(OPENERS[timeofday.daypart(self.now)])
         self.history.append(("her", line, None))
         self._used.add(line)
         return line
+
+    def end(self):
+        # called when you step away. she updates what she remembers: the patterns
+        # in your emotion rhythm always (offline, word-free), and - only when the
+        # model is on - a durable fact or two distilled from the thread. wrapped so
+        # leaving the conversation can never fail.
+        from core import portrait
+        try:
+            portrait.refresh_patterns(self.now)
+        except Exception:
+            pass
+        if self.distiller is not None and any(r == "you" for r, _t, _e in self.history):
+            try:
+                for fact in self.distiller(self.history) or []:
+                    portrait.remember(fact.get("text", ""), kind=fact.get("kind", "note"),
+                                      source="her", when=self.now)
+            except Exception:
+                pass
 
     def say(self, text):
         # one user turn -> her answer, in the same shape respond() returns.

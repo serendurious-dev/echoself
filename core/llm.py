@@ -56,3 +56,44 @@ def reply(text, emotion, stance, history=None):
     if not out:
         raise RuntimeError("empty reply from the model")
     return out
+
+
+_DISTILL_SYSTEM = (
+    "You read a short conversation between a person and the companion they built. "
+    "Pull out at most two durable facts worth remembering about the person's life - "
+    "an ongoing situation, a person who matters, something that helps or hurts them, "
+    "a goal. NOT passing moods, NOT what they felt for one minute, NOT anything you "
+    "are unsure about. Write each as a short phrase under eight words, no quotes, no "
+    "names you weren't given. Prefix each with its kind from: weight, lift, person, "
+    "goal, note. One per line, like 'weight: thesis is hanging over them'. If there is "
+    "nothing durable worth keeping, reply with exactly NONE."
+)
+
+
+def distill_facts(history):
+    # turn a finished thread into the few facts worth keeping in the portrait.
+    # the model sees the thread (it was already in the conversation); what comes
+    # back is a handful of short distilled phrases, never the transcript. raises
+    # on failure so the caller can simply skip remembering this time.
+    import anthropic
+    client = anthropic.Anthropic()
+    convo = "\n".join(f"{'them' if role == 'you' else 'her'}: {content}"
+                      for role, content, *_ in history if role in ("you", "her"))
+    message = client.messages.create(
+        model=os.environ.get(MODEL_ENV, DEFAULT_MODEL),
+        max_tokens=120,
+        system=_DISTILL_SYSTEM,
+        messages=[{"role": "user", "content": convo}],
+    )
+    out = next((b.text for b in message.content if b.type == "text"), "").strip()
+    facts = []
+    for line in out.splitlines():
+        line = line.strip().lstrip("-•").strip()
+        if not line or line.upper() == "NONE":
+            continue
+        kind, _, text = line.partition(":")
+        kind, text = kind.strip().lower(), text.strip()
+        if not text:
+            kind, text = "note", line
+        facts.append({"kind": kind, "text": text})
+    return facts[:2]

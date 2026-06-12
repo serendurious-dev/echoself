@@ -211,6 +211,7 @@ def talk(screen, clock, character):
     while True:
         said = _ask_line(screen, clock, "say anything — or esc to step away")
         if said is None:
+            conv.end()      # she keeps what's worth keeping; the words still go
             return
         turns.append(("you", said))
         r = conv.say(said)
@@ -229,6 +230,7 @@ def talk(screen, clock, character):
             dt = clock.tick(60) / 1000.0
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
+                    conv.end()
                     return
                 if e.type == pygame.KEYDOWN:
                     showing = False
@@ -249,6 +251,53 @@ def talk(screen, clock, character):
             screen.blit(small.render("press a key to keep talking · esc to leave", True, SOFT),
                         (x, h - 44))
             pygame.display.flip()
+
+
+_KIND_LABEL = {"weight": "weighs on you", "lift": "lifts you", "person": "someone",
+               "goal": "reaching for", "pattern": "a pattern", "note": "noted"}
+
+
+def show_portrait(screen, clock):
+    # what she remembers about you. everything she's gathered is here, in plain
+    # words, and any line can be removed with a keypress - model A, made literal.
+    # nothing is hidden, nothing ever left the machine.
+    from core import portrait
+    w, h    = screen.get_size()
+    title   = _font(38)
+    font    = _font(26)
+    soft    = _font(20)
+    label   = _font(18)
+    while True:
+        items = portrait.facts()[:9]      # the strongest nine; number keys remove
+        clock.tick(60)
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                return
+            if e.type == pygame.KEYDOWN:
+                if e.key in (pygame.K_ESCAPE, pygame.K_RETURN, pygame.K_q):
+                    return
+                if pygame.K_1 <= e.key <= pygame.K_9:
+                    i = e.key - pygame.K_1
+                    if i < len(items):
+                        portrait.forget(items[i]["id"])
+        screen.fill(BG)
+        screen.blit(title.render("what she remembers about you", True, INK), (60, 44))
+        screen.blit(soft.render("everything she's kept is here. nothing left this machine.",
+                                True, SOFT), (60, 92))
+        y = 150
+        if not items:
+            screen.blit(font.render("she hasn't gathered anything yet.", True, INK), (60, y))
+            screen.blit(soft.render("she will, the more you talk. it stays here, with you.",
+                                    True, SOFT), (60, y + 36))
+        else:
+            for i, f in enumerate(items):
+                tag = _KIND_LABEL.get(f.get("kind"), "noted")
+                screen.blit(font.render(f"{i + 1}.  {f['text']}", True, WARM), (60, y))
+                screen.blit(label.render(tag, True, SOFT), (w - 220, y + 4))
+                y += font.get_linesize() + 14
+        screen.blit(soft.render("press a number to forget that line   ·   esc to close",
+                                True, SOFT), (60, h - 44))
+        pygame.display.flip()
 
 
 def open_vault(screen, clock):
