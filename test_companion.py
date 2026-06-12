@@ -108,47 +108,31 @@ class TestEmotionLog(unittest.TestCase):
         self.assertNotIn("message", rows[0])
 
 
-class TestHybridBrain(unittest.TestCase):
-    # the optional Claude path: used when available, falls back on failure,
-    # never touched for a crisis.
+class TestInjectableWordingSeam(unittest.TestCase):
+    # EchoSelf ships no external brain - it runs fully offline. but the wording is
+    # pluggable: respond() takes an optional callable. these tests pin that seam
+    # down with fakes, including that it stays offline by default and that a crisis
+    # never reaches anything injected.
 
-    def setUp(self):
-        from core import llm
-        self.llm = llm
-        self._av, self._rp = llm.available, llm.reply
-
-    def tearDown(self):
-        self.llm.available, self.llm.reply = self._av, self._rp
-
-    def test_available_is_false_without_a_key(self):
-        import os
-        old = os.environ.pop("ANTHROPIC_API_KEY", None)
-        try:
-            self.assertFalse(self._av())
-        finally:
-            if old is not None:
-                os.environ["ANTHROPIC_API_KEY"] = old
-
-    def test_respond_uses_the_model_when_available(self):
-        self.llm.available = lambda: True
-        self.llm.reply = lambda text, emo, stance: "a warmer, model-written line"
-        r = companion.respond("I'm a little anxious about tomorrow")
-        self.assertEqual(r["reply"], "a warmer, model-written line")
-
-    def test_model_failure_falls_back_to_the_library(self):
-        self.llm.available = lambda: True
-        def down(*a):
-            raise RuntimeError("no network")
-        self.llm.reply = down
+    def test_offline_by_default_no_seam_wired(self):
+        # with nothing injected, the answer always comes from the offline library
         r = companion.respond("I feel so empty")
         self.assertIn(r["reply"], companion.RESPONSES["sadness"]["lines"])
 
-    def test_crisis_never_reaches_the_model(self):
-        self.llm.available = lambda: True
+    def test_an_injected_engine_is_used(self):
+        r = companion.respond("I'm a little anxious", llm=lambda *a: "an injected line")
+        self.assertEqual(r["reply"], "an injected line")
+
+    def test_injected_failure_falls_back_to_the_library(self):
+        def down(*a):
+            raise RuntimeError("boom")
+        r = companion.respond("I feel so empty", llm=down)
+        self.assertIn(r["reply"], companion.RESPONSES["sadness"]["lines"])
+
+    def test_crisis_never_reaches_an_injected_engine(self):
         def must_not_run(*a):
-            raise AssertionError("a crisis message must never reach the LLM")
-        self.llm.reply = must_not_run
-        r = companion.respond("I want to die")
+            raise AssertionError("a crisis message must never reach an injected engine")
+        r = companion.respond("I want to die", llm=must_not_run)
         self.assertTrue(r["crisis"])
 
 

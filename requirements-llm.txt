@@ -1,6 +1,0 @@
-# Optional. Only needed for the richer Claude-powered conversation in the talk
-# screen. EchoSelf runs fully without it - the offline companion is the default
-# and the safety net. To enable the hybrid brain:
-#   pip install -r requirements-llm.txt
-#   set ANTHROPIC_API_KEY=...        (your own key)
-anthropic>=0.40

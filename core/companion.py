@@ -203,21 +203,16 @@ def _portrait_opener(fact):
 
 def respond(text, llm=None):
     # the orchestration. crisis overrides everything; otherwise read the emotion
-    # and answer from its stance. `llm`, when given, is a callable(text, emotion,
-    # stance) -> reply for the optional richer path - the offline library is the
-    # fallback and is always what runs without a key.
+    # and answer from its stance. `llm` is an optional seam: a callable(text,
+    # emotion, stance) -> reply that something could inject to write the wording
+    # instead. nothing is shipped for it - EchoSelf runs fully offline, on its own
+    # library, with no network and no external service. the seam stays so the
+    # wording engine is pluggable, not so any particular one is required.
     if emotion.is_crisis(text):
         return {"emotion": "crisis", "intensity": 1.0, "crisis": True, "reply": CRISIS_REPLY}
 
     emo, intensity, _ = emotion.detect(text)
     bank = RESPONSES.get(emo, RESPONSES["neutral"])
-
-    # the hybrid brain: if a key is set and the SDK is there, Claude takes over
-    # the wording. otherwise (and on any failure) the offline library answers.
-    if llm is None:
-        from core import llm as llm_module
-        if llm_module.available():
-            llm = llm_module.reply
 
     if llm is not None:
         try:
@@ -260,14 +255,10 @@ class Conversation:
         self.turns     = 0
         self.ended     = False   # set on crisis; informational, doesn't gag her
         self.now       = now
-        # the hybrid brain: auto-wire Claude when the user has opted in, else the
-        # offline library carries the whole conversation. the distiller is the
-        # part that writes a durable fact to the portrait - model-only, on purpose.
-        if llm is None:
-            from core import llm as llm_module
-            if llm_module.available():
-                llm      = llm_module.reply
-                distiller = distiller or llm_module.distill_facts
+        # `llm` and `distiller` are optional seams - inject a callable to write the
+        # wording, or to distil a durable fact from a thread. nothing ships for
+        # them: the offline library carries the whole conversation, and offline she
+        # remembers patterns + what you tell her, never content guessed from words.
         self.llm       = llm
         self.distiller = distiller
 
@@ -358,9 +349,8 @@ class Conversation:
     # -- model wording ---------------------------------------------------------
 
     def _llm_reply(self, text, emo, stance):
-        # hand Claude the thread so it can answer in context. the prior turns go in
-        # as alternating messages; the API wants the first one to be the user, so
-        # drop the opener if she spoke first.
+        # if a wording engine was injected, hand it the thread for context. it gets
+        # the prior turns as (role, text) pairs; a plain 3-arg callable still works.
         hist = [(role, content) for (role, content, _e) in self.history[:-1]]
         try:
             return self.llm(text, emo, stance, hist)
