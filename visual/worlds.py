@@ -378,11 +378,14 @@ def run(args=None):
         run_builder(screen, clock)
     profile = load_profile()
 
-    # the one thing we ask directly, once a day: a word and a number.
+    # once a day, on launch, she just asks how you are - a real conversation, not
+    # a form. the mood gets read from what you say and logged underneath.
     from core.session_manager import logged_today
     if not logged_today():
-        from core.daily import capture_mood
-        capture_mood(screen, clock, profile)
+        from visual.screens import daily_checkin
+        from character.character_builder import spec_from_profile, make_character
+        who = make_character(spec_from_profile(profile))
+        daily_checkin(screen, clock, who, profile)
 
     # the inner world wakes: read the logs, classify the state, get the plan.
     # this is also where the drift nudges, one small step per launch.

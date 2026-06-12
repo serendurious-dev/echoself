@@ -196,10 +196,12 @@ def run_challenge(screen, clock, character, voice):
         pygame.display.flip()
 
 
-def talk(screen, clock, character):
-    # a conversation. the companion checks in, reads the emotion under what you
-    # type, and answers from it - the character's face following along. crisis is
-    # met with care, not a script. nothing you type is stored, only the emotion.
+def _converse(screen, clock, character):
+    # the shared conversation loop. the companion checks in, reads the emotion
+    # under what you type, and answers from it - the character's face following
+    # along. crisis is met with care, not a script. nothing you type is stored,
+    # only the emotion. returns the Conversation when you step away, so the caller
+    # (the daily check-in) can read the day's mood from it.
     from core import companion
     w, h  = screen.get_size()
     font  = _font(24)
@@ -212,7 +214,7 @@ def talk(screen, clock, character):
         said = _ask_line(screen, clock, "say anything — or esc to step away")
         if said is None:
             conv.end()      # she keeps what's worth keeping; the words still go
-            return
+            return conv
         turns.append(("you", said))
         r = conv.say(said)
         companion.log_emotion(r["emotion"], r["intensity"])
@@ -231,7 +233,7 @@ def talk(screen, clock, character):
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
                     conv.end()
-                    return
+                    return conv
                 if e.type == pygame.KEYDOWN:
                     showing = False
             character.update(dt)
@@ -251,6 +253,20 @@ def talk(screen, clock, character):
             screen.blit(small.render("press a key to keep talking · esc to leave", True, SOFT),
                         (x, h - 44))
             pygame.display.flip()
+
+
+def talk(screen, clock, character):
+    # the `t` key: just a conversation, whenever you want one
+    _converse(screen, clock, character)
+
+
+def daily_checkin(screen, clock, character, profile):
+    # the once-a-day check-in on launch. it's the same conversation - she opens
+    # with how your day was - but when you step away she reads the day's mood from
+    # what you said and logs it, so the brain still gets its number without a form.
+    from core import daily
+    conv = _converse(screen, clock, character)
+    daily.log_checkin(conv, profile)
 
 
 def settings_screen(screen, clock):

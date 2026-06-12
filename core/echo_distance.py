@@ -17,7 +17,9 @@ def _recent_mood_scores(days=14):
 
 # how close to "arrived" each conversation emotion reads, for the emotional axis
 _EMO_VALENCE = {"joy": 0.9, "neutral": 0.6, "anger": 0.4, "fear": 0.35,
-                "sadness": 0.25, "loneliness": 0.2, "shame": 0.2}
+                "sadness": 0.25, "loneliness": 0.2, "shame": 0.2,
+                "overwhelm": 0.3, "guilt": 0.3, "grief": 0.18, "numbness": 0.28,
+                "crisis": 0.1}
 
 
 def _conversation_closeness(limit=20):
