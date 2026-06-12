@@ -110,7 +110,83 @@ def _ask(stage, prompt):
         pygame.display.flip()
 
 
-def _pick_character(stage):
+def _choose_path(stage):
+    # the fork: a ready-made companion, or build one from scratch. returns 0 for
+    # the presets, 1 for the full builder.
+    options = [("pick a ready one", "five companions, ready to meet"),
+               ("make your own",    "build a character from scratch - every detail yours")]
+    idx = 0
+    while True:
+        dt, events = stage.frame()
+        for e in events:
+            if e.type == pygame.KEYDOWN:
+                if e.key in (pygame.K_LEFT, pygame.K_a):
+                    idx = (idx - 1) % 2
+                elif e.key in (pygame.K_RIGHT, pygame.K_e):
+                    idx = (idx + 1) % 2
+                elif e.key == pygame.K_RETURN:
+                    return idx
+        stage.say("how do you want to meet them?", 0.30)
+        stage.say(options[idx][0], 0.46, stage.mid, color=(226, 230, 238))
+        stage.say(options[idx][1], 0.55, stage.small, alpha=200, color=(190, 198, 212))
+        stage.hint("left and right to choose   ·   enter to pick")
+        pygame.display.flip()
+
+
+def _make_yourself(stage):
+    # the full builder: every knob the procedural renderer draws, each turned with
+    # a live, breathing preview. returns the picks, ready to save into the profile.
+    cb    = character_builder
+    dials = [
+        ("build",      "their build",       cb.BUILDS),
+        ("form",       "how they carry it", cb.FORMS),
+        ("hair_style", "their hair",        cb.HAIR_STYLES),
+        ("hair_color", "hair colour",       cb.HAIR_COLORS),
+        ("skin",       "their skin",        cb.SKIN_TONES),
+        ("eye_color",  "their eyes",        cb.EYE_COLORS),
+        ("outfit",     "what they wear",    cb.OUTFITS),
+        ("palette",    "their light",       cb.PALETTES),
+        ("symbol",     "their mark",        cb.SYMBOLS),
+    ]
+    idx = {key: 0 for key, _, _ in dials}
+    idx["skin"] = 1                      # a gentle starting tone, not the palest
+    base = cb.load_pack("gentle_guide")  # a neutral base; every field gets overridden
+
+    def picks():
+        return {key: options[idx[key]] for key, _, options in dials}
+
+    i = 0
+    while 0 <= i < len(dials):
+        key, label, options = dials[i]
+        advance = 0
+        spec = cb.spec_from_pack(base, **picks())
+        who  = cb.make_character(spec, pos=(stage.size[0] // 2, int(stage.size[1] * 0.88)),
+                                 height=int(stage.size[1] * 0.48))
+        who.t = stage.t
+        dt, events = stage.frame()
+        for e in events:
+            if e.type == pygame.KEYDOWN:
+                if e.key in (pygame.K_LEFT, pygame.K_a):
+                    idx[key] = (idx[key] - 1) % len(options)
+                elif e.key in (pygame.K_RIGHT, pygame.K_e):
+                    idx[key] = (idx[key] + 1) % len(options)
+                elif e.key in (pygame.K_RETURN, pygame.K_DOWN):
+                    advance = 1
+                elif e.key in (pygame.K_BACKSPACE, pygame.K_UP) and i > 0:
+                    advance = -1
+        who.update(dt)
+        who.draw(stage.screen)
+        stage.say("make yourself.", 0.06)
+        stage.say(f"{label}   ·   {idx[key] + 1} of {len(options)}", 0.135, stage.mid,
+                  color=(214, 222, 234))
+        back = "   ·   backspace to go back" if i > 0 else ""
+        stage.hint(f"left and right to change   ·   enter when it's right{back}")
+        pygame.display.flip()
+        i += advance
+    return picks()
+
+
+def _pick_character(stage, title="who walks with you?"):
     # the five of them, side by side, breathing. left/right to meet them,
     # enter to choose. returns the chosen pack dict.
     packs = character_builder.all_packs()
@@ -137,7 +213,7 @@ def _pick_character(stage):
             who.update(dt)
             who.draw(stage.screen)
         pack = packs[idx]
-        stage.say("who walks with you?", 0.08)
+        stage.say(title, 0.08)
         stage.say(pack["name"], 0.80, stage.mid, color=(226, 230, 238))
         stage.say('"' + pack["voice"]["phrases"]["greeting"][0] + '"', 0.855, stage.small,
                   alpha=200, color=(190, 198, 212))
@@ -226,8 +302,18 @@ def run_builder(screen, clock):
         signal["key"]  = key
         signals.append(signal)
 
-    pack              = _pick_character(stage)
-    build, hair, skin, palette = _customize(stage, pack)
+    if _choose_path(stage) == 0:
+        # a ready-made companion: pick one, then the four quick dials
+        pack = _pick_character(stage)
+        build, hair, skin, palette = _customize(stage, pack)
+        character = {"pack": pack["id"], "build": build, "hair_style": hair,
+                     "skin": skin, "palette": palette}
+    else:
+        # from scratch: build the look, then choose whose voice they have. the look
+        # and the personality are picked apart, so a custom face can carry any voice.
+        picks = _make_yourself(stage)
+        pack  = _pick_character(stage, "and whose voice do they have?")
+        character = {"pack": "custom", "voice": pack["id"], **picks}
 
     profile = {
         "created":   datetime.date.today().isoformat(),
@@ -241,8 +327,7 @@ def run_builder(screen, clock):
             "name":  answers["shadow_name"],
             "trait": answers["shadow_trait"],
         },
-        "character": {"pack": pack["id"], "build": build, "hair_style": hair,
-                      "skin": skin, "palette": palette},
+        "character": character,
         "session_zero_signals": signals,
     }
     session_manager.save_profile(profile)
