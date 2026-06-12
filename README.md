@@ -2,6 +2,9 @@
 
 > *"The version of you that made it — is waiting to tell you how."*
 
+![tests](https://github.com/serendurious-dev/echoself/actions/workflows/tests.yml/badge.svg)
+&nbsp; License: MIT (engine) + CC BY 4.0 (content)
+
 This is my final project for Introduction to Open Source Software. On the surface it is a
 program that teaches you to code. Underneath it is something I have wanted to exist for a
 long time: a companion that learns who you are without asking, and slowly becomes who you
@@ -66,12 +69,23 @@ Everything happens in one of three places, with one ML brain underneath all of t
 - **Echo Exchange.** Anonymous community sentences — something your ideal self told you
   that helped — contributed by pull request.
 
+## Look
+
+The character in the living sky, a lesson in the Learning World, and the four-axis Echo
+Distance over a month:
+
+![The ambient world](docs/screenshots/ambient.png)
+![A lesson in the learning world](docs/screenshots/learning.png)
+![The Echo Distance](docs/screenshots/echo_distance.png)
+
 ## Status
 
-Under active development. Right now the repository holds the foundation: structure, the
-OSS documents, and module skeletons that say what each part will be. The build is public
-from the first commit, on purpose — watch the issues and milestones if you want to follow
-along.
+v1.0 is feature-complete: the character (painted or code-drawn), the ML brain and the silent
+personality drift, the full Python track with editor-handoff challenges, the three worlds,
+the four-axis Echo Distance, the Dark Days Protocol, the Mirror Report, the Vault, Letters,
+Echo Exchange, the procedural soundscape, and demo + time-lapse modes. 147 tests, run on
+every push. The longer vision — an ambient life-companion that converses and learns you — is
+the documented next phase.
 
 ## Getting started
 
