@@ -169,7 +169,7 @@ class SkyWorld(World):
 
 
 class AmbientWorld(SkyWorld):
-    caption = "tab learn   c code   e how far   l letters   v vault   d drift   esc quit"
+    caption = "t talk   tab learn   c code   e how far   l letters   v vault   d drift   esc quit"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -431,6 +431,10 @@ def run(args=None):
                     from visual.analytics_charts import show_echo_distance
                     accent = worlds.current.character.spec.palette[0]
                     show_echo_distance(screen, clock, profile, accent)
+                elif event.key == pygame.K_t and not captured:
+                    from visual.screens import talk
+                    talk(screen, clock, worlds.current.character)
+                    worlds.current.character.set_expression(plan["expression"] if plan else "neutral")
                 elif event.key == pygame.K_c and not captured:
                     from visual.screens import run_challenge
                     from character.character_builder import voice_from_profile

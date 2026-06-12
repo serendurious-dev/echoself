@@ -196,6 +196,54 @@ def run_challenge(screen, clock, character, voice):
         pygame.display.flip()
 
 
+def talk(screen, clock, character):
+    # a conversation. the companion checks in, reads the emotion under what you
+    # type, and answers from it - the character's face following along. crisis is
+    # met with care, not a script. nothing you type is stored, only the emotion.
+    from core import companion
+    w, h  = screen.get_size()
+    font  = _font(24)
+    small = _font(20)
+    turns = [("her", companion.respond("")["reply"])]
+    character.set_expression("neutral")
+
+    while True:
+        said = _ask_line(screen, clock, "say anything — or esc to step away")
+        if said is None:
+            return
+        turns.append(("you", said))
+        r = companion.respond(said)
+        companion.log_emotion(r["emotion"], r["intensity"])
+        character.set_expression(companion.EXPRESSION.get(r["emotion"], "neutral"))
+        turns.append(("her", r["reply"]))
+
+        showing = True
+        while showing:
+            dt = clock.tick(60) / 1000.0
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    return
+                if e.type == pygame.KEYDOWN:
+                    showing = False
+            character.update(dt)
+            screen.fill(BG)
+            character.pos = (int(w * 0.17), int(h * 0.96))
+            character.draw(screen)
+            x, col = int(w * 0.36), int(w * 0.58)
+            blocks = []
+            for who, text in turns[-6:]:
+                color = WARM if who == "her" else INK
+                for i, ln in enumerate(_wrap(font, text, col)):
+                    blocks.append((("·  " if i == 0 else "   ") + ln, color))
+            y = max(60, h - 110 - len(blocks) * font.get_linesize())
+            for text, color in blocks:
+                screen.blit(font.render(text, True, color), (x, y))
+                y += font.get_linesize()
+            screen.blit(small.render("press a key to keep talking · esc to leave", True, SOFT),
+                        (x, h - 44))
+            pygame.display.flip()
+
+
 def open_vault(screen, clock):
     # the encrypted private writing space. the system holds it; it never reads it.
     from core import vault
