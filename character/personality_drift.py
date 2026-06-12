@@ -28,8 +28,28 @@ def save(drift):
     datastore.save_json(USER_MODEL, model)
 
 
+# how an emotion read from a conversation moves the axes. smaller than the
+# session nudge - a single sentence should barely move the needle, but a season
+# of heavy talks slowly drifts the character warmer, gentler, slower.
+_EMOTION_NUDGES = {
+    "sadness":    dict(warmth=+0.02, pace=-0.02, challenge=-0.01),
+    "fear":       dict(warmth=+0.02, pace=-0.02),
+    "loneliness": dict(warmth=+0.03),
+    "shame":      dict(warmth=+0.03, challenge=-0.02),
+    "anger":      dict(warmth=+0.015, challenge=-0.015),
+    "joy":        dict(challenge=+0.02, warmth=-0.005),
+}
+
+
 def nudge(drift, state):
     for axis, amount in _NUDGES.get(state, {}).items():
+        drift[axis] = max(-1.0, min(1.0, drift[axis] + amount))
+    return drift
+
+
+def nudge_emotion(drift, emotion):
+    # the character learns you from how you talk, not just how you study
+    for axis, amount in _EMOTION_NUDGES.get(emotion, {}).items():
         drift[axis] = max(-1.0, min(1.0, drift[axis] + amount))
     return drift
 

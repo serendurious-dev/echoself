@@ -99,6 +99,14 @@ def respond(text, llm=None):
 
     emo, intensity, _ = emotion.detect(text)
     bank = RESPONSES.get(emo, RESPONSES["neutral"])
+
+    # the hybrid brain: if a key is set and the SDK is there, Claude takes over
+    # the wording. otherwise (and on any failure) the offline library answers.
+    if llm is None:
+        from core import llm as llm_module
+        if llm_module.available():
+            llm = llm_module.reply
+
     if llm is not None:
         try:
             reply = llm(text, emo, bank["stance"])

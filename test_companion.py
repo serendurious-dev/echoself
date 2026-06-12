@@ -108,5 +108,81 @@ class TestEmotionLog(unittest.TestCase):
         self.assertNotIn("message", rows[0])
 
 
+class TestHybridBrain(unittest.TestCase):
+    # the optional Claude path: used when available, falls back on failure,
+    # never touched for a crisis.
+
+    def setUp(self):
+        from core import llm
+        self.llm = llm
+        self._av, self._rp = llm.available, llm.reply
+
+    def tearDown(self):
+        self.llm.available, self.llm.reply = self._av, self._rp
+
+    def test_available_is_false_without_a_key(self):
+        import os
+        old = os.environ.pop("ANTHROPIC_API_KEY", None)
+        try:
+            self.assertFalse(self._av())
+        finally:
+            if old is not None:
+                os.environ["ANTHROPIC_API_KEY"] = old
+
+    def test_respond_uses_the_model_when_available(self):
+        self.llm.available = lambda: True
+        self.llm.reply = lambda text, emo, stance: "a warmer, model-written line"
+        r = companion.respond("I'm a little anxious about tomorrow")
+        self.assertEqual(r["reply"], "a warmer, model-written line")
+
+    def test_model_failure_falls_back_to_the_library(self):
+        self.llm.available = lambda: True
+        def down(*a):
+            raise RuntimeError("no network")
+        self.llm.reply = down
+        r = companion.respond("I feel so empty")
+        self.assertIn(r["reply"], companion.RESPONSES["sadness"]["lines"])
+
+    def test_crisis_never_reaches_the_model(self):
+        self.llm.available = lambda: True
+        def must_not_run(*a):
+            raise AssertionError("a crisis message must never reach the LLM")
+        self.llm.reply = must_not_run
+        r = companion.respond("I want to die")
+        self.assertTrue(r["crisis"])
+
+
+class TestEmotionFeedsTheInnerWorld(unittest.TestCase):
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self._old = datastore.DATA_DIR
+        datastore.DATA_DIR = self._tmp.name
+
+    def tearDown(self):
+        datastore.DATA_DIR = self._old
+        self._tmp.cleanup()
+
+    def test_an_emotion_drifts_the_personality(self):
+        from character import personality_drift
+        d = {"challenge": 0.0, "warmth": 0.0, "pace": 0.0}
+        personality_drift.nudge_emotion(d, "loneliness")
+        self.assertGreater(d["warmth"], 0.0)
+        personality_drift.nudge_emotion(d, "joy")
+        self.assertGreater(d["challenge"], 0.0)
+
+    def test_heavy_conversations_open_the_emotional_gap(self):
+        from core import echo_distance
+        for _ in range(5):
+            companion.log_emotion("sadness", 0.7)
+        self.assertGreater(echo_distance.compute()["emotional"], 0.6)
+
+    def test_joyful_conversations_close_it(self):
+        from core import echo_distance
+        for _ in range(5):
+            companion.log_emotion("joy", 0.8)
+        self.assertLess(echo_distance.compute()["emotional"], 0.3)
+
+
 if __name__ == "__main__":
     unittest.main()

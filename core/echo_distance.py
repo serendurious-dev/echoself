@@ -15,10 +15,25 @@ def _recent_mood_scores(days=14):
             if r.get("mood_score")]
 
 
+# how close to "arrived" each conversation emotion reads, for the emotional axis
+_EMO_VALENCE = {"joy": 0.9, "neutral": 0.6, "anger": 0.4, "fear": 0.35,
+                "sadness": 0.25, "loneliness": 0.2, "shame": 0.2}
+
+
+def _conversation_closeness(limit=20):
+    from core import companion
+    vals = [_EMO_VALENCE.get(r["emotion"], 0.6) for r in companion.recent_emotions(limit)]
+    return sum(vals) / len(vals) if vals else None
+
+
 def compute(profile=None):
-    # emotional: recent mood, 1..10. a lighter week closes the gap.
-    moods = _recent_mood_scores()
-    emotional = 1.0 - (sum(moods) / len(moods) / 10.0) if moods else 0.5
+    # emotional: recent mood (1..10) blended with the feeling under recent
+    # conversations - the gap closes through how you talk, not just a number.
+    moods      = _recent_mood_scores()
+    mood_close = (sum(moods) / len(moods) / 10.0) if moods else None
+    conv_close = _conversation_closeness()
+    parts      = [c for c in (mood_close, conv_close) if c is not None]
+    emotional  = 1.0 - (sum(parts) / len(parts)) if parts else 0.5
 
     # learning: how much of the track is done, blended with quiz accuracy.
     # nothing started yet means unknown, not far - no cold-start punishment.

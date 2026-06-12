@@ -214,6 +214,12 @@ def talk(screen, clock, character):
         turns.append(("you", said))
         r = companion.respond(said)
         companion.log_emotion(r["emotion"], r["intensity"])
+        # the conversation trains the personality: a little drift per exchange
+        if not r["crisis"]:
+            from character import personality_drift
+            d = personality_drift.load()
+            personality_drift.nudge_emotion(d, r["emotion"])
+            personality_drift.save(d)
         character.set_expression(companion.EXPRESSION.get(r["emotion"], "neutral"))
         turns.append(("her", r["reply"]))
 
