@@ -13,6 +13,18 @@ from ml import archetypes
 USER_MODEL = "user_model.json"
 
 
+def _valence_by_day():
+    # how each day felt, read from the conversation log: the mean emotional
+    # valence of whatever was said that day. a day with no talk isn't here, and
+    # gets the neutral 0.6 default below. this is the bridge from how you talk to
+    # what the brain learns.
+    from core.echo_distance import _EMO_VALENCE
+    by_day = {}
+    for row in datastore.read_csv("conversation.csv"):
+        by_day.setdefault(row["date"], []).append(_EMO_VALENCE.get(row["emotion"], 0.6))
+    return {day: sum(vs) / len(vs) for day, vs in by_day.items() if vs}
+
+
 def session_features():
     # one feature row per day that had any activity, oldest first
     by_day = {}
@@ -21,6 +33,7 @@ def session_features():
     for row in session_manager.read_echo_log():
         by_day.setdefault(row["date"], [])
 
+    valence = _valence_by_day()
     days = sorted(by_day)
     rows = []
     prev = None
@@ -36,7 +49,8 @@ def session_features():
         duration = (sum(float(q["duration_s"] or 0) for q in quizzes) / len(quizzes)) if quizzes else 25.0
         rows.append([accuracy, duration,
                      (len(hints) / len(quizzes)) if quizzes else 0.0,
-                     float(len(events)), float(len(lessons)), float(gap)])
+                     float(len(events)), float(len(lessons)), float(gap),
+                     valence.get(day, 0.6)])
         prev = day
     return rows
 

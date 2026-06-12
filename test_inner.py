@@ -69,6 +69,31 @@ class TestBrain(InnerTest):
         self.assertAlmostEqual(rows[0][0], 1.0)        # day one: all correct
         self.assertEqual(rows[1][5], 3.0)              # day two: the gap
 
+    def test_valence_is_the_seventh_signal(self):
+        self.assertEqual(len(archetypes.FEATURES), 7)
+        self.assertEqual(archetypes.FEATURES[6], "valence")
+        rows, _ = archetypes.synthetic_sessions(per_state=5)
+        self.assertEqual(len(rows[0]), 7)
+
+    def test_conversations_color_the_days_valence(self):
+        # how you talked that day shows up in the brain's read of the day
+        from core import companion
+        when = datetime.datetime(2026, 6, 2, 20, 0)
+        progress_tracker.log_event("python", 1, "a", "quiz", correct="yes",
+                                   duration_s=10, when=when)
+        for _ in range(3):
+            companion.log_emotion("grief", 0.8, when=when)
+        heavy = behavioral_model.session_features()[-1][6]
+        self.assertLess(heavy, 0.4)            # grief pulls the day heavy
+
+    def test_a_light_day_reads_light(self):
+        from core import companion
+        when = datetime.datetime(2026, 6, 2, 20, 0)
+        progress_tracker.log_event("python", 1, "a", "quiz", correct="yes",
+                                   duration_s=10, when=when)
+        companion.log_emotion("joy", 0.8, when=when)
+        self.assertGreater(behavioral_model.session_features()[-1][6], 0.8)
+
     def test_a_withdrawing_history_reads_as_withdrawal(self):
         # busy at first, then thinning out with growing gaps
         base = datetime.datetime(2026, 5, 1, 19, 0)
