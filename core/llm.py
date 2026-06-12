@@ -31,16 +31,26 @@ def available():
         return False
 
 
-def reply(text, emotion, stance):
+def reply(text, emotion, stance, history=None):
     # one short companion reply from Claude. raises on any failure so the caller
-    # falls back to the offline library - the conversation never breaks.
+    # falls back to the offline library - the conversation never breaks. `history`
+    # (a list of (role, text) where role is "you"/"her") gives the model the thread
+    # so a multi-turn talk stays in context; without it this is a single exchange.
     import anthropic
     client = anthropic.Anthropic()
+
+    messages = [{"role": "assistant" if role == "her" else "user", "content": content}
+                for role, content in (history or [])]
+    # the API needs the conversation to start with the user; drop a leading opener
+    while messages and messages[0]["role"] == "assistant":
+        messages.pop(0)
+    messages.append({"role": "user", "content": text})
+
     message = client.messages.create(
         model=os.environ.get(MODEL_ENV, DEFAULT_MODEL),
         max_tokens=200,
         system=_SYSTEM.format(emotion=emotion, stance=stance),
-        messages=[{"role": "user", "content": text}],
+        messages=messages,
     )
     out = next((b.text for b in message.content if b.type == "text"), "").strip()
     if not out:

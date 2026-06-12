@@ -204,7 +204,8 @@ def talk(screen, clock, character):
     w, h  = screen.get_size()
     font  = _font(24)
     small = _font(20)
-    turns = [("her", companion.respond("")["reply"])]
+    conv  = companion.Conversation()      # holds the thread for this whole sitting
+    turns = [("her", conv.open())]
     character.set_expression("neutral")
 
     while True:
@@ -212,7 +213,7 @@ def talk(screen, clock, character):
         if said is None:
             return
         turns.append(("you", said))
-        r = companion.respond(said)
+        r = conv.say(said)
         companion.log_emotion(r["emotion"], r["intensity"])
         # the conversation trains the personality: a little drift per exchange
         if not r["crisis"]:
