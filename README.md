@@ -140,6 +140,11 @@ Local-first, no exceptions. No server, no account, no telemetry. Everything you 
 `data/` on your machine, and `data/` is gitignored so it cannot even be committed by
 accident. The full promise is in [SECURITY.md](SECURITY.md).
 
+Because EchoSelf reads how you feel and tries to support you, it also carries a plain
+[ETHICS.md](ETHICS.md): it is a companion, not a clinician; crisis always comes first and
+points to real human help; support is offered, never forced; and the coping ideas it draws
+on are sourced. That document is part of the project on purpose, not an afterthought.
+
 ## Contributing
 
 Code and creative content are both welcome — personality packs, lesson packs, narrative

@@ -7,13 +7,15 @@ import random
 import datetime
 
 from core import emotion, datastore, timeofday
+from psychology import frameworks
 
 CONV_LOG    = "conversation.csv"
 CONV_FIELDS = ["date", "time", "emotion", "intensity"]
 
 # how each emotion sits on the character's face during a conversation
 EXPRESSION = {"joy": "happy", "neutral": "neutral", "sadness": "patient", "anger": "thinking",
-              "fear": "patient", "loneliness": "patient", "shame": "patient", "crisis": "patient"}
+              "fear": "patient", "loneliness": "patient", "shame": "patient", "crisis": "patient",
+              "overwhelm": "patient", "guilt": "thinking", "grief": "patient", "numbness": "drift"}
 
 # crisis safety. this is not a counseling script and EchoSelf is not a clinician -
 # the only job here is care plus a push toward a real human who can help, now.
@@ -54,6 +56,7 @@ RESPONSES = {
     },
     "anger": {
         "stance": "validate the feeling, don't defend against it",
+        "technique": "paced_breathing",
         "lines": [
             "You're allowed to be angry. Something mattered to you, and it got stepped on.",
             "That sounds genuinely unfair. I'm not going to tell you to calm down.",
@@ -72,6 +75,7 @@ RESPONSES = {
     },
     "fear": {
         "stance": "normalize, then ground",
+        "technique": "grounding_54321",
         "lines": [
             "Anxiety is your mind trying to keep you safe — it's loud, but it's on your side.",
             "Let's slow it down together. You don't have to solve the whole thing right now.",
@@ -108,6 +112,7 @@ RESPONSES = {
     },
     "shame": {
         "stance": "separate the person from the verdict",
+        "technique": "self_compassion",
         "lines": [
             "A hard day doesn't make you a failure. It makes you someone who had a hard day.",
             "Be as kind to yourself as you'd be to someone you love. You're allowed that.",
@@ -122,6 +127,80 @@ RESPONSES = {
             "you're not the worst thing that happened today.",
             "a hard day is a hard day. it isn't a sentence on who you are.",
             "be on your own side for one second. you're allowed that much.",
+        ],
+    },
+    "overwhelm": {
+        "stance": "shrink it down, take the weight off",
+        "technique": "kaizen_step",
+        "lines": [
+            "That's a lot of weight to carry at once. No wonder you're worn down.",
+            "When it's all piled up like that, freezing is normal — it's not weakness.",
+            "You don't have to hold all of it in your head right now. Put some of it down with me.",
+        ],
+        "follow_ups": [
+            "what's the heaviest piece on the pile?",
+            "is it the amount, or that none of it can wait?",
+            "if just one thing got easier, which one would it be?",
+        ],
+        "deepen": [
+            "one thing at a time. the rest can wait, I promise it can.",
+            "you're not behind because you're failing. you're tired because it's genuinely a lot.",
+            "let's make it smaller. we don't have to move the whole mountain tonight.",
+        ],
+    },
+    "guilt": {
+        "stance": "weigh it honestly, without the pile-on",
+        "technique": "cbt_reframe",
+        "lines": [
+            "Guilt usually means you care — that you'd have done it differently if you could.",
+            "It makes sense to feel this. But let's look at it honestly, not just harshly.",
+            "You can regret something and still not deserve to be punished for it forever.",
+        ],
+        "follow_ups": [
+            "what is it you wish you'd done differently?",
+            "would you hold a friend to the standard you're holding yourself to?",
+            "was it actually in your control, or are you carrying something that wasn't yours?",
+        ],
+        "deepen": [
+            "owning it is the repair. the endless self-blame isn't the repair, it's just pain.",
+            "you can make it right, or learn from it, without hating yourself in the meantime.",
+            "a mistake is a thing you did. it isn't the whole of who you are.",
+        ],
+    },
+    "grief": {
+        "stance": "make room for it, don't tidy it away",
+        "lines": [
+            "I'm so sorry. That's a real loss, and it deserves to be felt, not rushed.",
+            "Grief is love with nowhere to go. The size of it says something true.",
+            "There's no right way to do this, and no clock on it. I'll sit with you in it.",
+        ],
+        "follow_ups": [
+            "do you want to tell me about them?",
+            "what do you miss most, right now, tonight?",
+            "would it help to remember them out loud, or just to not be alone in it?",
+        ],
+        "deepen": [
+            "you don't have to be okay. you just have to be here, and you are.",
+            "it comes in waves. when one hits, I'm not going anywhere.",
+            "carrying them with you isn't failing to move on. it's love continuing.",
+        ],
+    },
+    "numbness": {
+        "stance": "presence without pressure, no forcing feeling",
+        "lines": [
+            "Numb is its own kind of heavy. Feeling nothing can be harder than feeling sad.",
+            "You don't have to manufacture a feeling for me. Blank is allowed to be where you are.",
+            "Sometimes the mind goes quiet to protect you for a while. That's not broken.",
+        ],
+        "follow_ups": [
+            "how long has it felt flat like this?",
+            "is it everything, or just some of it that's gone grey?",
+            "is the numb a relief right now, or is it lonely?",
+        ],
+        "deepen": [
+            "we don't have to fix the numb tonight. I'll just be here in the quiet with you.",
+            "no need to perform okay, or perform sad. you can just be, and I'll stay.",
+            "the feeling usually comes back, in its own time. you don't have to chase it.",
         ],
     },
     "joy": {
@@ -255,6 +334,8 @@ class Conversation:
         self.turns     = 0
         self.ended     = False   # set on crisis; informational, doesn't gag her
         self.now       = now
+        self._offered  = None    # a technique she's offered and is waiting a yes on
+        self._offered_kinds = set()   # so she offers each tool at most once a sitting
         # `llm` and `distiller` are optional seams - inject a callable to write the
         # wording, or to distil a durable fact from a thread. nothing ships for
         # them: the offline library carries the whole conversation, and offline she
@@ -297,13 +378,28 @@ class Conversation:
 
     def say(self, text):
         # one user turn -> her answer, in the same shape respond() returns.
+        # crisis is checked first, always, before anything else can run.
         if emotion.is_crisis(text):
-            self.ended = True
+            self.ended   = True
+            self._offered = None
             self.history.append(("you", text, "crisis"))
             self.history.append(("her", CRISIS_REPLY, "crisis"))
             return {"emotion": "crisis", "intensity": 1.0, "crisis": True, "reply": CRISIS_REPLY}
 
         emo, intensity, _ = emotion.detect(text)
+
+        # if she offered a tool last turn and you said yes, walk it together now.
+        # if you said anything else, she drops it without a word and just continues -
+        # never pushy, the whole point of opt-in.
+        if self._offered is not None:
+            pending, self._offered = self._offered, None
+            if emotion.is_affirmation(text):
+                reply = frameworks.walk(pending)
+                self.history.append(("you", text, emo))
+                self.history.append(("her", reply, emo))
+                self.last_emo = emo
+                return {"emotion": emo, "intensity": intensity, "crisis": False, "reply": reply}
+
         self.history.append(("you", text, emo))
         self.turns += 1
 
@@ -318,11 +414,24 @@ class Conversation:
                 reply = self._llm_reply(text, emo, bank["stance"])
             except Exception:
                 pass   # the offline line already stands; the conversation never breaks
+        else:
+            # the gentle-guide step: once she's validated and you've stayed with a
+            # feeling that has a tool, she offers it - as a question, once. offered
+            # only on the offline path; an injected wording engine handles its own.
+            reply = self._maybe_offer(emo, bank, continuation, reply)
 
         self.last_emo = emo
         self.history.append(("her", reply, emo))
         self._used.add(reply)
         return {"emotion": emo, "intensity": intensity, "crisis": False, "reply": reply}
+
+    def _maybe_offer(self, emo, bank, continuation, reply):
+        tech = bank.get("technique")
+        if tech and continuation and tech not in self._offered_kinds:
+            self._offered = tech
+            self._offered_kinds.add(tech)
+            return reply + " " + frameworks.offer_line(tech)
+        return reply
 
     # -- offline wording -------------------------------------------------------
 
