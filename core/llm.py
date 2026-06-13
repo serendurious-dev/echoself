@@ -1,13 +1,7 @@
-"""the optional mirror-self: when you've added your own key, Claude writes the
-companion's reply *as your better self* - the version of you that made it,
-speaking back to you, conditioned on what she's learned about you (your portrait
-and your ideal self from Session Zero).
-
-this is opt-in and off by default. EchoSelf runs fully offline without it; this
-only activates when ANTHROPIC_API_KEY is set and the anthropic SDK is installed.
-it never sees a crisis message (companion.py handles those before it gets here),
-and on any failure the caller falls back to the offline library, so the
-conversation never breaks. nothing here is required - it's a layer you switch on."""
+"""optional mirror-self layer. with your own key the model writes the reply in your
+better-self voice, built from your ideal self + portrait. off by default - only runs
+when ANTHROPIC_API_KEY and the SDK are present. crisis never reaches it; any failure
+falls back to the offline library."""
 
 import os
 

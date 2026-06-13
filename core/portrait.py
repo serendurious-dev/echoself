@@ -1,10 +1,8 @@
 """what she remembers about you, between sittings - the portrait.
 
-model A, the one Prodipta picked: not raw transcripts (the words still die with
-the sitting), but distilled facts she can hold - what's weighing on you, what
-lifts you, the people and the patterns. it lives in one local file you can open,
-read line by line, and delete from at any time; --export and --forget sweep it
-like everything else, because it sits in the data dir. honest by construction:
+not raw transcripts (the words die with the sitting), but distilled facts she can
+hold - what weighs on you, what lifts you, the people, the patterns. one local file
+you can open, read, and delete from; --export and --forget sweep it like the rest.
 nothing here is hidden from you, nothing leaves the machine.
 
 how facts get in: patterns come from the emotion rhythm offline (no words

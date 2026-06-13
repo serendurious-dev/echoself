@@ -1,10 +1,6 @@
-"""the don't-give-up layer: how far you've come, what's one step away, and how
-to come back without guilt.
-
-it reads the same learning_log everything else does and turns it into a picture
-meant to keep you going - per-topic mastery (not just done / not-done), the next
-single step, a momentum that never shames a break, and a gentle welcome when
-you've been away. the feeling is presence over pressure, the same as the rest."""
+"""the don't-give-up layer. reads learning_log into per-topic mastery (not just
+done/not-done), the next single step, a momentum that doesn't shame a break, and a
+welcome back after time away."""
 
 import datetime
 

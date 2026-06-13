@@ -1,10 +1,6 @@
-"""when she reaches out, and what she says.
-
-once a day, in the user's own waking hours, and only on a day they haven't already
-come by - a companion checks in, it doesn't nag. the words fit the time of day;
-they lean gentle when things have been heavy; and, only if the user asked for the
-proactive style, they lean on what she remembers (the portrait). all offline, all
-read from the user's own local clock - never an assumption about when "day" is."""
+"""when she reaches out: once a day, in your waking hours, skipped if you already
+came by. the line fits the time of day, softens when things have been heavy, and
+leans on the portrait if you chose the proactive style. read from your own clock."""
 
 import random
 

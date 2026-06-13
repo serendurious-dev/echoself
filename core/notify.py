@@ -1,7 +1,5 @@
-"""a desktop notification, the honest way: a Windows toast through PowerShell -
-no dependency, nothing to install, nothing phoned out. if it can't fire (not
-Windows, no PowerShell, any error), it falls back to a quiet line in the same
-reminders.log the daemon already uses, so the message is never simply lost."""
+"""a desktop notification: a Windows toast via PowerShell, no dependency. falls back
+to a line in reminders.log if it can't fire, so the message is never lost."""
 
 import os
 import datetime

@@ -1,8 +1,6 @@
-"""the daily check-in. it used to be one word and one number - the only thing
-EchoSelf asked directly. now she just talks to you ("how was today?"), reads the
-mood from the conversation, and logs the number quietly underneath, so the data
-layer and the brain keep what they need without a cold form. the old word+number
-capture stays below as a fallback."""
+"""the daily check-in. used to be one word + one number; now she just talks ("how
+was today?"), reads the mood from the conversation, and logs the number underneath.
+the old word+number capture stays below as a fallback."""
 
 from collections import Counter
 
