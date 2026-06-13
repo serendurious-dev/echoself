@@ -219,15 +219,17 @@ def _converse(screen, clock, character):
             # key); grounded and never made up - if she can't verify it, she says so.
             from core import llm
             q = said[1:].strip()
-            if llm.available() and q:
+            if not q:
+                answer = "ask me something after the ?, and i'll look it up."
+            elif not llm.available():
+                answer = ("i can look things up only when the mirror-self layer is on - your "
+                          "own key. without it i can't promise the answer's real, so i won't guess.")
+            else:
                 try:
                     answer = llm.research(q)
                 except Exception:
                     answer = ("i tried to look that up but couldn't reach an answer i trust. "
                               "better to give you nothing than something made up.")
-            else:
-                answer = ("i can look things up only when the mirror-self layer is on - your "
-                          "own key. without it i can't promise the answer's real, so i won't guess.")
             character.set_expression("thinking")
             turns.append(("her", answer))
         else:

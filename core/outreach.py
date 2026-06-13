@@ -6,7 +6,8 @@ import random
 
 from core import timeofday, settings, session_manager, companion, portrait
 
-_HEAVY      = ("sadness", "anger", "fear", "loneliness", "shame")
+_HEAVY      = ("sadness", "anger", "fear", "loneliness", "shame",
+               "overwhelm", "guilt", "grief", "numbness")
 _GOOD_PARTS = ("morning", "afternoon", "evening")    # waking hours, not the dead of night
 
 _GENERAL = {
