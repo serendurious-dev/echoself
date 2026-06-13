@@ -220,9 +220,8 @@ class AmbientWorld(SkyWorld):
 
 
 class LearningWorld(SkyWorld):
-    # the character teaches here. the lesson session owns the panel and the
-    # flow, this world owns the sky around it. number keys, typing and h all
-    # belong to the lesson, so this world captures input - tab leaves.
+    # the character teaches here; the lesson session owns the panel, this world the
+    # sky. captures input (keys go to the lesson); tab leaves.
     caption = "tab - back to the sky"
     star_speed = 0.6
     star_brightness = 0.7
@@ -266,9 +265,8 @@ class DriftWorld(SkyWorld):
 
 
 def default_worlds(size, plan=None):
-    # one character, one sky full of stars - shared. the worlds change the
-    # light around them, not the person or the stars. the character is whoever
-    # the profile says, the gentle guide until session zero has happened.
+    # one shared character + sky; the worlds change only the light. character from
+    # the profile (the gentle guide until Session Zero has run).
     # plan is the psychology layer's read of today, None means neutral.
     from core.session_manager import load_profile
     from character.character_builder import spec_from_profile, voice_from_profile, make_character

@@ -5,9 +5,7 @@ from core import datastore
 
 SETTINGS_FILE = "settings.json"
 
-# she reaches out by default - that's the whole point of a companion - but it's
-# one keypress to turn off, and "general" stays the gentler default (a plain
-# check-in) until the user chooses the proactive, portrait-aware one.
+# outreach on by default (one keypress to turn off); general is the gentler default.
 DEFAULTS = {
     "outreach":       True,         # may she send a daily check-in at all
     "outreach_style": "general",    # "general" | "personal"

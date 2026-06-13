@@ -21,9 +21,7 @@ def available():
 
 
 def _mirror_system(emotion, stance):
-    # build the "your better self" persona from what's actually known about the
-    # user - their ideal self and the portrait. all local; we send only what's
-    # needed to sound like them, never the raw conversation log.
+    # build the better-self persona from the local profile (ideal self) + portrait.
     from core import session_manager, portrait
     profile = session_manager.load_profile() or {}
     name    = profile.get("your_name")
@@ -95,9 +93,8 @@ _RESEARCH_SYSTEM = (
 
 
 def research(query):
-    # answer a factual question with web search, grounded, never fabricated. opt-in
-    # (same key as the mirror-self). raises on failure so the caller can say so
-    # honestly rather than invent something.
+    # factual answer via web search, grounded, never fabricated. raises on failure
+    # so the caller can say so rather than invent something.
     import anthropic
     client = anthropic.Anthropic()
     message = client.messages.create(

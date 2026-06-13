@@ -27,10 +27,11 @@ companion that learns you and stays with you.
 - **Four languages** - Python deep (with real editor-handoff coding challenges),
   plus C, C++, and Java as quiz-based intro tracks.
 - **A way in** - a help screen (`h`, and automatically after Session Zero), and
-  she calls you by name.
-- **100% offline** - the optional API layer was removed; no external service, no
-  network, all the program's own code.
-- Richer personality drift (five axes now, including humor), and ~238 tests.
+  she calls you by name. Friend when you're hurting, gentle teacher when you're dodging.
+- **Offline by default** - the whole core runs with no network. One optional,
+  off-by-default layer (your own key) adds the mirror-self voice and ask-anything
+  research, grounded so it refuses rather than guess.
+- Richer personality drift (five axes now, including humor), and 244 tests.
 
 ## v0.1 - the learning companion (the course foundation)
 

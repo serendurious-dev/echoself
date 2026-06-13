@@ -197,11 +197,9 @@ def run_challenge(screen, clock, character, voice):
 
 
 def _converse(screen, clock, character):
-    # the shared conversation loop. the companion checks in, reads the emotion
-    # under what you type, and answers from it - the character's face following
-    # along. crisis is met with care, not a script. nothing you type is stored,
-    # only the emotion. returns the Conversation when you step away, so the caller
-    # (the daily check-in) can read the day's mood from it.
+    # the shared conversation loop (talk and the daily check-in both use it).
+    # nothing typed is stored. returns the Conversation on leaving, so the
+    # check-in can read the day's mood from it.
     from core import companion
     w, h  = screen.get_size()
     font  = _font(24)

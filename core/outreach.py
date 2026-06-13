@@ -25,8 +25,7 @@ def _recently_heavy(limit=5):
 
 
 def _by_name(line):
-    # weave the user's name in, when she knows it - a notification that says your
-    # name lands differently than one that doesn't
+    # weave the name in when known
     name = (session_manager.load_profile() or {}).get("your_name")
     if name and "?" in line and random.random() < 0.6:
         return line.replace("?", f", {name}?", 1)

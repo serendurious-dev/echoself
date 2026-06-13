@@ -19,9 +19,8 @@ _MOOD_WORD = {
 
 
 def mood_from_conversation(conv):
-    # read the day's mood from what she heard, not from a form. returns (word,
-    # score 1-10) or (None, None) if you didn't actually say anything. the score
-    # reuses the same emotion->valence the Echo Distance uses, so it all agrees.
+    # read the day's mood from the conversation. returns (word, 1-10) or
+    # (None, None) if nothing was said. score reuses echo_distance's valence.
     emos = [e for role, _t, e in conv.history if role == "you" and e]
     if not emos:
         return None, None

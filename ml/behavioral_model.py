@@ -14,10 +14,8 @@ USER_MODEL = "user_model.json"
 
 
 def _valence_by_day():
-    # how each day felt, read from the conversation log: the mean emotional
-    # valence of whatever was said that day. a day with no talk isn't here, and
-    # gets the neutral 0.6 default below. this is the bridge from how you talk to
-    # what the brain learns.
+    # each day's mean emotional valence from the conversation log; days with no
+    # talk default to neutral 0.6 in session_features.
     from core.echo_distance import _EMO_VALENCE
     by_day = {}
     for row in datastore.read_csv("conversation.csv"):

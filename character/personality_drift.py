@@ -30,10 +30,8 @@ def save(drift):
     datastore.save_json(USER_MODEL, model)
 
 
-# how an emotion read from a conversation moves the axes. smaller than the
-# session nudge - a single sentence should barely move the needle, but a season
-# of heavy talks slowly drifts the character warmer, gentler, slower; a season of
-# good ones lets her be playful, because that's what you can take.
+# how a conversation's emotion moves the axes - smaller than the session nudge,
+# so it takes a season of talks to shift her, not one sentence.
 _EMOTION_NUDGES = {
     "sadness":    dict(warmth=+0.02, pace=-0.02, challenge=-0.01, humor=-0.02),
     "fear":       dict(warmth=+0.02, pace=-0.02, humor=-0.015),
@@ -62,8 +60,7 @@ def nudge_emotion(drift, emotion):
 
 
 # -- what the drift actually changes ------------------------------------------
-# the effects stay honest and visible: timing, tone, and now a little playfulness
-# on the good days when she's earned the room for it.
+# timing, tone, and playfulness on the good days.
 
 def pace_hesitation(drift, base_s):
     # warm-drifted characters wait longer before noticing, challenge-drifted

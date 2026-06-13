@@ -51,9 +51,8 @@ _NEGATIONS = {"not", "no", "never", "isnt", "isn't", "wasnt", "wasn't", "dont", 
               "didnt", "didn't", "cant", "can't", "wont", "won't", "arent", "aren't",
               "hardly", "barely", "aint", "ain't"}
 
-# crisis comes first, always. these never get "handled" by the normal path -
-# they trigger care and a push toward real, human help (see companion.py).
-# err toward catching - missing a real one is far worse than catching a false one
+# crisis phrases, handled before anything else (see companion.py). err toward
+# catching: a missed one is far worse than a false alarm.
 _CRISIS = ["kill myself", "killing myself", "end my life", "ending my life",
            "end it all", "ending it all", "end it", "suicide", "suicidal",
            "want to die", "wanna die", "don't want to live", "do not want to live",

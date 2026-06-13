@@ -23,9 +23,7 @@ KINDS = ("weight", "lift", "person", "goal", "pattern", "note")
 # the heavy feelings, for reading patterns out of the emotion log
 _HEAVY = ("sadness", "anger", "fear", "loneliness", "shame")
 
-# patterns are recomputed from fresh data, so they age out fast; a fact she
-# pulled from a conversation lingers longer; something you wrote yourself stays
-# until you remove it.
+# how many days each kind lives before pruning; your own facts never auto-expire.
 _STALE_DAYS = {"pattern": 21, "note": 45, "person": 90, "weight": 45,
                "lift": 90, "goal": 120}
 
@@ -128,9 +126,8 @@ def _emotion_rows():
 
 
 def refresh_patterns(when=None):
-    # recompute the kind="pattern" facts from the recent emotion log and replace
-    # the old ones. this is the offline portrait: she notices the shape of how
-    # you've been, without needing to keep a single thing you said.
+    # recompute the pattern facts from the recent emotion log (offline, word-free),
+    # replacing the old ones.
     rows = _emotion_rows()[-60:]
     p = load()
     p["facts"] = [f for f in p["facts"] if f.get("kind") != "pattern"]
@@ -169,9 +166,7 @@ def refresh_patterns(when=None):
 # -- the gentle opener hint ----------------------------------------------------
 
 def opener_hint(when=None):
-    # the one fresh thing most worth checking on first - what's weighing on them,
-    # or what they're reaching for. only recent, only the heavy/important kinds,
-    # so she leads with care, not cleverness.
+    # the freshest weight/goal worth opening on (recent + important kinds), or None.
     day = datetime.date.fromisoformat(_today(when))
     best = None
     for f in facts(when):

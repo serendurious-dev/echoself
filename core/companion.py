@@ -10,9 +10,7 @@ from core import emotion, datastore, timeofday
 from psychology import frameworks
 from character import personality_drift
 
-# little light touches she only allows herself once she's drifted playful enough
-# (high humor) and the moment is bright. the drift earns them; they don't just
-# show up. this is one of the things "the character has changed" actually means.
+# light touches, only when she's drifted playful enough (high humor). earned, not default.
 PLAYFUL = [
     "look at you go.",
     "i'd high-five you if i had hands.",
@@ -23,11 +21,11 @@ PLAYFUL = [
 
 
 def playful_touch(emo, drift):
-    # a light line for a bright moment, but only when she's drifted humorous
-    # enough to have earned it. None otherwise - she never jokes over a hard feeling.
+    # a light line on joy, only when drifted humorous enough. never over a hard feeling.
     if emo == "joy" and personality_drift.prefers_humor(drift):
         return random.choice(PLAYFUL)
     return None
+
 
 CONV_LOG    = "conversation.csv"
 CONV_FIELDS = ["date", "time", "emotion", "intensity"]
@@ -37,8 +35,7 @@ EXPRESSION = {"joy": "happy", "neutral": "neutral", "sadness": "patient", "anger
               "fear": "patient", "loneliness": "patient", "shame": "patient", "crisis": "patient",
               "overwhelm": "patient", "guilt": "thinking", "grief": "patient", "numbness": "drift"}
 
-# crisis safety. this is not a counseling script and EchoSelf is not a clinician -
-# the only job here is care plus a push toward a real human who can help, now.
+# crisis safety: not a counseling script. care, plus a push toward real human help.
 CRISIS_REPLY = (
     "I'm really glad you told me, and I'm staying right here with you.\n"
     "What you're carrying sounds like more than anyone should carry alone - and I'm a program, "
@@ -49,12 +46,8 @@ CRISIS_REPLY = (
     "I'll be here when you come back."
 )
 
-# per emotion: the stance, then three kinds of line. `lines` is the first thing
-# she says when a feeling shows up; `follow_ups` is the question that keeps the
-# thread open (so a conversation goes somewhere instead of resetting); `deepen`
-# is what she says when you stay on the same feeling - she goes with you instead
-# of repeating herself. the stance is the point: validate, normalize, stay;
-# don't argue someone out of a feeling.
+# per emotion: stance, `lines` (first thing she says), `follow_ups` (the question
+# that keeps the thread open), `deepen` (when you stay on the feeling).
 RESPONSES = {
     "sadness": {
         "stance": "validate first, then presence",
@@ -261,10 +254,8 @@ RESPONSES = {
     },
 }
 
-# the teacher in her. not for when you're hurting - never then - but for when the
-# brain reads that you're capable and just dodging. firm, believing in you out
-# loud, still presence over pressure: a friend who won't let you shrink, not a
-# drill sergeant. she only reaches for this when you're light enough to take it.
+# the teacher register: for when the brain reads you as capable but dodging, not
+# when you're hurting. firm but no shame - used only when you're light enough for it.
 TEACHER = {
     "stance": "gentle accountability - believe in them out loud, no shame",
     "lines": [
@@ -284,16 +275,14 @@ TEACHER = {
     ],
 }
 
-# feelings heavy enough that she stays a friend, full stop - she never switches
-# to the teacher over real pain, no matter what the behaviour says.
+# heavy feelings: she stays a friend over these, never the teacher.
 _HEAVY = ("sadness", "anger", "fear", "loneliness", "shame",
           "overwhelm", "guilt", "grief", "numbness")
 
 
 def stance(emo, state):
-    # which register she answers in. the emotion gets the first and final word -
-    # if you're hurting she's a friend, always. only when you're light does the
-    # behavioural read (are you avoiding? capable but coasting?) let the teacher in.
+    # which register she answers in. hurting -> friend, always. only when you're
+    # light does the behavioural read (avoiding/coasting?) let the teacher in.
     if emo in _HEAVY or emo == "crisis":
         return "friend"
     if emo == "joy":
@@ -303,9 +292,7 @@ def stance(emo, state):
     return "friend"
 
 
-# how she opens a conversation, by the part of *this user's* day it actually is.
-# read from their local clock (see timeofday) - never an assumption that late
-# means the same hour for everyone.
+# how she opens, by the part of the user's own day it is (read from their clock).
 OPENERS = {
     "deep_night": [
         "it's late for you. couldn't sleep, or just not ready to let today go?",
@@ -343,12 +330,9 @@ def _portrait_opener(fact):
 
 
 def respond(text, llm=None):
-    # the orchestration. crisis overrides everything; otherwise read the emotion
-    # and answer from its stance. `llm` is an optional seam: a callable(text,
-    # emotion, stance) -> reply that something could inject to write the wording
-    # instead. nothing is shipped for it - EchoSelf runs fully offline, on its own
-    # library, with no network and no external service. the seam stays so the
-    # wording engine is pluggable, not so any particular one is required.
+    # crisis overrides everything; else read the emotion and answer from its stance.
+    # `llm` is an optional seam, auto-wired to the mirror-self when a key is set
+    # (below); offline library by default and on any failure.
     if emotion.is_crisis(text):
         return {"emotion": "crisis", "intensity": 1.0, "crisis": True, "reply": CRISIS_REPLY}
 
@@ -373,9 +357,8 @@ def respond(text, llm=None):
 
 
 def log_emotion(emo, intensity, when=None):
-    # the conversation log keeps only the *signal* - the inferred emotion and how
-    # strong it was - never the words. that is what the inner world will learn
-    # from, and it honors the same privacy as the Vault: your text stays yours.
+    # logs only the signal (emotion + intensity), never the words. same privacy
+    # rule as the Vault: your text stays yours.
     when = when or datetime.datetime.now()
     datastore.append_csv(CONV_LOG, CONV_FIELDS, {
         "date": when.strftime("%Y-%m-%d"), "time": when.strftime("%H:%M"),
@@ -388,12 +371,10 @@ def recent_emotions(limit=30):
 
 
 class Conversation:
-    # a talk that holds its thread. she opens, you answer, and she stays with the
-    # topic instead of starting over every line - asks a real follow-up, then goes
-    # deeper instead of repeating herself. the thread lives only in memory, for
-    # this one sitting; nothing you type is written down (the caller still logs the
-    # emotion, never the words, exactly as a single exchange would). crisis ends it
-    # straight into real help and never reaches the model.
+    # a talk that holds its thread: opens, asks, then deepens instead of repeating.
+    # the thread is RAM-only for one sitting - nothing typed is stored (the caller
+    # still logs the emotion, never the words). crisis ends it into real help and
+    # never reaches the model.
 
     def __init__(self, llm=None, distiller=None, now=None):
         self.history   = []      # (role, text, emotion) - RAM only, never persisted
@@ -408,15 +389,12 @@ class Conversation:
         self.drift     = personality_drift.load()   # who she's become, for tone
         from core import session_manager
         self.name      = (session_manager.load_profile() or {}).get("your_name")
-        # the behavioural read from the brain - whether you've been avoiding,
-        # fading, flowing - so she can be a teacher when you're dodging and a
-        # friend when you're not. None until the brain has woken once.
+        # the brain's last read (Avoiding/Fading/Flowing...), for teacher vs friend.
+        # None until the brain has woken once.
         model = datastore.load_json("user_model.json", default={}) or {}
         self.state = model.get("last_state")
-        # `llm` and `distiller` are optional seams. when the user has opted in (a
-        # key + the SDK), they auto-wire to the mirror-self model; otherwise the
-        # offline library carries the whole conversation, and offline she remembers
-        # patterns + what you tell her, never content guessed from words.
+        # optional seams: auto-wire to the mirror-self when a key + SDK are present,
+        # else the offline library carries the whole conversation.
         if llm is None:
             from core import llm as llm_module
             if llm_module.available():
@@ -426,9 +404,8 @@ class Conversation:
         self.distiller = distiller
 
     def open(self):
-        # the first thing she says. if she's holding something that weighs on you
-        # and it's still fresh, she leads with that - care before cleverness.
-        # otherwise she opens to the part of your day it actually is.
+        # lead with a fresh weight from the portrait if there is one, else open to
+        # the time of day.
         from core import portrait
         fact = None
         try:
@@ -436,7 +413,7 @@ class Conversation:
         except Exception:
             pass
         line = _portrait_opener(fact) if fact else random.choice(OPENERS[timeofday.daypart(self.now)])
-        # call you by name sometimes - she knows it, and being known is the point
+        # use the name sometimes
         if self.name and "?" in line and random.random() < 0.6:
             line = line.replace("?", f", {self.name}?", 1)
         self.history.append(("her", line, None))
@@ -444,10 +421,8 @@ class Conversation:
         return line
 
     def end(self):
-        # called when you step away. she updates what she remembers: the patterns
-        # in your emotion rhythm always (offline, word-free), and - only when the
-        # model is on - a durable fact or two distilled from the thread. wrapped so
-        # leaving the conversation can never fail.
+        # on leaving: refresh the portrait patterns (offline), and distil a fact or
+        # two if the model's on. wrapped so leaving never fails.
         from core import portrait
         try:
             portrait.refresh_patterns(self.now)
@@ -473,9 +448,8 @@ class Conversation:
 
         emo, intensity, _ = emotion.detect(text)
 
-        # if she offered a tool last turn and you said yes, walk it together now.
-        # if you said anything else, she drops it without a word and just continues -
-        # never pushy, the whole point of opt-in.
+        # offered a tool last turn + you said yes -> walk it. anything else -> drop
+        # it silently, never pushy.
         if self._offered is not None:
             pending, self._offered = self._offered, None
             if emotion.is_affirmation(text):
@@ -493,8 +467,7 @@ class Conversation:
             bank = TEACHER
         else:
             bank = RESPONSES.get(emo, RESPONSES["neutral"])
-        # staying on the same feeling (or answering the follow-up she just asked)
-        # means go deeper, not back to the opening line.
+        # same feeling (or answering her follow-up) -> go deeper, not back to the opener.
         continuation = self._awaiting or emo == self.last_emo
         reply = self._offline_reply(emo, bank, continuation)
 
@@ -504,11 +477,9 @@ class Conversation:
             except Exception:
                 pass   # the offline line already stands; the conversation never breaks
         else:
-            # the gentle-guide step: once she's validated and you've stayed with a
-            # feeling that has a tool, she offers it - as a question, once. offered
-            # only on the offline path; an injected wording engine handles its own.
+            # once validated and you've stayed on a feeling with a tool, offer it
+            # (once, offline path only); plus a light touch on a bright moment.
             reply = self._maybe_offer(emo, bank, continuation, reply)
-            # and on a bright moment, if she's drifted playful enough, a light touch
             light = playful_touch(emo, self.drift)
             if light:
                 reply = reply + " " + light
@@ -540,9 +511,8 @@ class Conversation:
     def _offline_reply(self, emo, bank, continuation):
         pool = bank.get("deepen", bank["lines"]) if continuation else bank["lines"]
         base = self._pick(pool) or self._pick(bank["lines"]) or random.choice(bank["lines"])
-        # early in a heavy feeling, invite them to keep going; on light chitchat,
-        # just stay - no interrogation. but when she's in teacher mode the question
-        # is the whole point, so let it through even on a neutral message.
+        # ask a follow-up early in a heavy feeling, or in teacher mode; on light
+        # chitchat, just stay.
         follow = None
         if not continuation and (emo not in ("joy", "neutral") or bank is TEACHER):
             follow = self._pick(bank.get("follow_ups", []))
