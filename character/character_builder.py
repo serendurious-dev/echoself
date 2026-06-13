@@ -83,10 +83,11 @@ def spec_from_profile(profile):
     # base and is fully overridden by its saved knobs. broken or missing pieces
     # fall back to the gentle guide - the app never refuses to start.
     try:
-        c       = profile["character"]
-        pack_id = c.get("pack")
-        base    = load_pack(pack_id if pack_id and pack_id != "custom" else "gentle_guide")
-        return spec_from_pack(base,
+        c        = profile["character"]
+        pack_id  = c.get("pack")
+        is_custom = not pack_id or pack_id == "custom"
+        base     = load_pack("gentle_guide" if is_custom else pack_id)
+        spec = spec_from_pack(base,
                               hair_style=c.get("hair_style"),
                               skin=c.get("skin"),
                               build=c.get("build"),
@@ -96,6 +97,9 @@ def spec_from_profile(profile):
                               outfit=c.get("outfit"),
                               form=c.get("form"),
                               symbol=c.get("symbol"))
+        if is_custom:
+            spec.art = None   # a built-from-scratch character is drawn by code, not painted
+        return spec
     except (KeyError, TypeError, OSError, ValueError):
         return spec_from_pack(load_pack("gentle_guide"))
 

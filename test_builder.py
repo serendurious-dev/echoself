@@ -147,6 +147,14 @@ class TestMakeYourself(unittest.TestCase):
         self.assertEqual(spec.eye_color, (91, 138, 128))
         self.assertEqual(spec.palette[0], (155, 138, 196))
         self.assertEqual(spec.symbol, "spark")
+        # a custom character must be code-drawn, NOT the painted art - otherwise
+        # make_character returns the fixed painted sprite and ignores every choice
+        self.assertIsNone(spec.art)
+        from character.renderer import Character as Procedural
+        self.assertIsInstance(character_builder.make_character(spec), Procedural)
+        # a preset, by contrast, keeps its painted art
+        self.assertEqual(character_builder.spec_from_profile({"character": {"pack": "gentle_guide"}}).art,
+                         "codel")
         # the look is custom, the voice is whoever they picked
         self.assertEqual(character_builder.voice_from_profile(profile),
                          character_builder.load_pack("strict_mentor")["voice"]["phrases"])

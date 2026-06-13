@@ -160,6 +160,7 @@ def _make_yourself(stage):
         key, label, options = dials[i]
         advance = 0
         spec = cb.spec_from_pack(base, **picks())
+        spec.art = None   # a built character is drawn by code, so the dials actually show
         who  = cb.make_character(spec, pos=(stage.size[0] // 2, int(stage.size[1] * 0.88)),
                                  height=int(stage.size[1] * 0.48))
         who.t = stage.t
@@ -291,6 +292,38 @@ def _closing(stage, pack, profile):
         pygame.display.flip()
 
 
+def _pick_voice(stage, look_spec):
+    # the look is already built; here you only choose how they speak. so we keep
+    # showing YOUR character (not the five preset looks) and cycle the voices by
+    # name and a sample line.
+    packs = character_builder.all_packs()
+    who   = character_builder.make_character(
+        look_spec, pos=(stage.size[0] // 2, int(stage.size[1] * 0.9)),
+        height=int(stage.size[1] * 0.46))
+    who.set_expression("happy")
+    idx = 0
+    while True:
+        dt, events = stage.frame()
+        for e in events:
+            if e.type == pygame.KEYDOWN:
+                if e.key in (pygame.K_LEFT, pygame.K_a):
+                    idx = (idx - 1) % len(packs)
+                elif e.key in (pygame.K_RIGHT, pygame.K_e):
+                    idx = (idx + 1) % len(packs)
+                elif e.key == pygame.K_RETURN:
+                    return packs[idx]
+        who.t = stage.t
+        who.update(dt)
+        who.draw(stage.screen)
+        pack = packs[idx]
+        stage.say("and how do they speak?", 0.08)
+        stage.say(pack["name"], 0.74, stage.mid, color=(226, 230, 238))
+        stage.say('"' + pack["voice"]["phrases"]["greeting"][0] + '"', 0.80, stage.small,
+                  alpha=200, color=(190, 198, 212))
+        stage.hint("left and right for the voice   -   enter to choose")
+        pygame.display.flip()
+
+
 def choose_character(stage):
     # the character half of session zero, reusable on its own so it can be re-run
     # later from inside the app. returns (character-dict-for-the-profile, pack).
@@ -300,10 +333,12 @@ def choose_character(stage):
         build, hair, skin, palette = _customize(stage, pack)
         return ({"pack": pack["id"], "build": build, "hair_style": hair,
                  "skin": skin, "palette": palette}, pack)
-    # from scratch: build the look, then choose whose voice they have. the look
-    # and the personality are picked apart, so a custom face can carry any voice.
+    # from scratch: build the look, then choose the voice - the look and the
+    # personality are picked apart, so a custom face can carry any voice.
     picks = _make_yourself(stage)
-    pack  = _pick_character(stage, "and whose voice do they have?")
+    look  = character_builder.spec_from_pack(character_builder.load_pack("gentle_guide"), **picks)
+    look.art = None
+    pack  = _pick_voice(stage, look)
     return ({"pack": "custom", "voice": pack["id"], **picks}, pack)
 
 
