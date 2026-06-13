@@ -53,7 +53,8 @@ Everything happens in one of three places, with one ML brain underneath all of t
   pack the engine composites and animates. With no art pack, she's drawn entirely by code as a
   fallback, every feature a parameter. Either way she breathes, blinks, and reacts.
 - **Five starting personalities** - the Strict Mentor, the Gentle Guide, the Playful Rival,
-  the Philosophical Elder, the Quiet Empath. Or build your own.
+  the Philosophical Elder, the Quiet Empath. Or build your own. The painted default pack is
+  female for now; a painted male pack (CC BY 4.0, to match) is on the roadmap.
 - **Personality drift.** Every session nudges the personality toward what works for you.
   After thirty sessions it has genuinely changed. It never says so.
 - **CodePath.** Learn Python deeply through lessons taught in the character's voice, with C,
