@@ -6,6 +6,8 @@ they lean gentle when things have been heavy; and, only if the user asked for th
 proactive style, they lean on what she remembers (the portrait). all offline, all
 read from the user's own local clock - never an assumption about when "day" is."""
 
+import random
+
 from core import timeofday, settings, session_manager, companion, portrait
 
 _HEAVY      = ("sadness", "anger", "fear", "loneliness", "shame")
@@ -26,11 +28,20 @@ def _recently_heavy(limit=5):
     return heavy >= max(2, (len(rows) + 1) // 2)
 
 
+def _by_name(line):
+    # weave the user's name in, when she knows it - a notification that says your
+    # name lands differently than one that doesn't
+    name = (session_manager.load_profile() or {}).get("your_name")
+    if name and "?" in line and random.random() < 0.6:
+        return line.replace("?", f", {name}?", 1)
+    return line
+
+
 def compose(now=None, style=None):
     # the line she'd send right now. heavy stretch -> the gentlest version;
     # otherwise the chosen style, falling back to a plain check-in.
     if _recently_heavy():
-        return "thinking of you. i'm here whenever you want to talk."
+        return _by_name("thinking of you. i'm here whenever you want to talk.")
     style = style or settings.get("outreach_style")
     if style == "personal":
         try:
@@ -38,8 +49,8 @@ def compose(now=None, style=None):
         except Exception:
             hint = None
         if hint:
-            return f"thinking of you. how's {hint['text']} sitting today?"
-    return _GENERAL.get(timeofday.daypart(now), "how are you?")
+            return _by_name(f"thinking of you. how's {hint['text']} sitting today?")
+    return _by_name(_GENERAL.get(timeofday.daypart(now), "how are you?"))
 
 
 def should_reach(now=None, already_today=False):

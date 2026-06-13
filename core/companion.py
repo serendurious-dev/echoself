@@ -357,6 +357,8 @@ class Conversation:
         self._offered  = None    # a technique she's offered and is waiting a yes on
         self._offered_kinds = set()   # so she offers each tool at most once a sitting
         self.drift     = personality_drift.load()   # who she's become, for tone
+        from core import session_manager
+        self.name      = (session_manager.load_profile() or {}).get("your_name")
         # `llm` and `distiller` are optional seams - inject a callable to write the
         # wording, or to distil a durable fact from a thread. nothing ships for
         # them: the offline library carries the whole conversation, and offline she
@@ -375,6 +377,9 @@ class Conversation:
         except Exception:
             pass
         line = _portrait_opener(fact) if fact else random.choice(OPENERS[timeofday.daypart(self.now)])
+        # call you by name sometimes - she knows it, and being known is the point
+        if self.name and "?" in line and random.random() < 0.6:
+            line = line.replace("?", f", {self.name}?", 1)
         self.history.append(("her", line, None))
         self._used.add(line)
         return line

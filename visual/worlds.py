@@ -169,8 +169,8 @@ class SkyWorld(World):
 
 
 class AmbientWorld(SkyWorld):
-    caption = ("t talk   tab learn   c code   e how far   g progress   p memory   "
-               "b remake   l letters   v vault   s settings   d drift   esc quit")
+    caption = ("h help   t talk   tab learn   c code   e how far   g progress   "
+               "p memory   b remake   l letters   v vault   s settings   d drift   esc quit")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -376,8 +376,11 @@ def run(args=None):
     pygame.display.set_caption("EchoSelf")
     clock  = pygame.time.Clock()
 
-    if load_profile() is None:
+    first_run = load_profile() is None
+    if first_run:
         run_builder(screen, clock)
+        from visual.screens import show_help
+        show_help(screen, clock)        # first time here: what this place is
     profile = load_profile()
 
     # once a day, on launch, she just asks how you are - a real conversation, not
@@ -460,6 +463,10 @@ def run(args=None):
                     # how far you've come - the don't-give-up dashboard
                     from visual.screens import show_mastery
                     show_mastery(screen, clock, worlds.current.character)
+                elif event.key == pygame.K_h and not captured:
+                    # what this place is, and what the keys do - any time
+                    from visual.screens import show_help
+                    show_help(screen, clock)
                 elif event.key == pygame.K_b and not captured:
                     # remake your character any time, then rebuild the worlds around
                     # the new look (the sky takes its colour from them)

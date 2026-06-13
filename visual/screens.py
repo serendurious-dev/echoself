@@ -269,6 +269,63 @@ def daily_checkin(screen, clock, character, profile):
     daily.log_checkin(conv, profile)
 
 
+_HELP_WORLDS = [
+    ("the ambient world", "where you are now. a sky, the character, and quiet. just be here, or reach for anything below."),
+    ("the learning world", "press tab. the character teaches you to code - python deep, with c, c++ and java to try."),
+    ("drift", "press d. the softest place: no lessons, no numbers, no demands. for the heavy days."),
+]
+
+_HELP_KEYS = [
+    ("tab", "learn - the lessons"),
+    ("t", "talk - she listens, and reads how you feel"),
+    ("g", "your progress - how far you've come"),
+    ("p", "what she remembers about you"),
+    ("e", "how far - your echo distance"),
+    ("c", "a coding challenge in your own editor"),
+    ("b", "remake your character"),
+    ("l", "letters    v  the vault (private, encrypted)"),
+    ("s", "settings    d  drift    m  mute    esc  leave"),
+]
+
+
+def show_help(screen, clock):
+    # the one thing a first-timer needs: what this place is, and what the keys do.
+    # shown once after session zero, and any time on 'h'. presence over pressure -
+    # nothing here is a task list, it's an invitation.
+    w, h   = screen.get_size()
+    title  = _font(38)
+    head   = _font(26)
+    font   = _font(23)
+    soft   = _font(20)
+    while True:
+        clock.tick(60)
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                return
+            if e.type == pygame.KEYDOWN:
+                if e.key in (pygame.K_ESCAPE, pygame.K_RETURN, pygame.K_q, pygame.K_h):
+                    return
+        screen.fill(BG)
+        screen.blit(title.render("EchoSelf - how this place works", True, INK), (60, 40))
+        y = 104
+        for name, what in _HELP_WORLDS:
+            screen.blit(head.render(name, True, WARM), (60, y))
+            for ln in _wrap(font, what, w - 120):
+                y += 28
+                screen.blit(font.render(ln, True, (200, 208, 220)), (60, y))
+            y += 42
+        y += 6
+        screen.blit(head.render("the keys", True, WARM), (60, y))
+        y += 36
+        for key, what in _HELP_KEYS:
+            screen.blit(font.render(key, True, (224, 214, 180)), (60, y))
+            screen.blit(font.render(what, True, (196, 204, 216)), (140, y))
+            y += 30
+        screen.blit(soft.render("she learns you quietly. there's no wrong way to be here.   ·   esc to close",
+                                True, SOFT), (60, h - 44))
+        pygame.display.flip()
+
+
 def show_mastery(screen, clock, character):
     # how far you've come - the don't-give-up dashboard. per-topic progress, the
     # single next step, momentum without guilt, a welcome back if you've been away.
