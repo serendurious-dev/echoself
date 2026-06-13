@@ -88,6 +88,48 @@ class TestConversationThread(unittest.TestCase):
         self.assertTrue(conv.ended)
 
 
+class TestFriendVsTeacher(unittest.TestCase):
+    # she reads how you are and how you've been, and answers as the right one - a
+    # friend when you're hurting, a gentle teacher when you're just dodging.
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self._old = datastore.DATA_DIR
+        datastore.DATA_DIR = self._tmp.name
+
+    def tearDown(self):
+        datastore.DATA_DIR = self._old
+        self._tmp.cleanup()
+
+    def _state(self, s):
+        datastore.save_json("user_model.json", {"last_state": s})
+
+    def _conv(self):
+        return companion.Conversation(now=datetime.datetime(2026, 6, 13, 19, 0))
+
+    def test_the_stance_rules(self):
+        self.assertEqual(companion.stance("sadness", "Avoiding"), "friend")   # hurting wins
+        self.assertEqual(companion.stance("neutral", "Avoiding"), "teacher")  # dodging
+        self.assertEqual(companion.stance("neutral", "Flowing"), "friend")
+        self.assertEqual(companion.stance("joy", "Avoiding"), "celebrate")
+        self.assertEqual(companion.stance("neutral", None), "friend")         # no read yet
+
+    def test_teacher_when_youre_capable_and_dodging(self):
+        self._state("Avoiding")
+        conv = self._conv()
+        conv.open()
+        r = conv.say("eh, i didn't really do much today")        # neutral + avoiding
+        self.assertTrue(any(r["reply"].startswith(l) for l in companion.TEACHER["lines"]))
+        self.assertIn("?", r["reply"])                            # and she asks the question
+
+    def test_always_a_friend_when_youre_hurting_even_if_avoiding(self):
+        self._state("Avoiding")
+        conv = self._conv()
+        conv.open()
+        r = conv.say("honestly i feel so empty and worthless")    # heavy -> friend, never teacher
+        self.assertFalse(any(r["reply"].startswith(l) for l in companion.TEACHER["lines"]))
+
+
 class TestThreadKeepsNothing(unittest.TestCase):
 
     def setUp(self):

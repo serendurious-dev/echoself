@@ -261,6 +261,48 @@ RESPONSES = {
     },
 }
 
+# the teacher in her. not for when you're hurting - never then - but for when the
+# brain reads that you're capable and just dodging. firm, believing in you out
+# loud, still presence over pressure: a friend who won't let you shrink, not a
+# drill sergeant. she only reaches for this when you're light enough to take it.
+TEACHER = {
+    "stance": "gentle accountability - believe in them out loud, no shame",
+    "lines": [
+        "I don't think you're stuck. I think you're avoiding the first step — which is human, but let's name it.",
+        "You can do more than you're letting yourself right now, and I'd be a poor friend not to say so.",
+        "Be honest with me: is this a rest you need, or a dodge? No judgment either way — I just want the true answer.",
+    ],
+    "follow_ups": [
+        "what's the one thing you've been putting off?",
+        "if you did just five minutes of it, what would the five minutes be?",
+        "what's actually in the way — the task, or starting it?",
+    ],
+    "deepen": [
+        "okay. small-and-now beats perfect-and-later. pick the smallest version and go.",
+        "I'm not going to let you talk yourself out of something you'd be proud of. gently, but no.",
+        "you've got this. I've watched you do harder things. one step.",
+    ],
+}
+
+# feelings heavy enough that she stays a friend, full stop - she never switches
+# to the teacher over real pain, no matter what the behaviour says.
+_HEAVY = ("sadness", "anger", "fear", "loneliness", "shame",
+          "overwhelm", "guilt", "grief", "numbness")
+
+
+def stance(emo, state):
+    # which register she answers in. the emotion gets the first and final word -
+    # if you're hurting she's a friend, always. only when you're light does the
+    # behavioural read (are you avoiding? capable but coasting?) let the teacher in.
+    if emo in _HEAVY or emo == "crisis":
+        return "friend"
+    if emo == "joy":
+        return "celebrate"
+    if state in ("Avoiding", "Drifting"):
+        return "teacher"
+    return "friend"
+
+
 # how she opens a conversation, by the part of *this user's* day it actually is.
 # read from their local clock (see timeofday) - never an assumption that late
 # means the same hour for everyone.
@@ -359,6 +401,11 @@ class Conversation:
         self.drift     = personality_drift.load()   # who she's become, for tone
         from core import session_manager
         self.name      = (session_manager.load_profile() or {}).get("your_name")
+        # the behavioural read from the brain - whether you've been avoiding,
+        # fading, flowing - so she can be a teacher when you're dodging and a
+        # friend when you're not. None until the brain has woken once.
+        model = datastore.load_json("user_model.json", default={}) or {}
+        self.state = model.get("last_state")
         # `llm` and `distiller` are optional seams - inject a callable to write the
         # wording, or to distil a durable fact from a thread. nothing ships for
         # them: the offline library carries the whole conversation, and offline she
@@ -429,7 +476,11 @@ class Conversation:
         self.history.append(("you", text, emo))
         self.turns += 1
 
-        bank = RESPONSES.get(emo, RESPONSES["neutral"])
+        # friend or teacher? the emotion and the behavioural state decide together
+        if stance(emo, self.state) == "teacher":
+            bank = TEACHER
+        else:
+            bank = RESPONSES.get(emo, RESPONSES["neutral"])
         # staying on the same feeling (or answering the follow-up she just asked)
         # means go deeper, not back to the opening line.
         continuation = self._awaiting or emo == self.last_emo
@@ -477,10 +528,11 @@ class Conversation:
     def _offline_reply(self, emo, bank, continuation):
         pool = bank.get("deepen", bank["lines"]) if continuation else bank["lines"]
         base = self._pick(pool) or self._pick(bank["lines"]) or random.choice(bank["lines"])
-        # early in a heavy feeling, invite them to keep going; once we're in it, or
-        # the feeling is light, just stay - no interrogation.
+        # early in a heavy feeling, invite them to keep going; on light chitchat,
+        # just stay - no interrogation. but when she's in teacher mode the question
+        # is the whole point, so let it through even on a neutral message.
         follow = None
-        if not continuation and emo not in ("joy", "neutral"):
+        if not continuation and (emo not in ("joy", "neutral") or bank is TEACHER):
             follow = self._pick(bank.get("follow_ups", []))
         self._awaiting = follow is not None
         return base + " " + follow if follow else base
