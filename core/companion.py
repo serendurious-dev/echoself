@@ -355,6 +355,13 @@ def respond(text, llm=None):
     emo, intensity, _ = emotion.detect(text)
     bank = RESPONSES.get(emo, RESPONSES["neutral"])
 
+    # opt-in mirror-self: if a key is set and the SDK is there, the model writes
+    # the wording; otherwise (and on any failure) the offline library answers.
+    if llm is None:
+        from core import llm as llm_module
+        if llm_module.available():
+            llm = llm_module.reply
+
     if llm is not None:
         try:
             reply = llm(text, emo, bank["stance"])
@@ -406,10 +413,15 @@ class Conversation:
         # friend when you're not. None until the brain has woken once.
         model = datastore.load_json("user_model.json", default={}) or {}
         self.state = model.get("last_state")
-        # `llm` and `distiller` are optional seams - inject a callable to write the
-        # wording, or to distil a durable fact from a thread. nothing ships for
-        # them: the offline library carries the whole conversation, and offline she
-        # remembers patterns + what you tell her, never content guessed from words.
+        # `llm` and `distiller` are optional seams. when the user has opted in (a
+        # key + the SDK), they auto-wire to the mirror-self model; otherwise the
+        # offline library carries the whole conversation, and offline she remembers
+        # patterns + what you tell her, never content guessed from words.
+        if llm is None:
+            from core import llm as llm_module
+            if llm_module.available():
+                llm      = llm_module.reply
+                distiller = distiller or llm_module.distill_facts
         self.llm       = llm
         self.distiller = distiller
 

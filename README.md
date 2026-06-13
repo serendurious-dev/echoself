@@ -136,9 +136,15 @@ data/               your local data. never committed, never leaves your machine
 
 ## Privacy
 
-Local-first, no exceptions. No server, no account, no telemetry. Everything you do stays in
+Local-first by default. No server, no account, no telemetry. Everything you do stays in
 `data/` on your machine, and `data/` is gitignored so it cannot even be committed by
-accident. The full promise is in [SECURITY.md](SECURITY.md).
+accident. With the defaults, EchoSelf makes no network calls at all. The full promise is in
+[SECURITY.md](SECURITY.md).
+
+There is one **optional, off-by-default** layer: if you install `requirements-llm.txt` and add
+your *own* Anthropic API key, the character can answer in a richer "mirror-self" voice powered by
+a model. That layer — and only that layer — sends the conversation to the API over the network;
+leave it off and nothing ever leaves your machine. Crisis messages never reach it.
 
 Because EchoSelf reads how you feel and tries to support you, it also carries a plain
 [ETHICS.md](ETHICS.md): it is a companion, not a clinician; crisis always comes first and

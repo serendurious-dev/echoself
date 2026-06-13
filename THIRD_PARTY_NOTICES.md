@@ -41,6 +41,15 @@ Full license: https://github.com/pandas-dev/pandas/blob/main/LICENSE
 Our CODE_OF_CONDUCT.md is adapted from the Contributor Covenant v2.1,
 © Coraline Ada Ehmke, licensed CC BY 4.0. https://www.contributor-covenant.org
 
+## Optional dependency (off by default)
+
+### anthropic — MIT
+The optional mirror-self conversation layer (see `requirements-llm.txt`) uses the
+`anthropic` Python SDK, © Anthropic, licensed MIT. It is **not** installed or used
+by default; it activates only when the user installs it and supplies their own
+`ANTHROPIC_API_KEY`. When enabled, that layer sends the conversation to the
+Anthropic API over the network; with it off, EchoSelf makes no network calls at all.
+
 ## EchoSelf's Own Licenses
 
 - Engine code: MIT — see [LICENSE](LICENSE)

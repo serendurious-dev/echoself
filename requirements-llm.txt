@@ -1,0 +1,10 @@
+# Optional. Only needed for the opt-in mirror-self conversation layer - the
+# version where the character answers in your own better-self voice, powered by
+# the Anthropic API with YOUR OWN key. EchoSelf runs fully offline without this;
+# the offline library is the default and the safety net.
+#
+#   pip install -r requirements-llm.txt
+#   set ANTHROPIC_API_KEY=...        (your own key)
+#
+# the model is configurable with ECHOSELF_LLM_MODEL (default: claude-sonnet-4-6).
+anthropic>=0.40

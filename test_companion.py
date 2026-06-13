@@ -136,6 +136,40 @@ class TestInjectableWordingSeam(unittest.TestCase):
         self.assertTrue(r["crisis"])
 
 
+class TestOptionalMirrorSelf(unittest.TestCase):
+    # the opt-in LLM layer: off by default, used when available, never for crisis,
+    # always falling back to the offline library on failure.
+
+    def setUp(self):
+        from core import llm
+        self.llm = llm
+        self._av, self._rp = llm.available, llm.reply
+
+    def tearDown(self):
+        self.llm.available, self.llm.reply = self._av, self._rp
+
+    def test_off_without_a_key(self):
+        import os
+        old = os.environ.pop("ANTHROPIC_API_KEY", None)
+        try:
+            self.assertFalse(self._av())
+        finally:
+            if old is not None:
+                os.environ["ANTHROPIC_API_KEY"] = old
+
+    def test_used_when_available(self):
+        self.llm.available = lambda: True
+        self.llm.reply = lambda text, emo, stance: "a mirror-self line"
+        self.assertEqual(companion.respond("I'm a little anxious")["reply"], "a mirror-self line")
+
+    def test_crisis_never_reaches_it(self):
+        self.llm.available = lambda: True
+        def boom(*a):
+            raise AssertionError("crisis must never reach the model")
+        self.llm.reply = boom
+        self.assertTrue(companion.respond("I want to die")["crisis"])
+
+
 class TestPlayfulness(unittest.TestCase):
     # the humor axis: it grows on good days, and only then does she let a light
     # touch out, and only on a bright moment - never over a hard feeling.

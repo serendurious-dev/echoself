@@ -17,9 +17,9 @@ is meant to sit beside that, never to replace it.
 If what you write sounds like you might be in danger — thoughts of suicide or
 self-harm — EchoSelf drops everything else. It does not try to counsel you, it
 does not soften it, and that message never reaches any of the normal response
-logic (and, since the project is fully offline, it never reaches a network
-either). It does one thing: it stays with you for a moment, tells you honestly
-that it is a program and cannot keep you safe, and points you to real human help.
+logic — and never the optional model layer either, even when that layer is turned
+on. It does one thing: it stays with you for a moment, tells you honestly that it
+is a program and cannot keep you safe, and points you to real human help.
 
 In South Korea: **109** (suicide prevention) or **1393**. Anywhere, in immediate
 danger: your local emergency number. The detection deliberately errs toward
@@ -64,6 +64,17 @@ The coping tools are encoded in `psychology/frameworks.py`, each with its source
 
 These are summaries of public, widely taught ideas, adapted into a companion's
 voice. They are not a substitute for care from a person who is trained to give it.
+
+## The optional model layer
+
+By default EchoSelf is fully offline and the offline library writes everything she
+says. There is one opt-in layer: if you install it and add your *own* API key, a
+model can write her replies in a richer "mirror-self" voice. Being honest about
+it: when that layer is on, your messages in a conversation are sent to the
+Anthropic API to generate the reply. It is off unless you turn it on, it is never
+used for a crisis message, and the offline companion remains the default and the
+fallback. If privacy is what you want, simply don't enable it — nothing changes
+about the rest of the program.
 
 ## My promise
 
