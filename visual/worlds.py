@@ -170,7 +170,7 @@ class SkyWorld(World):
 
 class AmbientWorld(SkyWorld):
     caption = ("t talk   tab learn   c code   e how far   g progress   p memory   "
-               "l letters   v vault   s settings   d drift   esc quit")
+               "b remake   l letters   v vault   s settings   d drift   esc quit")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -458,6 +458,13 @@ def run(args=None):
                     # how far you've come - the don't-give-up dashboard
                     from visual.screens import show_mastery
                     show_mastery(screen, clock, worlds.current.character)
+                elif event.key == pygame.K_b and not captured:
+                    # remake your character any time, then rebuild the worlds around
+                    # the new look (the sky takes its colour from them)
+                    from core.echo_builder import remake_character
+                    remake_character(screen, clock)
+                    worlds.worlds  = default_worlds(WINDOW_SIZE, plan)
+                    worlds.current = worlds.worlds["ambient"]
                 elif event.key == pygame.K_s and not captured:
                     # whether she reaches out, and how - the user's to decide
                     from visual.screens import settings_screen

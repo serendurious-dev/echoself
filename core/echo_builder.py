@@ -291,6 +291,34 @@ def _closing(stage, pack, profile):
         pygame.display.flip()
 
 
+def choose_character(stage):
+    # the character half of session zero, reusable on its own so it can be re-run
+    # later from inside the app. returns (character-dict-for-the-profile, pack).
+    if _choose_path(stage) == 0:
+        # a ready-made companion: pick one, then the four quick dials
+        pack = _pick_character(stage)
+        build, hair, skin, palette = _customize(stage, pack)
+        return ({"pack": pack["id"], "build": build, "hair_style": hair,
+                 "skin": skin, "palette": palette}, pack)
+    # from scratch: build the look, then choose whose voice they have. the look
+    # and the personality are picked apart, so a custom face can carry any voice.
+    picks = _make_yourself(stage)
+    pack  = _pick_character(stage, "and whose voice do they have?")
+    return ({"pack": "custom", "voice": pack["id"], **picks}, pack)
+
+
+def remake_character(screen, clock):
+    # re-make your character any time, not just on day one. keeps the rest of the
+    # profile, swaps the character, says hello again. returns the saved profile.
+    stage = _Stage(screen, clock)
+    character, pack = choose_character(stage)
+    profile = session_manager.load_profile() or {}
+    profile["character"] = character
+    session_manager.save_profile(profile)
+    _closing(stage, pack, profile)
+    return profile
+
+
 def run_builder(screen, clock):
     # the whole of session zero. returns the saved profile.
     stage   = _Stage(screen, clock)
@@ -302,18 +330,7 @@ def run_builder(screen, clock):
         signal["key"]  = key
         signals.append(signal)
 
-    if _choose_path(stage) == 0:
-        # a ready-made companion: pick one, then the four quick dials
-        pack = _pick_character(stage)
-        build, hair, skin, palette = _customize(stage, pack)
-        character = {"pack": pack["id"], "build": build, "hair_style": hair,
-                     "skin": skin, "palette": palette}
-    else:
-        # from scratch: build the look, then choose whose voice they have. the look
-        # and the personality are picked apart, so a custom face can carry any voice.
-        picks = _make_yourself(stage)
-        pack  = _pick_character(stage, "and whose voice do they have?")
-        character = {"pack": "custom", "voice": pack["id"], **picks}
+    character, pack = choose_character(stage)
 
     profile = {
         "created":   datetime.date.today().isoformat(),
