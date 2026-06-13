@@ -1,4 +1,4 @@
-# User data — local-first, never committed (see SECURITY.md)
+# User data - local-first, never committed (see SECURITY.md)
 data/*
 !data/.gitkeep
 
