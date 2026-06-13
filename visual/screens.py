@@ -295,7 +295,7 @@ _HELP_WORLDS = [
 _HELP_KEYS = [
     ("tab", "learn - the lessons"),
     ("t", "talk - she listens, and reads how you feel (start a line with ? to look something up)"),
-    ("g", "your progress - how far you've come"),
+    ("g", "your progress - how far you've come, and where you switch language"),
     ("p", "what she remembers about you"),
     ("e", "how far - your echo distance"),
     ("c", "a coding challenge in your own editor"),
