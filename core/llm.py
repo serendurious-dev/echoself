@@ -89,6 +89,37 @@ def reply(text, emotion, stance, history=None):
     return out
 
 
+_RESEARCH_SYSTEM = (
+    "You are looking something up for the person you're talking with. Your one hard "
+    "rule, above everything: never make anything up. Use web search to find the "
+    "answer. If the search gives you a clear, well-sourced answer, say it plainly in "
+    "two or three sentences and name where it came from. If you cannot verify it - if "
+    "the sources disagree, or you just can't find it - say exactly that, 'I couldn't "
+    "find a reliable answer to that,' and stop. Do not guess, ever, not even a little. "
+    "A wrong answer is worse than no answer here. Keep the same warm, plain voice."
+)
+
+
+def research(query):
+    # answer a factual question with web search, grounded, never fabricated. opt-in
+    # (same key as the mirror-self). raises on failure so the caller can say so
+    # honestly rather than invent something.
+    import anthropic
+    client = anthropic.Anthropic()
+    message = client.messages.create(
+        model=os.environ.get(MODEL_ENV, DEFAULT_MODEL),
+        max_tokens=700,
+        system=_RESEARCH_SYSTEM,
+        tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 5}],
+        messages=[{"role": "user", "content": query}],
+    )
+    out = "\n".join(b.text for b in message.content
+                    if getattr(b, "type", None) == "text" and b.text).strip()
+    if not out:
+        raise RuntimeError("no answer from the model")
+    return out
+
+
 _DISTILL_SYSTEM = (
     "You read a short conversation between a person and the companion they built. "
     "Pull out at most two durable facts worth remembering about the person's life - "

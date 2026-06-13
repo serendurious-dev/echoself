@@ -211,21 +211,38 @@ def _converse(screen, clock, character):
     character.set_expression("neutral")
 
     while True:
-        said = _ask_line(screen, clock, "say anything — or esc to step away")
+        said = _ask_line(screen, clock, "say anything, or start with ? to look something up. esc to leave")
         if said is None:
             conv.end()      # she keeps what's worth keeping; the words still go
             return conv
         turns.append(("you", said))
-        r = conv.say(said)
-        companion.log_emotion(r["emotion"], r["intensity"])
-        # the conversation trains the personality: a little drift per exchange
-        if not r["crisis"]:
-            from character import personality_drift
-            d = personality_drift.load()
-            personality_drift.nudge_emotion(d, r["emotion"])
-            personality_drift.save(d)
-        character.set_expression(companion.EXPRESSION.get(r["emotion"], "neutral"))
-        turns.append(("her", r["reply"]))
+        if said.startswith("?"):
+            # a question to look up. only when the mirror-self layer is on (your own
+            # key); grounded and never made up - if she can't verify it, she says so.
+            from core import llm
+            q = said[1:].strip()
+            if llm.available() and q:
+                try:
+                    answer = llm.research(q)
+                except Exception:
+                    answer = ("i tried to look that up but couldn't reach an answer i trust. "
+                              "better to give you nothing than something made up.")
+            else:
+                answer = ("i can look things up only when the mirror-self layer is on - your "
+                          "own key. without it i can't promise the answer's real, so i won't guess.")
+            character.set_expression("thinking")
+            turns.append(("her", answer))
+        else:
+            r = conv.say(said)
+            companion.log_emotion(r["emotion"], r["intensity"])
+            # the conversation trains the personality: a little drift per exchange
+            if not r["crisis"]:
+                from character import personality_drift
+                d = personality_drift.load()
+                personality_drift.nudge_emotion(d, r["emotion"])
+                personality_drift.save(d)
+            character.set_expression(companion.EXPRESSION.get(r["emotion"], "neutral"))
+            turns.append(("her", r["reply"]))
 
         showing = True
         while showing:
@@ -277,7 +294,7 @@ _HELP_WORLDS = [
 
 _HELP_KEYS = [
     ("tab", "learn - the lessons"),
-    ("t", "talk - she listens, and reads how you feel"),
+    ("t", "talk - she listens, and reads how you feel (start a line with ? to look something up)"),
     ("g", "your progress - how far you've come"),
     ("p", "what she remembers about you"),
     ("e", "how far - your echo distance"),
