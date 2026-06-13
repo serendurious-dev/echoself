@@ -210,6 +210,12 @@ class LessonSession:
         y = panel.y + 24
         inner = panel.w - 56
 
+        # which language you're in, and how to change it (the switch lives in g)
+        from learning import mastery
+        self._text(surface, self.font_soft, mastery.track_name(self.track) + "    -    g to switch language",
+                   x, y, inner, (150, 160, 172))
+        y += self.font_soft.get_linesize() + 8
+
         if self.state == "track_done":
             from core import enough
             y = self._text(surface, self.font_big, "that is everything i have for now.",

@@ -9,7 +9,7 @@ import pygame
 
 PACK_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "characters")
 
-SS = 2   # supersampling factor. draw big, scale down, edges stay smooth
+SS = 3   # supersampling factor. draw big, scale down, edges stay smooth and soft
 
 # what the expression engine gets to drive. values are targets, the renderer
 # eases toward them so nothing ever snaps.
@@ -340,7 +340,11 @@ class Character:
             self._front_hair(hx, hy, hair, hair_dk, hair_lt, male)
 
         # -- composite ----------------------------------------------------------
+        # a touch of soft focus: scale down a little then back up, so the features
+        # read gentle instead of stark - less "cut from paper", more painted.
         figure = pygame.transform.smoothscale(self.canvas, (self._cw, self._chh))
+        soft   = pygame.transform.smoothscale(figure, (int(self._cw * 0.82), int(self._chh * 0.82)))
+        figure = pygame.transform.smoothscale(soft, (self._cw, self._chh))
         surface.blit(figure, top_left)
 
         sym = (self.pos[0] + sway * 0.004 * self.h, self.pos[1] - 0.70 * self.h)

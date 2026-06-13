@@ -248,6 +248,12 @@ class LearningWorld(SkyWorld):
 
     def update(self, dt):
         super().update(dt)
+        from learning import mastery
+        # if you switched language (in the progress screen), reload into it
+        if self.session and self.session.track != mastery.active_track():
+            from learning.quiz_engine import LessonSession
+            self.session = LessonSession(mastery.active_track(), self.character,
+                                         self.voice, plan=self.plan)
         if self.session:
             self.session.update(dt)
 
@@ -457,8 +463,9 @@ def run(args=None):
                     # what she remembers about you - the portrait, yours to read and prune
                     from visual.screens import show_portrait
                     show_portrait(screen, clock)
-                elif event.key == pygame.K_g and not captured:
-                    # how far you've come - the don't-give-up dashboard
+                elif event.key == pygame.K_g:
+                    # how far you've come - the don't-give-up dashboard, and where
+                    # you switch language (works from inside a lesson too)
                     from visual.screens import show_mastery
                     show_mastery(screen, clock, worlds.current.character)
                 elif event.key == pygame.K_h and not captured:
