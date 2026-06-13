@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "track": "java",
+  "cluster": 1,
+  "lesson": 4,
+  "id": "java-c1-l4-forloop",
+  "title": "for - counting a loop",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A for loop counts through a range, running its body each pass.",
+  "explanation": "i runs 1, 2, 3, 4; total collects them as it goes: 1, then 3, then 6, then 10.",
+  "code_example": "int total = 0;\nfor (int i = 1; i <= 4; i++) {\n    total += i;\n}\nSystem.out.println(total);",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": [
+      "4",
+      "10",
+      "1234",
+      "0"
+    ],
+    "answer_index": 1
+  },
+  "hints": [
+    "Add 1 + 2 + 3 + 4.",
+    "Sum them step by step.",
+    "It prints 10."
+  ]
+}

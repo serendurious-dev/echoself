@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "track": "c",
+  "cluster": 1,
+  "lesson": 2,
+  "id": "c-c1-l2-printf",
+  "title": "printf - formatted output",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "printf writes text with placeholders; each % is filled by an argument, in order.",
+  "explanation": "printf walks the format string and, every time it meets a placeholder like %d or %f, it pulls the next argument to fill it. Match the specifier to the type or the output comes out wrong.",
+  "code_example": "int n = 5;\nprintf(\"n is %d\\n\", n);",
+  "quiz": {
+    "type": "mcq",
+    "question": "Which specifier prints an integer?",
+    "options": [
+      "%d",
+      "%s",
+      "%c",
+      "%f"
+    ],
+    "answer_index": 0
+  },
+  "hints": [
+    "d is for decimal - a whole number.",
+    "%s is for strings, %f for floats.",
+    "It is %d."
+  ]
+}

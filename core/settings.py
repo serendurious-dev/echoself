@@ -11,6 +11,7 @@ SETTINGS_FILE = "settings.json"
 DEFAULTS = {
     "outreach":       True,         # may she send a daily check-in at all
     "outreach_style": "general",    # "general" | "personal"
+    "learning_track": "python",     # which language CodePath is teaching
 }
 
 STYLES = ("general", "personal")

@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "track": "cpp",
+  "cluster": 1,
+  "lesson": 1,
+  "id": "cpp-c1-l1-cout",
+  "title": "cout - printing in C++",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "C++ prints with std::cout and the << operator, and you can chain values together.",
+  "explanation": "cout is the standard output stream. Each << sends one more thing to it, so you can line up text, variables, and endl (a newline) in a single row.",
+  "code_example": "int year = 2026;\nstd::cout << \"Year: \" << year << std::endl;",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": [
+      "Year: 2026",
+      "Year: year",
+      "2026",
+      "Year: << year"
+    ],
+    "answer_index": 0
+  },
+  "hints": [
+    "<< sends each piece to the screen in turn.",
+    "The text, then the value of year.",
+    "Year: 2026."
+  ]
+}

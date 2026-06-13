@@ -273,6 +273,7 @@ def show_mastery(screen, clock, character):
     # how far you've come - the don't-give-up dashboard. per-topic progress, the
     # single next step, momentum without guilt, a welcome back if you've been away.
     from learning import mastery
+    from core import settings
     w, h    = screen.get_size()
     title   = _font(38)
     font    = _font(26)
@@ -288,13 +289,22 @@ def show_mastery(screen, clock, character):
             if e.type == pygame.KEYDOWN:
                 if e.key in (pygame.K_ESCAPE, pygame.K_RETURN, pygame.K_q):
                     return
+                if pygame.K_1 <= e.key <= pygame.K_4:        # switch language
+                    i = e.key - pygame.K_1
+                    if i < len(mastery.TRACKS):
+                        settings.set("learning_track", mastery.TRACKS[i][0])
+                        report = mastery.report()
         character.update(dt)
         screen.fill(BG)
         character.pos = (int(w * 0.84), int(h * 1.02))
         character.draw(screen)
 
         screen.blit(title.render("how far you've come", True, INK), (60, 44))
-        y = 122
+        # which language, and how to switch
+        switch = "   ".join(f"{i + 1} {name}" + (" ←" if tr == report["track"] else "")
+                            for i, (tr, name) in enumerate(mastery.TRACKS))
+        screen.blit(soft.render(switch, True, SOFT), (60, 92))
+        y = 132
         # the topic bars
         bar_w = int(w * 0.46)
         for c in report["clusters"]:
@@ -323,7 +333,8 @@ def show_mastery(screen, clock, character):
                 screen.blit(soft.render(ln, True, (186, 200, 178)), (60, y))
                 y += soft.get_linesize()
 
-        screen.blit(soft.render("tab to learn  ·  esc to close", True, SOFT), (60, h - 44))
+        screen.blit(soft.render("1-4 switch language  ·  tab to learn  ·  esc to close",
+                                True, SOFT), (60, h - 44))
         pygame.display.flip()
 
 

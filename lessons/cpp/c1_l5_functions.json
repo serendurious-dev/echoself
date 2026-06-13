@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "track": "cpp",
+  "cluster": 1,
+  "lesson": 5,
+  "id": "cpp-c1-l5-functions",
+  "title": "functions in C++",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A function declares a return type, takes parameters, and returns a value.",
+  "explanation": "twice adds its argument to itself. Calling twice(6) runs the body with n = 6 and hands back the result.",
+  "code_example": "int twice(int n) {\n    return n + n;\n}\nstd::cout << twice(6);",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": [
+      "12",
+      "66",
+      "6",
+      "36"
+    ],
+    "answer_index": 0
+  },
+  "hints": [
+    "6 + 6.",
+    "Not 6 * 6.",
+    "It prints 12."
+  ]
+}

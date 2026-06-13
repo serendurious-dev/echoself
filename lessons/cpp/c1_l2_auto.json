@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "track": "cpp",
+  "cluster": 1,
+  "lesson": 2,
+  "id": "cpp-c1-l2-auto",
+  "title": "auto - letting the type be inferred",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "C++ is statically typed, but auto lets the compiler infer the type from the value.",
+  "explanation": "When the type is obvious from the right-hand side, auto saves you writing it out. The variable is still strongly typed - auto just works out what that type is.",
+  "code_example": "auto count = 10;\nauto name = std::string(\"Min\");\nstd::cout << count;",
+  "quiz": {
+    "type": "mcq",
+    "question": "What type does 'auto count = 10;' give count?",
+    "options": [
+      "int",
+      "double",
+      "string",
+      "auto"
+    ],
+    "answer_index": 0
+  },
+  "hints": [
+    "10 is a whole-number literal.",
+    "auto copies the literal's type.",
+    "It is int."
+  ]
+}

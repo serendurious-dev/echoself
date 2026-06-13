@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "track": "cpp",
+  "cluster": 1,
+  "lesson": 4,
+  "id": "cpp-c1-l4-vector",
+  "title": "vector - a list that grows",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A std::vector is a resizable list; push_back adds to the end and size() counts it.",
+  "explanation": "Vectors are the everyday C++ container - an array that resizes itself. You add to it with push_back and ask how many it holds with size().",
+  "code_example": "std::vector<int> v;\nv.push_back(3);\nv.push_back(7);\nstd::cout << v.size();",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": [
+      "2",
+      "10",
+      "37",
+      "0"
+    ],
+    "answer_index": 0
+  },
+  "hints": [
+    "How many push_backs happened?",
+    "Two items were added.",
+    "size() is 2."
+  ]
+}

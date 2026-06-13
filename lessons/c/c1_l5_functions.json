@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "track": "c",
+  "cluster": 1,
+  "lesson": 5,
+  "id": "c-c1-l5-functions",
+  "title": "functions - work with a name",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A function takes inputs, does work, and returns a value of its declared type.",
+  "explanation": "The type written before the name is what the function hands back. return ends the function and gives that value to whoever called it.",
+  "code_example": "int square(int x) {\n    return x * x;\n}\n// square(5) is printed below\nprintf(\"%d\", square(5));",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": [
+      "10",
+      "25",
+      "55",
+      "5"
+    ],
+    "answer_index": 1
+  },
+  "hints": [
+    "square multiplies its input by itself.",
+    "5 * 5.",
+    "It prints 25."
+  ]
+}

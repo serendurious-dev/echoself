@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "track": "java",
+  "cluster": 1,
+  "lesson": 5,
+  "id": "java-c1-l5-methods",
+  "title": "methods - work with a name",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A method takes parameters and returns a value of its declared type.",
+  "explanation": "cube multiplies its input three times over. cube(3) is 3 * 3 * 3.",
+  "code_example": "static int cube(int x) {\n    return x * x * x;\n}\n// cube(3) is printed below\nSystem.out.println(cube(3));",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": [
+      "9",
+      "27",
+      "333",
+      "6"
+    ],
+    "answer_index": 1
+  },
+  "hints": [
+    "3 * 3 * 3.",
+    "Not 3 * 3.",
+    "It prints 27."
+  ]
+}

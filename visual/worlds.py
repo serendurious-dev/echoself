@@ -237,9 +237,11 @@ class LearningWorld(SkyWorld):
     def enter(self):
         super().enter()
         from learning.quiz_engine import LessonSession
-        # a fresh session each visit picks up wherever the log says you are,
-        # carrying the psychology layer's plan for today
-        self.session = LessonSession("python", self.character, self.voice, plan=self.plan)
+        from learning import mastery
+        # a fresh session each visit picks up wherever the log says you are, in the
+        # language you chose, carrying the psychology layer's plan for today
+        self.session = LessonSession(mastery.active_track(), self.character, self.voice,
+                                     plan=self.plan)
 
     def handle(self, event):
         if self.session:

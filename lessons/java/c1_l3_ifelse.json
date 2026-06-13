@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "track": "java",
+  "cluster": 1,
+  "lesson": 3,
+  "id": "java-c1-l3-ifelse",
+  "title": "if and else in Java",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "if and else branch on a boolean condition.",
+  "explanation": "9 % 3 is 0, which means 9 divides evenly by 3, so the condition is true and the first branch prints.",
+  "code_example": "int n = 9;\nif (n % 3 == 0)\n    System.out.println(\"divisible\");\nelse\n    System.out.println(\"not\");",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": [
+      "divisible",
+      "not",
+      "9",
+      "nothing"
+    ],
+    "answer_index": 0
+  },
+  "hints": [
+    "9 divided by 3 leaves what remainder?",
+    "Remainder 0 makes the condition true.",
+    "It prints divisible."
+  ]
+}

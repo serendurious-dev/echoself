@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "track": "cpp",
+  "cluster": 1,
+  "lesson": 3,
+  "id": "cpp-c1-l3-ifelse",
+  "title": "if and else in C++",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "if and else choose between two paths based on a condition.",
+  "explanation": "The comparison >= asks 'greater than or equal'. The branch under if runs when it is true, otherwise the else branch runs.",
+  "code_example": "int score = 80;\nif (score >= 60)\n    std::cout << \"pass\";\nelse\n    std::cout << \"retry\";",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": [
+      "pass",
+      "retry",
+      "80",
+      "nothing"
+    ],
+    "answer_index": 0
+  },
+  "hints": [
+    "Is 80 >= 60?",
+    "Yes, so the if branch runs.",
+    "It prints pass."
+  ]
+}

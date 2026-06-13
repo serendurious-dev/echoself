@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "track": "c",
+  "cluster": 1,
+  "lesson": 1,
+  "id": "c-c1-l1-types",
+  "title": "Types - declaring what a name holds",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "C is statically typed: every variable is declared with a type, and that type never changes.",
+  "explanation": "Before you use a name in C you tell the compiler what kind of value it holds - int for whole numbers, double for decimals, char for a single character. The type is a promise the compiler checks for you.",
+  "code_example": "int year = 2026;\ndouble pi = 3.14;\nchar grade = 'A';\nprintf(\"%d %c\\n\", year, grade);",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": [
+      "2026 A",
+      "year grade",
+      "2026 3.14",
+      "A 2026"
+    ],
+    "answer_index": 0
+  },
+  "hints": [
+    "%d prints the int, %c prints the char.",
+    "year is 2026, grade is the character A.",
+    "The two values, a space between them."
+  ]
+}

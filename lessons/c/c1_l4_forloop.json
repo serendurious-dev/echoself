@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "track": "c",
+  "cluster": 1,
+  "lesson": 4,
+  "id": "c-c1-l4-forloop",
+  "title": "for - counting a loop",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A for loop repeats a block, counting with a variable you control.",
+  "explanation": "The three parts of a for - start, condition, step - sit in the parentheses. The body runs while the condition holds, and the step runs after each pass.",
+  "code_example": "int sum = 0;\nfor (int i = 1; i <= 3; i++)\n    sum += i;\nprintf(\"%d\", sum);",
+  "quiz": {
+    "type": "predict_output",
+    "question": "What does this print?",
+    "options": [
+      "3",
+      "6",
+      "123",
+      "0"
+    ],
+    "answer_index": 1
+  },
+  "hints": [
+    "i takes the values 1, 2, 3.",
+    "sum becomes 1, then 3, then 6.",
+    "It prints 6."
+  ]
+}

@@ -10,14 +10,30 @@ import datetime
 
 from learning import codepath, progress_tracker
 
+# the languages CodePath teaches. python is the deep one (lessons + real coding
+# challenges run in your own editor); c / c++ / java are quiz-based intro tracks.
+TRACKS = [("python", "Python"), ("c", "C"), ("cpp", "C++"), ("java", "Java")]
+
 # a human title for each cluster, so the dashboard reads like topics, not numbers
 _CLUSTER_TITLES = {
     ("python", 1): "the basics",
     ("python", 2): "flow & functions",
     ("python", 3): "structures & classes",
+    ("c", 1):    "C basics",
+    ("cpp", 1):  "C++ basics",
+    ("java", 1): "Java basics",
 }
 
 _AWAY_DAYS = 3        # the gap after which she gently says "welcome back"
+
+
+def active_track():
+    from core import settings
+    return settings.get("learning_track")
+
+
+def track_name(track):
+    return dict(TRACKS).get(track, track)
 
 
 def _today():
@@ -73,8 +89,9 @@ def welcome_back_line(track="python"):
             "you came back, and that's the whole thing.")
 
 
-def report(track="python"):
+def report(track=None):
     # the whole picture the dashboard draws and the lesson world reads.
+    track = track or active_track()
     clusters = _clusters(track)
     total = sum(c["total"] for c in clusters)
     done  = sum(c["done"] for c in clusters)
@@ -102,6 +119,8 @@ def report(track="python"):
         momentum = "this is day one. the best time to start is now."
 
     return {
+        "track":        track,
+        "track_name":   track_name(track),
         "clusters":     clusters,
         "overall":      overall,
         "next":         nxt,

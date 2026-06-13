@@ -1,0 +1,29 @@
+{
+  "format_version": 1,
+  "track": "java",
+  "cluster": 1,
+  "lesson": 2,
+  "id": "java-c1-l2-types",
+  "title": "types - primitives and String",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "Java is statically typed: int, double, boolean, String - each declared explicitly.",
+  "explanation": "You name the type before the variable, and Java holds you to it. String is a class (capital S); the small types like int are primitives.",
+  "code_example": "int age = 20;\ndouble gpa = 4.3;\nboolean ok = true;\nSystem.out.println(age);",
+  "quiz": {
+    "type": "mcq",
+    "question": "Which is Java's type for whole numbers?",
+    "options": [
+      "int",
+      "number",
+      "whole",
+      "Integer string"
+    ],
+    "answer_index": 0
+  },
+  "hints": [
+    "The primitive for integers.",
+    "Lowercase, three letters.",
+    "It is int."
+  ]
+}
