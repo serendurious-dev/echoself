@@ -129,7 +129,7 @@ def _choose_path(stage):
         stage.say("how do you want to meet them?", 0.30)
         stage.say(options[idx][0], 0.46, stage.mid, color=(226, 230, 238))
         stage.say(options[idx][1], 0.55, stage.small, alpha=200, color=(190, 198, 212))
-        stage.hint("left and right to choose   ·   enter to pick")
+        stage.hint("left and right to choose   -   enter to pick")
         pygame.display.flip()
 
 
@@ -177,10 +177,10 @@ def _make_yourself(stage):
         who.update(dt)
         who.draw(stage.screen)
         stage.say("make yourself.", 0.06)
-        stage.say(f"{label}   ·   {idx[key] + 1} of {len(options)}", 0.135, stage.mid,
+        stage.say(f"{label}   -   {idx[key] + 1} of {len(options)}", 0.135, stage.mid,
                   color=(214, 222, 234))
-        back = "   ·   backspace to go back" if i > 0 else ""
-        stage.hint(f"left and right to change   ·   enter when it's right{back}")
+        back = "   -   backspace to go back" if i > 0 else ""
+        stage.hint(f"left and right to change   -   enter when it's right{back}")
         pygame.display.flip()
         i += advance
     return picks()

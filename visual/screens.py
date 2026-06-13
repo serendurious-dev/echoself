@@ -85,7 +85,7 @@ def _ask_line(screen, clock, prompt, masked=False):
                     typed += e.unicode
         screen.fill(BG)
         screen.blit(pfont.render(prompt, True, INK), (60, h // 2 - 60))
-        shown  = ("•" * len(typed)) if masked else typed
+        shown  = ("-" * len(typed)) if masked else typed
         cursor = "_" if int(pygame.time.get_ticks() / 500) % 2 == 0 else " "
         screen.blit(font.render(shown + cursor, True, WARM), (60, h // 2))
         screen.blit(_font(22).render("enter to confirm   esc to cancel", True, SOFT),
@@ -262,12 +262,12 @@ def _converse(screen, clock, character):
             for who, text in turns[-6:]:
                 color = WARM if who == "her" else INK
                 for i, ln in enumerate(_wrap(font, text, col)):
-                    blocks.append((("·  " if i == 0 else "   ") + ln, color))
+                    blocks.append((("-  " if i == 0 else "   ") + ln, color))
             y = max(60, h - 110 - len(blocks) * font.get_linesize())
             for text, color in blocks:
                 screen.blit(font.render(text, True, color), (x, y))
                 y += font.get_linesize()
-            screen.blit(small.render("press a key to keep talking · esc to leave", True, SOFT),
+            screen.blit(small.render("press a key to keep talking - esc to leave", True, SOFT),
                         (x, h - 44))
             pygame.display.flip()
 
@@ -338,7 +338,7 @@ def show_help(screen, clock):
             screen.blit(font.render(key, True, (224, 214, 180)), (60, y))
             screen.blit(font.render(what, True, (196, 204, 216)), (140, y))
             y += 30
-        screen.blit(soft.render("she learns you quietly. there's no wrong way to be here.   ·   esc to close",
+        screen.blit(soft.render("she learns you quietly. there's no wrong way to be here.   -   esc to close",
                                 True, SOFT), (60, h - 44))
         pygame.display.flip()
 
@@ -375,7 +375,7 @@ def show_mastery(screen, clock, character):
 
         screen.blit(title.render("how far you've come", True, INK), (60, 44))
         # which language, and how to switch
-        switch = "   ".join(f"{i + 1} {name}" + (" ←" if tr == report["track"] else "")
+        switch = "   ".join(f"{i + 1} {name}" + (" <-" if tr == report["track"] else "")
                             for i, (tr, name) in enumerate(mastery.TRACKS))
         screen.blit(soft.render(switch, True, SOFT), (60, 92))
         y = 132
@@ -407,7 +407,7 @@ def show_mastery(screen, clock, character):
                 screen.blit(soft.render(ln, True, (186, 200, 178)), (60, y))
                 y += soft.get_linesize()
 
-        screen.blit(soft.render("1-4 switch language  ·  tab to learn  ·  esc to close",
+        screen.blit(soft.render("1-4 switch language  -  tab to learn  -  esc to close",
                                 True, SOFT), (60, h - 44))
         pygame.display.flip()
 
@@ -448,7 +448,7 @@ def settings_screen(screen, clock):
             screen.blit(font.render(line, True, WARM), (60, y))
             screen.blit(soft.render(note, True, SOFT), (60, y + 36))
             y += 96
-        screen.blit(soft.render("press a number to change it   ·   esc to close", True, SOFT),
+        screen.blit(soft.render("press a number to change it   -   esc to close", True, SOFT),
                     (60, h - 44))
         pygame.display.flip()
 
@@ -495,7 +495,7 @@ def show_portrait(screen, clock):
                 screen.blit(font.render(f"{i + 1}.  {f['text']}", True, WARM), (60, y))
                 screen.blit(label.render(tag, True, SOFT), (w - 220, y + 4))
                 y += font.get_linesize() + 14
-        screen.blit(soft.render("press a number to forget that line   ·   esc to close",
+        screen.blit(soft.render("press a number to forget that line   -   esc to close",
                                 True, SOFT), (60, h - 44))
         pygame.display.flip()
 

@@ -43,8 +43,8 @@ they deem inappropriate, threatening, offensive, or harmful.
 
 ## Scope
 
-This Code of Conduct applies within all community spaces — the repository, issues, pull
-requests, and discussions — and also applies when an individual is officially representing the
+This Code of Conduct applies within all community spaces - the repository, issues, pull
+requests, and discussions - and also applies when an individual is officially representing the
 community in public spaces.
 
 ## Enforcement
@@ -54,7 +54,7 @@ maintainer at `prodiptaach0109@gmail.com`. All complaints will be reviewed and i
 promptly and fairly. All maintainers are obligated to respect the privacy and security of the
 reporter of any incident.
 
-Consequences scale with severity and repetition: correction → warning → temporary ban →
+Consequences scale with severity and repetition: correction -> warning -> temporary ban ->
 permanent ban.
 
 ## Attribution

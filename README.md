@@ -1,6 +1,6 @@
 # EchoSelf
 
-> *"The version of you that made it — is waiting to tell you how."*
+> *"The version of you that made it - is waiting to tell you how."*
 
 ![tests](https://github.com/serendurious-dev/echoself/actions/workflows/tests.yml/badge.svg)
 &nbsp; License: MIT (engine) + CC BY 4.0 (content)
@@ -37,13 +37,13 @@ nothing guilts you, nothing pushes harder than you can take that day.
 
 Everything happens in one of three places, with one ML brain underneath all of them:
 
-- **The Ambient World** — a living sky in Pygame. Your character's color bleeds into the
+- **The Ambient World** - a living sky in Pygame. Your character's color bleeds into the
   environment, stars drift with your Echo Distance. Drift Mode lives here: a soft place to
   just exist, no interaction required, one keypress away from anywhere.
-- **The Learning World** — where the character teaches. A glowing panel opens beside them
+- **The Learning World** - where the character teaches. A glowing panel opens beside them
   with the lesson, code examples, challenges. The world's color shifts with your detected
   psychological state.
-- **The Inner World** — invisible, always running. A behavioral model that builds a
+- **The Inner World** - invisible, always running. A behavioral model that builds a
   fingerprint of you from interaction patterns (never from your private writing, see
   [SECURITY.md](SECURITY.md)) and tells the character what you need.
 
@@ -52,13 +52,14 @@ Everything happens in one of three places, with one ML brain underneath all of t
 - **A character, drawn two ways.** By default she's painted art - a layered, openly-licensed
   pack the engine composites and animates. With no art pack, she's drawn entirely by code as a
   fallback, every feature a parameter. Either way she breathes, blinks, and reacts.
-- **Five starting personalities** — the Strict Mentor, the Gentle Guide, the Playful Rival,
+- **Five starting personalities** - the Strict Mentor, the Gentle Guide, the Playful Rival,
   the Philosophical Elder, the Quiet Empath. Or build your own.
 - **Personality drift.** Every session nudges the personality toward what works for you.
   After thirty sessions it has genuinely changed. It never says so.
-- **CodePath.** Learn Python (C, C++ and Java are on the roadmap) through lessons taught in
-  the character's voice. Quizzes happen in-world; real coding challenges open as a starter
-  file in *your own editor*, and the character runs the tests and reacts when they pass.
+- **CodePath.** Learn Python deeply through lessons taught in the character's voice, with C,
+  C++ and Java as quiz-based intro tracks. Quizzes happen in-world; in Python, real coding
+  challenges open as a starter file in *your own editor*, and the character runs the tests and
+  reacts when they pass. A mastery dashboard shows how far you have come, with no guilt for a break.
 - **Four-axis Echo Distance.** The gap between your current self and your ideal self,
   tracked across Mental, Behavioral, Emotional and Learning, drawn as a radar chart with a
   30-day timeline.
@@ -66,8 +67,8 @@ Everything happens in one of three places, with one ML brain underneath all of t
   character stays.
 - **Mirror Report.** A weekly reflection, written in your ideal self's voice.
 - **The Vault.** An encrypted private writing space. The system holds it, it never reads it.
-- **Echo Exchange.** Anonymous community sentences — something your ideal self told you
-  that helped — contributed by pull request.
+- **Echo Exchange.** Anonymous community sentences - something your ideal self told you
+  that helped - contributed by pull request.
 
 ## Look
 
@@ -80,12 +81,14 @@ Distance over a month:
 
 ## Status
 
-v1.0 is feature-complete: the character (painted or code-drawn), the ML brain and the silent
-personality drift, the full Python track with editor-handoff challenges, the three worlds,
-the four-axis Echo Distance, the Dark Days Protocol, the Mirror Report, the Vault, Letters,
-Echo Exchange, the procedural soundscape, and demo + time-lapse modes. 147 tests, run on
-every push. The longer vision — an ambient life-companion that converses and learns you — is
-the documented next phase.
+Feature-complete and then some. The course core: the character (painted or code-drawn), the ML
+brain and the silent personality drift, four language tracks, the three worlds, the four-axis Echo
+Distance, the Dark Days Protocol, the Mirror Report, the Vault, Letters, Echo Exchange, the
+procedural soundscape, and demo + time-lapse modes. On top of that, the companion it was always
+meant to be: she reads how you feel, holds a real conversation, remembers you between days, reaches
+out once a day, offers gentle coping tools, switches between friend and teacher, and the brain
+learns you from how you talk. 244 tests, run on every push. The one optional layer (the mirror-self
+voice, bring your own key) is off by default; everything else runs offline.
 
 ## Getting started
 
@@ -113,8 +116,8 @@ app and a background companion daemon from corrupting your data, writes are atom
 leaves the old file or the new one, never half), and a launch audit cleans up after an unclean
 exit. `--doctor` proves all of it in one command.
 
-The `--demo` flag exists because the deepest features here — the drift, the Mirror Report,
-Dark Days — only emerge over weeks of real use. Demo mode lets you feel the lived-in
+The `--demo` flag exists because the deepest features here - the drift, the Mirror Report,
+Dark Days - only emerge over weeks of real use. Demo mode lets you feel the lived-in
 version immediately instead of taking my word for it.
 
 ## Project structure
@@ -143,7 +146,7 @@ accident. With the defaults, EchoSelf makes no network calls at all. The full pr
 
 There is one **optional, off-by-default** layer: if you install `requirements-llm.txt` and add
 your *own* Anthropic API key, the character can answer in a richer "mirror-self" voice powered by
-a model. That layer — and only that layer — sends the conversation to the API over the network;
+a model. That layer - and only that layer - sends the conversation to the API over the network;
 leave it off and nothing ever leaves your machine. Crisis messages never reach it.
 
 Because EchoSelf reads how you feel and tries to support you, it also carries a plain
@@ -153,15 +156,15 @@ on are sourced. That document is part of the project on purpose, not an aftertho
 
 ## Contributing
 
-Code and creative content are both welcome — personality packs, lesson packs, narrative
+Code and creative content are both welcome - personality packs, lesson packs, narrative
 arcs, exchange sentences. [CONTRIBUTING.md](CONTRIBUTING.md) has the formats and the
 workflow, [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) has the ground rules.
 
 ## Two licenses, on purpose
 
-- **MIT** for the engine — everything in `core/`, `character/`, `learning/`, `ml/`,
+- **MIT** for the engine - everything in `core/`, `character/`, `learning/`, `ml/`,
   `visual/`, `audio/` and `main.py`. See [LICENSE](LICENSE).
-- **CC BY 4.0** for creative content — `characters/`, `lessons/`, `arcs/`, `exchange/`.
+- **CC BY 4.0** for creative content - `characters/`, `lessons/`, `arcs/`, `exchange/`.
   See [LICENSE-CONTENT](LICENSE-CONTENT).
 
 Code and creative writing have different legal needs. MIT keeps the engine maximally
@@ -177,12 +180,12 @@ in your own art any time - see [characters/art/README.md](characters/art/README.
 
 ## Roadmap
 
-- **v1.0** — character system (custom + the five presets), the ML brain and psychology
+- **v1.0** - character system (custom + the five presets), the ML brain and psychology
   layer, personality drift, the full Python track, the three worlds, four-axis Echo
   Distance, Dark Days, Mirror Report, the Vault, Letters, Echo Exchange, the soundscape,
   demo and time-lapse modes.
-- **v1.5** — C and Java tracks, deeper analysis of written responses, longer pattern memory.
-- **v2.0** — all four tracks, a community lesson pack ecosystem, anonymous peer challenges,
+- **v1.5** - C and Java tracks, deeper analysis of written responses, longer pattern memory.
+- **v2.0** - all four tracks, a community lesson pack ecosystem, anonymous peer challenges,
   study pods.
 
 ---
@@ -193,5 +196,5 @@ does not optimize your productivity and it does not gamify your discipline. It b
 character that learns you, and slowly, without announcing it, the character becomes who
 you needed all along.
 
-That is what open source is too — something built by people for people, freely given,
+That is what open source is too - something built by people for people, freely given,
 honestly maintained, always there.

@@ -53,7 +53,7 @@ def main(argv=None):
 
     if args.forget:
         from core import data_control
-        print("This permanently deletes all your local EchoSelf data — profile, logs, letters,")
+        print("This permanently deletes all your local EchoSelf data - profile, logs, letters,")
         print("the Vault. It cannot be undone. (Nothing was ever sent anywhere; this is all of it.)")
         if input("Type DELETE to confirm: ").strip() == "DELETE":
             removed = data_control.forget()

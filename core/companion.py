@@ -41,7 +41,7 @@ EXPRESSION = {"joy": "happy", "neutral": "neutral", "sadness": "patient", "anger
 # the only job here is care plus a push toward a real human who can help, now.
 CRISIS_REPLY = (
     "I'm really glad you told me, and I'm staying right here with you.\n"
-    "What you're carrying sounds like more than anyone should carry alone — and I'm a program, "
+    "What you're carrying sounds like more than anyone should carry alone - and I'm a program, "
     "not a person who can keep you safe tonight. Please reach out to someone who can, right now: "
     "a crisis line, a doctor, or someone you trust.\n"
     "If you're in immediate danger, contact your local emergency number. In South Korea you can "
@@ -59,7 +59,7 @@ RESPONSES = {
     "sadness": {
         "stance": "validate first, then presence",
         "lines": [
-            "That sounds heavy. You don't have to make it smaller than it is — I can sit with it.",
+            "That sounds heavy. You don't have to make it smaller than it is - I can sit with it.",
             "It makes sense that you'd feel this. Heavy days are allowed to be heavy.",
             "I'm not going to rush you out of it. I'm just here, for as long as this takes.",
         ],
@@ -84,7 +84,7 @@ RESPONSES = {
         ],
         "follow_ups": [
             "what crossed the line?",
-            "who was it — or what?",
+            "who was it - or what?",
             "do you want to be heard right now, or do you want to figure out what to do?",
         ],
         "deepen": [
@@ -97,14 +97,14 @@ RESPONSES = {
         "stance": "normalize, then ground",
         "technique": "grounding_54321",
         "lines": [
-            "Anxiety is your mind trying to keep you safe — it's loud, but it's on your side.",
+            "Anxiety is your mind trying to keep you safe - it's loud, but it's on your side.",
             "Let's slow it down together. You don't have to solve the whole thing right now.",
             "That's a lot to hold at once. One breath, one piece.",
         ],
         "follow_ups": [
             "what's the part that scares you most?",
             "is it the thing itself, or the not-knowing?",
-            "what would help more right now — a plan, or a minute to breathe?",
+            "what would help more right now - a plan, or a minute to breathe?",
         ],
         "deepen": [
             "one piece at a time. we don't have to see the whole staircase.",
@@ -122,7 +122,7 @@ RESPONSES = {
         "follow_ups": [
             "how long has it felt like this?",
             "is there someone you wish you could reach?",
-            "what kind of company do you miss — anyone, or someone in particular?",
+            "what kind of company do you miss - anyone, or someone in particular?",
         ],
         "deepen": [
             "i'm glad you're here, even if it's just me tonight.",
@@ -141,7 +141,7 @@ RESPONSES = {
         "follow_ups": [
             "whose voice is that, when you call yourself that?",
             "what would you say to a friend who said this about themselves?",
-            "what actually happened — the facts, not the verdict?",
+            "what actually happened - the facts, not the verdict?",
         ],
         "deepen": [
             "you're not the worst thing that happened today.",
@@ -154,7 +154,7 @@ RESPONSES = {
         "technique": "kaizen_step",
         "lines": [
             "That's a lot of weight to carry at once. No wonder you're worn down.",
-            "When it's all piled up like that, freezing is normal — it's not weakness.",
+            "When it's all piled up like that, freezing is normal - it's not weakness.",
             "You don't have to hold all of it in your head right now. Put some of it down with me.",
         ],
         "follow_ups": [
@@ -172,7 +172,7 @@ RESPONSES = {
         "stance": "weigh it honestly, without the pile-on",
         "technique": "cbt_reframe",
         "lines": [
-            "Guilt usually means you care — that you'd have done it differently if you could.",
+            "Guilt usually means you care - that you'd have done it differently if you could.",
             "It makes sense to feel this. But let's look at it honestly, not just harshly.",
             "You can regret something and still not deserve to be punished for it forever.",
         ],
@@ -226,7 +226,7 @@ RESPONSES = {
     "joy": {
         "stance": "savor it, reflect it back",
         "lines": [
-            "I love that. Stay in it a second — these are the days worth keeping.",
+            "I love that. Stay in it a second - these are the days worth keeping.",
             "That's really good to hear.",
             "Hold onto the shape of this one. You'll want it on the harder days.",
         ],
@@ -236,7 +236,7 @@ RESPONSES = {
             "what do you want to do with this feeling?",
         ],
         "deepen": [
-            "good. you earned the lightness — let it stay a while.",
+            "good. you earned the lightness - let it stay a while.",
             "remember this one. write it somewhere you'll find it later.",
             "this is you, too. not just the heavy days.",
         ],
@@ -245,7 +245,7 @@ RESPONSES = {
         "stance": "open the door, no pressure",
         "lines": [
             "How was today, really? Not the polite version.",
-            "I'm here. Tell me anything, or nothing — both are fine.",
+            "I'm here. Tell me anything, or nothing - both are fine.",
             "What's sitting with you right now?",
         ],
         "follow_ups": [
@@ -254,7 +254,7 @@ RESPONSES = {
             "how's the week actually treating you?",
         ],
         "deepen": [
-            "i'm here for whatever — big or small, it's fine.",
+            "i'm here for whatever - big or small, it's fine.",
             "no rush. we can just talk.",
             "tell me more, if you want to.",
         ],
@@ -268,14 +268,14 @@ RESPONSES = {
 TEACHER = {
     "stance": "gentle accountability - believe in them out loud, no shame",
     "lines": [
-        "I don't think you're stuck. I think you're avoiding the first step — which is human, but let's name it.",
+        "I don't think you're stuck. I think you're avoiding the first step - which is human, but let's name it.",
         "You can do more than you're letting yourself right now, and I'd be a poor friend not to say so.",
-        "Be honest with me: is this a rest you need, or a dodge? No judgment either way — I just want the true answer.",
+        "Be honest with me: is this a rest you need, or a dodge? No judgment either way - I just want the true answer.",
     ],
     "follow_ups": [
         "what's the one thing you've been putting off?",
         "if you did just five minutes of it, what would the five minutes be?",
-        "what's actually in the way — the task, or starting it?",
+        "what's actually in the way - the task, or starting it?",
     ],
     "deepen": [
         "okay. small-and-now beats perfect-and-later. pick the smallest version and go.",
@@ -338,7 +338,7 @@ def _portrait_opener(fact):
     # lead with the thing she's been holding for you, gently, in her voice
     text = fact["text"]
     if fact.get("kind") == "goal":
-        return f"before anything else — how's it going with {text}?"
+        return f"before anything else - how's it going with {text}?"
     return f"i've been thinking about you. how's {text} sitting today?"
 
 

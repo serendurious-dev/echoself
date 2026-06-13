@@ -54,7 +54,7 @@ ground is.
   beat), `hair` (follows the head, a touch more swing), or `none`.
 - `eyes` - tag the open and closed eye layers; the engine swaps them to blink.
 - `mouth` - tag mouth layers `neutral` / `happy` / `open`; the engine picks one per
-  expression (happy and patient → happy, celebrating → open, the rest → neutral).
+  expression (happy and patient -> happy, celebrating -> open, the rest -> neutral).
 - `expr` - optional list of expression names; the layer only shows for those (e.g. a blush).
 
 Then point the character at it:

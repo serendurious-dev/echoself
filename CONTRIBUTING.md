@@ -9,7 +9,7 @@ they carry different licenses, on purpose:
 | Creative content (JSON packs, sentences) | `characters/`, `lessons/`, `arcs/`, `exchange/` | CC BY 4.0 |
 
 By opening a pull request you agree your contribution is licensed accordingly. You keep
-your copyright, and content authors are always credited — that is what the BY means.
+your copyright, and content authors are always credited - that is what the BY means.
 
 ## The workflow
 
@@ -31,24 +31,24 @@ your copyright, and content authors are always credited — that is what the BY 
 
 ## Content packs
 
-**Personality packs** (`characters/*.json`) — who a character starts as: voice, teaching
+**Personality packs** (`characters/*.json`) - who a character starts as: voice, teaching
 style, visual defaults. [`characters/gentle_guide.json`](characters/gentle_guide.json) is
 the canonical format. Write phrases that sound like a person, not like UI copy. Include
 your name in the `author` field, that is your credit.
 
-**Lesson packs** (`lessons/<track>/*.json`) — one concept per lesson, voice-neutral, the
+**Lesson packs** (`lessons/<track>/*.json`) - one concept per lesson, voice-neutral, the
 character's current personality colors it at runtime. See
 [`lessons/python/c1_l1_variables.json`](lessons/python/c1_l1_variables.json). Every lesson
 needs a concept, an explanation, a code example, a quiz (`mcq`, `predict_output`, or
 `fill_blank`), and exactly three hints that get progressively more revealing. Teaching
 order comes from the `cluster` and `lesson` numbers inside the file, not the filename.
 
-**Narrative arcs** (`arcs/*.json`) — story chapters spanning 7–14 sessions, selected by
+**Narrative arcs** (`arcs/*.json`) - story chapters spanning 7-14 sessions, selected by
 mood and Echo Distance. The format lands with the narrative engine, see `arcs/README.md`.
 
-**Echo Exchange** (`exchange/sentences.json`) — one sentence, something your ideal self
+**Echo Exchange** (`exchange/sentences.json`) - one sentence, something your ideal self
 told you that helped. Anonymous by default, your credit lives in the git history, not in
-the sentence. Original work only, nothing identifying, and please — no advice, no "just
+the sentence. Original work only, nothing identifying, and please - no advice, no "just
 try harder". These sentences reach people on their worst days.
 
 ## How content gets reviewed

@@ -11,7 +11,7 @@ write honestly into something they do not trust.
 - `data/` is gitignored, so your data cannot be committed or pushed even by accident.
 - **The Vault is never read.** It is encrypted at rest and no part of the system parses,
   analyzes or trains on its contents. The system holds it. It does not look at it.
-- The ML model trains on interaction metadata only — timing, session length, quiz accuracy.
+- The ML model trains on interaction metadata only - timing, session length, quiz accuracy.
   Never on the text of anything you wrote privately.
 - **Your data is yours to take or to erase.** `python main.py --export` zips all of it; `python
   main.py --forget` permanently deletes it. There is no copy anywhere else to worry about.
@@ -25,10 +25,10 @@ write honestly into something they do not trust.
 
 ## Reporting a vulnerability
 
-If you find something — especially anything that could expose local data, weaken the Vault,
-or make EchoSelf transmit anything — please tell me privately first:
+If you find something - especially anything that could expose local data, weaken the Vault,
+or make EchoSelf transmit anything - please tell me privately first:
 
-1. Preferred: GitHub Security Advisories on this repo ("Security" tab → "Report a
+1. Preferred: GitHub Security Advisories on this repo ("Security" tab -> "Report a
    vulnerability").
 2. Or email `prodiptaach0109@gmail.com` with the subject `[EchoSelf Security]`.
 

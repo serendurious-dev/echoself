@@ -147,7 +147,7 @@ def distill_facts(history):
     out = next((b.text for b in message.content if b.type == "text"), "").strip()
     facts = []
     for line in out.splitlines():
-        line = line.strip().lstrip("-•").strip()
+        line = line.strip().lstrip("--").strip()
         if not line or line.upper() == "NONE":
             continue
         kind, _, txt = line.partition(":")
