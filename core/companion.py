@@ -236,20 +236,26 @@ RESPONSES = {
     },
     "neutral": {
         "stance": "open the door, no pressure",
+        # acknowledgements, not dead-ends. on a fresh share she pairs one of these
+        # with a follow_up below, so a plain message gets a real "tell me more",
+        # not the same line back. (respond() uses just the line; the thread adds the ask.)
         "lines": [
-            "How was today, really? Not the polite version.",
-            "I'm here. Tell me anything, or nothing - both are fine.",
-            "What's sitting with you right now?",
+            "okay, i'm here - i'm listening.",
+            "i'm with you. i want to hear it.",
+            "mm, i'm taking that in.",
         ],
         "follow_ups": [
-            "what's been on your mind?",
-            "anything you want to put down for a minute?",
-            "how's the week actually treating you?",
+            "what was that like for you?",
+            "how did it land - good, bad, somewhere in between?",
+            "was that a good part of the day, or just a part of it?",
+            "what made you want to tell me that one?",
+            "is there more under it, or was that just the day?",
         ],
         "deepen": [
-            "i'm here for whatever - big or small, it's fine.",
-            "no rush. we can just talk.",
-            "tell me more, if you want to.",
+            "i hear you. what else was in the day?",
+            "okay. and how are you, underneath it all?",
+            "mm. i'm still here - keep going.",
+            "what's that stirring up, if anything?",
         ],
     },
 }
@@ -511,10 +517,10 @@ class Conversation:
     def _offline_reply(self, emo, bank, continuation):
         pool = bank.get("deepen", bank["lines"]) if continuation else bank["lines"]
         base = self._pick(pool) or self._pick(bank["lines"]) or random.choice(bank["lines"])
-        # ask a follow-up early in a heavy feeling, or in teacher mode; on light
-        # chitchat, just stay.
+        # ask a follow-up on a fresh share - a heavy feeling, plain chitchat, or
+        # teacher mode all open the thread. only joy is savored, not questioned.
         follow = None
-        if not continuation and (emo not in ("joy", "neutral") or bank is TEACHER):
+        if not continuation and (emo != "joy" or bank is TEACHER):
             follow = self._pick(bank.get("follow_ups", []))
         self._awaiting = follow is not None
         return base + " " + follow if follow else base

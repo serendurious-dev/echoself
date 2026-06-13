@@ -55,6 +55,22 @@ class TestConversationThread(unittest.TestCase):
         self.assertEqual(r["emotion"], "sadness")
         self.assertIn("?", r["reply"])              # a follow-up keeps the thread open
 
+    def test_a_plain_share_is_listened_to_not_dead_ended(self):
+        # a message with no feeling-word used to get the same generic line back;
+        # now she acknowledges it and asks about it, so it reads as listening.
+        conv = self._conv()
+        conv.open()
+        r = conv.say("i had pizza for lunch today")
+        self.assertEqual(r["emotion"], "neutral")
+        self.assertIn("?", r["reply"])                  # she asks about what you shared
+
+    def test_plain_chitchat_deepens_without_repeating(self):
+        conv = self._conv()
+        conv.open()
+        said = ["i went for a walk", "then i made some tea", "and read for a bit"]
+        replies = [conv.say(s)["reply"] for s in said]
+        self.assertEqual(len(set(replies)), len(replies))   # never the same line twice
+
     def test_staying_on_a_feeling_deepens_instead_of_repeating(self):
         conv = self._conv()
         conv.open()
