@@ -107,7 +107,8 @@ class TestDaemonLoop(OSTest):
         self.assertIsNotNone(ch.last_beat())      # but it did beat
 
     def test_presence_writes_one_reminder_a_day(self):
-        daemon.daemon_run(self.dir, interval=0.01, max_ticks=3)
+        # outreach off here so we measure presence alone; outreach has its own tests
+        daemon.daemon_run(self.dir, interval=0.01, max_ticks=3, outreach=False)
         with open(os.path.join(self.dir, "reminders.log")) as f:
             lines = [ln for ln in f if ln.strip()]
         self.assertEqual(len(lines), 1)           # once a day, not once a tick

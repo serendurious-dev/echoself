@@ -54,11 +54,11 @@ def _reach_out(data_dir):
         return False
 
 
-def daemon_run(data_dir, interval=30.0, max_ticks=None, presence=True):
+def daemon_run(data_dir, interval=30.0, max_ticks=None, presence=True, outreach=True):
     # the loop. installs signal handlers when it can (only works on the main
     # thread, so tests that call this on a worker just skip them), beats, checks
-    # the stop flag, leaves presence. always clears its pid on the way out, so a
-    # clean exit never looks like a crash.
+    # the stop flag, leaves presence, and reaches out once a day. always clears
+    # its pid on the way out, so a clean exit never looks like a crash.
     # note: we do NOT clear the stop flag here. start() clears it before
     # spawning, so a stop requested before the loop begins is still honored -
     # otherwise a stop could race a startup and be silently dropped.
@@ -84,6 +84,7 @@ def daemon_run(data_dir, interval=30.0, max_ticks=None, presence=True):
                 break
             if presence:
                 _presence(data_dir)
+            if outreach:
                 _reach_out(data_dir)
             ticks += 1
             if max_ticks is not None and ticks >= max_ticks:
