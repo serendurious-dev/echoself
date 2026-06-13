@@ -27,6 +27,17 @@ class TestTimeOfDay(unittest.TestCase):
 
 class TestConversationThread(unittest.TestCase):
 
+    def setUp(self):
+        # the Conversation loads the drift on creation; sandbox it so these read
+        # a clean slate, not whatever's in the real data dir
+        self._tmp = tempfile.TemporaryDirectory()
+        self._old = datastore.DATA_DIR
+        datastore.DATA_DIR = self._tmp.name
+
+    def tearDown(self):
+        datastore.DATA_DIR = self._old
+        self._tmp.cleanup()
+
     def _conv(self, hour=14):
         # offline (no llm injected, no key in the test env), with a fixed clock
         return companion.Conversation(now=datetime.datetime(2026, 6, 13, hour, 0))

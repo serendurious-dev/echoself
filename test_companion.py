@@ -136,6 +136,23 @@ class TestInjectableWordingSeam(unittest.TestCase):
         self.assertTrue(r["crisis"])
 
 
+class TestPlayfulness(unittest.TestCase):
+    # the humor axis: it grows on good days, and only then does she let a light
+    # touch out, and only on a bright moment - never over a hard feeling.
+
+    def test_humor_grows_with_a_season_of_joy(self):
+        from character import personality_drift
+        d = {a: 0.0 for a in personality_drift.AXES}
+        for _ in range(20):
+            personality_drift.nudge_emotion(d, "joy")
+        self.assertGreater(d["humor"], 0.3)
+
+    def test_a_light_touch_only_when_bright_and_drifted_playful(self):
+        self.assertIsNotNone(companion.playful_touch("joy", {"humor": 0.5}))
+        self.assertIsNone(companion.playful_touch("joy", {"humor": 0.0}))     # not drifted yet
+        self.assertIsNone(companion.playful_touch("sadness", {"humor": 0.9})) # never over pain
+
+
 class TestEmotionFeedsTheInnerWorld(unittest.TestCase):
 
     def setUp(self):

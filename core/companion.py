@@ -8,6 +8,26 @@ import datetime
 
 from core import emotion, datastore, timeofday
 from psychology import frameworks
+from character import personality_drift
+
+# little light touches she only allows herself once she's drifted playful enough
+# (high humor) and the moment is bright. the drift earns them; they don't just
+# show up. this is one of the things "the character has changed" actually means.
+PLAYFUL = [
+    "look at you go.",
+    "i'd high-five you if i had hands.",
+    "writing this one down in the good-days column.",
+    "okay that's a little bit great, not gonna lie.",
+    "see? i never doubted you. (i'm contractually required to say that. i also mean it.)",
+]
+
+
+def playful_touch(emo, drift):
+    # a light line for a bright moment, but only when she's drifted humorous
+    # enough to have earned it. None otherwise - she never jokes over a hard feeling.
+    if emo == "joy" and personality_drift.prefers_humor(drift):
+        return random.choice(PLAYFUL)
+    return None
 
 CONV_LOG    = "conversation.csv"
 CONV_FIELDS = ["date", "time", "emotion", "intensity"]
@@ -336,6 +356,7 @@ class Conversation:
         self.now       = now
         self._offered  = None    # a technique she's offered and is waiting a yes on
         self._offered_kinds = set()   # so she offers each tool at most once a sitting
+        self.drift     = personality_drift.load()   # who she's become, for tone
         # `llm` and `distiller` are optional seams - inject a callable to write the
         # wording, or to distil a durable fact from a thread. nothing ships for
         # them: the offline library carries the whole conversation, and offline she
@@ -419,6 +440,10 @@ class Conversation:
             # feeling that has a tool, she offers it - as a question, once. offered
             # only on the offline path; an injected wording engine handles its own.
             reply = self._maybe_offer(emo, bank, continuation, reply)
+            # and on a bright moment, if she's drifted playful enough, a light touch
+            light = playful_touch(emo, self.drift)
+            if light:
+                reply = reply + " " + light
 
         self.last_emo = emo
         self.history.append(("her", reply, emo))
