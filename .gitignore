@@ -37,3 +37,6 @@ _preview_*.png
 
 # generated placeholder art pack (run tools/make_placeholder_art.py to recreate)
 characters/art/_placeholder/
+
+# a stray clone of this repo nested inside the working copy - never track it
+/echoself/
