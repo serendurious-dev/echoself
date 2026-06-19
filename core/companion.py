@@ -45,8 +45,14 @@ CRISIS_REPLY = crisis.reply()
 
 
 def crisis_reply():
-    from core import settings
-    return crisis.reply(settings.get("region"))
+    from core import settings, safety_plan
+    msg = crisis.reply(settings.get("region"))
+    # if they wrote a plan for moments like this, point to it - gently, after the
+    # human-help push, never instead of it
+    if safety_plan.has_content():
+        msg += ("\nAnd the plan you wrote for hard moments is right here whenever you want it - "
+                "you already named some of what helps.")
+    return msg
 
 # per emotion: stance, `lines` (first thing she says), `follow_ups` (the question
 # that keeps the thread open), `deepen` (when you stay on the feeling).

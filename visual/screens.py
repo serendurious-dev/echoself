@@ -500,6 +500,48 @@ def show_portrait(screen, clock):
         pygame.display.flip()
 
 
+def safety_plan_screen(screen, clock):
+    # your plan for the hard moments, written when you're okay. build it a line at
+    # a time; it's only ever yours - never shared, never sent. the crisis lines
+    # for your region sit underneath it automatically.
+    from core import safety_plan
+    w, h  = screen.get_size()
+    title = _font(36)
+    font  = _font(24)
+    soft  = _font(20)
+    while True:
+        plan = safety_plan.load()
+        clock.tick(60)
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                return
+            if e.type == pygame.KEYDOWN:
+                if e.key in (pygame.K_ESCAPE, pygame.K_q):
+                    return
+                if pygame.K_1 <= e.key <= pygame.K_4:
+                    idx = e.key - pygame.K_1
+                    if idx < len(safety_plan.SECTIONS):
+                        key, prompt = safety_plan.SECTIONS[idx]
+                        line = _ask_line(screen, clock, prompt + ":")
+                        if line:
+                            safety_plan.add(key, line)
+        screen.fill(BG)
+        screen.blit(title.render("your safety plan", True, INK), (60, 40))
+        screen.blit(soft.render("for the hard moments. only yours - never shared, never sent.",
+                                True, SOFT), (60, 84))
+        y = 140
+        for i, (key, prompt) in enumerate(safety_plan.SECTIONS):
+            screen.blit(font.render(f"{i + 1}.  {prompt}", True, WARM), (60, y))
+            y += font.get_linesize() + 4
+            for item in plan.get(key, []):
+                screen.blit(soft.render(f"      - {item}", True, INK), (90, y))
+                y += soft.get_linesize() + 2
+            y += 14
+        screen.blit(soft.render("press 1-4 to add a line   -   esc to close", True, SOFT),
+                    (60, h - 44))
+        pygame.display.flip()
+
+
 def open_vault(screen, clock):
     # the encrypted private writing space. the system holds it; it never reads it.
     from core import vault

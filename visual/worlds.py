@@ -170,7 +170,8 @@ class SkyWorld(World):
 
 class AmbientWorld(SkyWorld):
     caption = ("h help   t talk   tab learn   c code   e how far   g progress   "
-               "p memory   b remake   l letters   v vault   s settings   d drift   esc quit")
+               "p memory   b remake   l letters   v vault   s settings   k safety   "
+               "d drift   esc quit")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -462,6 +463,10 @@ def run(args=None):
                     # whether she reaches out, and how - the user's to decide
                     from visual.screens import settings_screen
                     settings_screen(screen, clock)
+                elif event.key == pygame.K_k and not captured:
+                    # the plan you wrote for the hard moments, yours to build and keep
+                    from visual.screens import safety_plan_screen
+                    safety_plan_screen(screen, clock)
                 elif event.key == pygame.K_m and not captured:
                     sound.toggle_mute()
                 else:
