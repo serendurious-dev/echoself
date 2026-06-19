@@ -11,6 +11,7 @@ DEFAULTS = {
     "outreach_style": "general",    # "general" | "personal"
     "learning_track": "python",     # which language CodePath is teaching
     "region":         "KR",         # which country's crisis lines she points to
+    "nlp_backend":    "off",         # "off" (lexicon) | "local" (transformer, if installed)
 }
 
 STYLES = ("general", "personal")

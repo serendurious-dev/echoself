@@ -18,6 +18,33 @@ def prepare_environment(demo=False, timelapse=False):
             demo_mode.advance_day()
     from osutil import recovery
     recovery.audit(datastore.DATA_DIR)
+    enable_nlp()
+
+
+def enable_nlp():
+    # wire the local transformer for emotion only if the user turned it on AND it's
+    # installed; otherwise the lexicon stays the read. deliberate, never automatic.
+    from core import settings, emotion
+    if settings.get("nlp_backend") != "local":
+        emotion.clear_backend()
+        return False
+    from core import emotion_nn
+    if emotion_nn.available():
+        emotion.set_backend(emotion_nn.analyze)
+        return True
+    return False
+
+
+def nlp_active():
+    from core import emotion
+    return emotion._BACKEND is not None
+
+
+def set_nlp(on):
+    # the user's switch: turn the local transformer read on or off, and apply it now
+    from core import settings
+    settings.set("nlp_backend", "local" if on else "off")
+    return enable_nlp()
 
 
 def needs_onboarding():

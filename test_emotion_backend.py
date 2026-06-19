@@ -1,8 +1,10 @@
 """the pluggable emotion read: lexicon floor, optional transformer backend."""
 
+import tempfile
 import unittest
 
-from core import emotion, emotion_nn
+import echoself_core
+from core import emotion, emotion_nn, settings, datastore
 
 
 class TestBackendSeam(unittest.TestCase):
@@ -52,6 +54,42 @@ class TestTransformerBackend(unittest.TestCase):
         out = emotion_nn._blend("fear", 0.9, lex)
         self.assertEqual(out["primary"], "fear")
         self.assertEqual(out["confidence"], 0.9)
+
+
+class TestEnableNlp(unittest.TestCase):
+    # wiring is a deliberate choice (setting + installed), never automatic
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self._old = datastore.DATA_DIR
+        datastore.DATA_DIR = self._tmp.name
+        self._avail = emotion_nn.available
+
+    def tearDown(self):
+        emotion_nn.available = self._avail
+        emotion.clear_backend()
+        datastore.DATA_DIR = self._old
+        self._tmp.cleanup()
+
+    def test_off_by_default_stays_lexicon(self):
+        self.assertFalse(echoself_core.enable_nlp())
+        self.assertFalse(echoself_core.nlp_active())
+
+    def test_on_and_installed_wires_the_backend(self):
+        emotion_nn.available = lambda: True
+        self.assertTrue(echoself_core.set_nlp(True))
+        self.assertTrue(echoself_core.nlp_active())
+
+    def test_on_but_not_installed_stays_lexicon(self):
+        emotion_nn.available = lambda: False
+        self.assertFalse(echoself_core.set_nlp(True))
+        self.assertFalse(echoself_core.nlp_active())
+
+    def test_turning_it_off_clears_the_backend(self):
+        emotion_nn.available = lambda: True
+        echoself_core.set_nlp(True)
+        echoself_core.set_nlp(False)
+        self.assertFalse(echoself_core.nlp_active())
 
 
 if __name__ == "__main__":

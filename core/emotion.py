@@ -212,12 +212,11 @@ def _lexicon_analyze(text):
 
 
 # the emotion read is pluggable: the lexicon is the default floor; an optional
-# local-transformer backend (core/emotion_nn) can plug in for a sharper read of
-# context and tone, and refines its result against the lexicon's finer feelings.
-# same {primary, secondary, intensity, confidence, scores} shape either way, so
-# nothing downstream changes.
-_BACKEND         = None
-_BACKEND_CHECKED = False
+# local-transformer backend (core/emotion_nn) can be wired in for a sharper read.
+# wiring is a deliberate choice made by the app (see echoself_core.enable_nlp) -
+# never automatic just because a library happens to be installed - so behaviour
+# stays predictable and tests stay deterministic. same shape either way.
+_BACKEND = None
 
 
 def set_backend(fn):
@@ -226,28 +225,13 @@ def set_backend(fn):
 
 
 def clear_backend():
-    global _BACKEND, _BACKEND_CHECKED
-    _BACKEND, _BACKEND_CHECKED = None, False
-
-
-def _ensure_backend():
-    # try once to wire the optional transformer backend, if it's installed
-    global _BACKEND_CHECKED
-    if _BACKEND_CHECKED or _BACKEND is not None:
-        return
-    _BACKEND_CHECKED = True
-    try:
-        from core import emotion_nn
-        if emotion_nn.available():
-            set_backend(emotion_nn.analyze)
-    except Exception:
-        pass
+    global _BACKEND
+    _BACKEND = None
 
 
 def analyze(text):
-    # the deep read. uses the transformer backend when it's wired and working,
-    # else the offline lexicon - and on any backend error, the lexicon catches it.
-    _ensure_backend()
+    # the deep read. uses the wired backend when there is one and it works, else
+    # the offline lexicon - and on any backend error, the lexicon catches it.
     if _BACKEND is not None:
         try:
             return _BACKEND(text)
