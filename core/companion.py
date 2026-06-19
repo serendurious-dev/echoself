@@ -342,7 +342,8 @@ def respond(text, llm=None):
     if emotion.is_crisis(text):
         return {"emotion": "crisis", "intensity": 1.0, "crisis": True, "reply": CRISIS_REPLY}
 
-    emo, intensity, _ = emotion.detect(text)
+    read = emotion.analyze(text)
+    emo  = read["primary"] or "neutral"
     bank = RESPONSES.get(emo, RESPONSES["neutral"])
 
     # opt-in mirror-self: if a key is set and the SDK is there, the model writes
@@ -359,7 +360,11 @@ def respond(text, llm=None):
             reply = random.choice(bank["lines"])
     else:
         reply = random.choice(bank["lines"])
-    return {"emotion": emo, "intensity": intensity, "crisis": False, "reply": reply}
+    # secondary + confidence ride along for the screen and future tone work; the
+    # four old keys keep their shape so nothing downstream has to change.
+    return {"emotion": emo, "intensity": read["intensity"], "crisis": False,
+            "reply": reply, "secondary": read["secondary"],
+            "confidence": read["confidence"]}
 
 
 def log_emotion(emo, intensity, when=None):

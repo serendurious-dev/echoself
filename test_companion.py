@@ -40,6 +40,47 @@ class TestEmotion(unittest.TestCase):
         self.assertFalse(emotion.is_crisis("I'm just tired today"))
 
 
+class TestDeepEmotion(unittest.TestCase):
+    # v1.5: the read past a flat word list - weight, intensifiers, hedges,
+    # clause-aware negation, a second feeling, and a confidence.
+
+    def test_heavier_words_read_stronger(self):
+        self.assertGreater(emotion.detect("I feel devastated")[1],
+                           emotion.detect("I feel down")[1])
+
+    def test_intensifier_raises_intensity(self):
+        self.assertGreater(emotion.detect("I'm so anxious")[1],
+                           emotion.detect("I'm anxious")[1])
+
+    def test_hedge_lowers_intensity(self):
+        self.assertLess(emotion.detect("a bit sad")[1],
+                        emotion.detect("sad")[1])
+
+    def test_negation_stops_at_a_clause_break(self):
+        # "down but okay" - the 'okay' is not under the negation of nothing, and
+        # 'down' should still carry the message
+        self.assertEqual(emotion.detect("I'm down but okay")[0], "sadness")
+
+    def test_finds_a_second_feeling(self):
+        a = emotion.analyze("I'm anxious and ashamed")
+        self.assertIsNotNone(a["secondary"])
+        self.assertIn(a["secondary"], ("fear", "shame"))
+
+    def test_a_clear_message_is_more_confident_than_a_muddled_one(self):
+        clear   = emotion.analyze("I'm so happy")
+        muddled = emotion.analyze("I'm anxious and ashamed")
+        self.assertGreater(clear["confidence"], muddled["confidence"])
+
+    def test_shouting_adds_a_little_intensity(self):
+        self.assertGreater(emotion.detect("I'm ANGRY!!")[1],
+                           emotion.detect("i'm angry")[1])
+
+    def test_nothing_registers_stays_neutral(self):
+        a = emotion.analyze("the meeting is at three on tuesday")
+        self.assertIsNone(a["primary"])
+        self.assertEqual(a["intensity"], 0.0)
+
+
 class TestCompanion(unittest.TestCase):
 
     def test_crisis_overrides_everything(self):
