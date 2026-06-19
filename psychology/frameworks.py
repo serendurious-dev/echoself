@@ -86,6 +86,65 @@ FRAMEWORKS = {
             "pour your care into the first pile. let the second be heavy somewhere you're not "
             "carrying it. you've been holding both, and only one is yours."),
     },
+    # DBT distress tolerance - for the acute moments, when a feeling is too big to
+    # think your way out of. survival skills, not fixes. (Linehan, DBT.)
+    "dbt_tipp": {
+        "name":   "TIPP, to bring the panic down fast",
+        "for":    "a panic attack, a body in full alarm",
+        "source": "Linehan, M. (2015). DBT Skills Training Manual, 2nd ed. - distress tolerance, TIPP.",
+        "offer":  "your body's flooded right now, and there's a fast way to bring it down. want to do it with me? just say yes.",
+        "walk": (
+            "okay - fastest first, cold:\n"
+            "if you can, splash cold water on your face, or hold something cold to your cheeks and "
+            "around your eyes for thirty seconds. cold on the face slows your heart on purpose - "
+            "it's a reflex, not willpower. (skip the cold if your heart isn't well.)\n"
+            "then burn some of it off - twenty seconds of something hard: push against a wall, jog "
+            "on the spot, clench and release your fists.\n"
+            "then the breath: in for four, out slow for six, a few rounds - the long exhale is the "
+            "off-switch.\n"
+            "your body's screaming danger, but it's wrong - this peaks and then it always comes "
+            "down. i'm right here the whole time."),
+    },
+    "dbt_stop": {
+        "name":   "STOP, before the urge wins",
+        "for":    "an impulse you might regret - to lash out, to run, to do something to the moment",
+        "source": "Linehan, M. (2015). DBT Skills Training Manual, 2nd ed. - distress tolerance, STOP.",
+        "offer":  "want a four-step thing to put a gap between the feeling and what you do next? say yes.",
+        "walk": (
+            "four beats, with me:\n"
+            "S - stop. don't move, don't send, don't act. freeze the frame.\n"
+            "T - take a step back. one breath, drop your shoulders.\n"
+            "O - observe. just the facts of what's happening, not the story about it.\n"
+            "P - proceed mindfully. now pick the move the calmer you would pick.\n"
+            "the urge passes faster than it swears it will."),
+    },
+    "dbt_radical_acceptance": {
+        "name":   "radical acceptance",
+        "for":    "pain you can't change right now",
+        "source": "Linehan, M. (2015). DBT Skills Training Manual, 2nd ed. - distress tolerance, radical acceptance.",
+        "offer":  "this might be one you can't fix tonight, only carry. want a gentler way to carry it? say yes.",
+        "walk": (
+            "accepting isn't agreeing, and it isn't giving up - it's stopping the second fight, "
+            "the one against the fact that it happened.\n"
+            "say it once, plainly: this is how it is right now. i don't like it, and it's real.\n"
+            "notice where you tense up to argue with reality, and let just that part soften. the "
+            "pain stays; the exhausting war with it doesn't have to. you're allowed to set the war "
+            "down and still hurt."),
+    },
+    "dbt_self_soothe": {
+        "name":   "self-soothe, five senses",
+        "for":    "raw, frayed, numb - too much or too little feeling at once",
+        "source": "Linehan, M. (2015). DBT Skills Training Manual, 2nd ed. - distress tolerance, self-soothe.",
+        "offer":  "want to be kind to your senses for one minute - it really does settle the body. say yes.",
+        "walk": (
+            "one small kind thing per sense, whatever's near:\n"
+            "touch - something soft, a blanket, a warm mug in your hands.\n"
+            "sound - one song, or the rain, or just quiet.\n"
+            "sight - the sky, a photo you love, a candle.\n"
+            "smell - tea, soap, fresh air from a window.\n"
+            "taste - something small, slowly.\n"
+            "you don't have to earn comfort. give your body one honest minute of it."),
+    },
 }
 
 

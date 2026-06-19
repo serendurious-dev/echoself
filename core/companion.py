@@ -72,6 +72,7 @@ RESPONSES = {
     "anger": {
         "stance": "validate the feeling, don't defend against it",
         "technique": "paced_breathing",
+        "acute_technique": "dbt_stop",   # white-hot -> a gap before the urge wins
         "lines": [
             "You're allowed to be angry. Something mattered to you, and it got stepped on.",
             "That sounds genuinely unfair. I'm not going to tell you to calm down.",
@@ -91,6 +92,7 @@ RESPONSES = {
     "fear": {
         "stance": "normalize, then ground",
         "technique": "grounding_54321",
+        "acute_technique": "dbt_tipp",   # full-on panic -> the fast, physical one
         "lines": [
             "Anxiety is your mind trying to keep you safe - it's loud, but it's on your side.",
             "Let's slow it down together. You don't have to solve the whole thing right now.",
@@ -184,6 +186,7 @@ RESPONSES = {
     },
     "grief": {
         "stance": "make room for it, don't tidy it away",
+        "technique": "dbt_radical_acceptance",
         "lines": [
             "I'm so sorry. That's a real loss, and it deserves to be felt, not rushed.",
             "Grief is love with nowhere to go. The size of it says something true.",
@@ -202,6 +205,7 @@ RESPONSES = {
     },
     "numbness": {
         "stance": "presence without pressure, no forcing feeling",
+        "technique": "dbt_self_soothe",
         "lines": [
             "Numb is its own kind of heavy. Feeling nothing can be harder than feeling sad.",
             "You don't have to manufacture a feeling for me. Blank is allowed to be where you are.",
@@ -493,7 +497,7 @@ class Conversation:
         else:
             # once validated and you've stayed on a feeling with a tool, offer it
             # (once, offline path only); plus a light touch on a bright moment.
-            reply = self._maybe_offer(emo, bank, continuation, reply)
+            reply = self._maybe_offer(emo, bank, continuation, reply, intensity)
             light = playful_touch(emo, self.drift)
             if light:
                 reply = reply + " " + light
@@ -503,8 +507,12 @@ class Conversation:
         self._used.add(reply)
         return {"emotion": emo, "intensity": intensity, "crisis": False, "reply": reply}
 
-    def _maybe_offer(self, emo, bank, continuation, reply):
+    def _maybe_offer(self, emo, bank, continuation, reply, intensity=0.0):
+        # when the feeling's at full volume, reach for the acute (DBT) skill if the
+        # bank has one - the fast, physical kind - instead of the gentler default.
         tech = bank.get("technique")
+        if intensity >= 0.7 and bank.get("acute_technique"):
+            tech = bank["acute_technique"]
         if tech and continuation and tech not in self._offered_kinds:
             self._offered = tech
             self._offered_kinds.add(tech)
