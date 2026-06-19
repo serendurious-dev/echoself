@@ -166,9 +166,9 @@ def _emphasis(text):
     return min(bump, 1.3)
 
 
-def analyze(text):
-    # the deep read. returns primary/secondary feeling, an intensity 0..1, a
-    # confidence 0..1 (how dominant the top feeling is), and the raw scores.
+def _lexicon_analyze(text):
+    # the offline floor: weighted word lists + modifiers + negation. always here,
+    # never needs a model or a network.
     low    = text.lower()
     scores = {e: 0.0 for e in EMOTIONS}
 
@@ -209,6 +209,51 @@ def analyze(text):
 
     return {"primary": primary, "secondary": secondary, "intensity": round(intensity, 3),
             "confidence": round(confidence, 3), "scores": scores}
+
+
+# the emotion read is pluggable: the lexicon is the default floor; an optional
+# local-transformer backend (core/emotion_nn) can plug in for a sharper read of
+# context and tone, and refines its result against the lexicon's finer feelings.
+# same {primary, secondary, intensity, confidence, scores} shape either way, so
+# nothing downstream changes.
+_BACKEND         = None
+_BACKEND_CHECKED = False
+
+
+def set_backend(fn):
+    global _BACKEND
+    _BACKEND = fn
+
+
+def clear_backend():
+    global _BACKEND, _BACKEND_CHECKED
+    _BACKEND, _BACKEND_CHECKED = None, False
+
+
+def _ensure_backend():
+    # try once to wire the optional transformer backend, if it's installed
+    global _BACKEND_CHECKED
+    if _BACKEND_CHECKED or _BACKEND is not None:
+        return
+    _BACKEND_CHECKED = True
+    try:
+        from core import emotion_nn
+        if emotion_nn.available():
+            set_backend(emotion_nn.analyze)
+    except Exception:
+        pass
+
+
+def analyze(text):
+    # the deep read. uses the transformer backend when it's wired and working,
+    # else the offline lexicon - and on any backend error, the lexicon catches it.
+    _ensure_backend()
+    if _BACKEND is not None:
+        try:
+            return _BACKEND(text)
+        except Exception:
+            pass
+    return _lexicon_analyze(text)
 
 
 def detect(text):
