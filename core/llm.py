@@ -1,12 +1,12 @@
-"""optional mirror-self layer. with your own key the model writes the reply in your
-better-self voice, built from your ideal self + portrait. off by default - only runs
-when ANTHROPIC_API_KEY and the SDK are present. crisis never reaches it; any failure
-falls back to the offline library."""
+"""the warm voice. with a key the model writes the reply in your better-self voice,
+built from your ideal self + portrait. on whenever ANTHROPIC_API_KEY and the SDK are
+present (the offline library is the fallback, never the goal). crisis never reaches
+it; any failure falls back to offline. override the model with ECHOSELF_LLM_MODEL."""
 
 import os
 
 MODEL_ENV     = "ECHOSELF_LLM_MODEL"
-DEFAULT_MODEL = "claude-sonnet-4-6"
+DEFAULT_MODEL = "claude-opus-4-8"
 
 
 def available():
@@ -101,7 +101,7 @@ def research(query):
         model=os.environ.get(MODEL_ENV, DEFAULT_MODEL),
         max_tokens=700,
         system=_RESEARCH_SYSTEM,
-        tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 5}],
+        tools=[{"type": "web_search_20260209", "name": "web_search", "max_uses": 5}],
         messages=[{"role": "user", "content": query}],
     )
     out = "\n".join(b.text for b in message.content

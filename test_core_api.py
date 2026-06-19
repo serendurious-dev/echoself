@@ -46,5 +46,29 @@ class TestCoreApi(unittest.TestCase):
         self.assertTrue(hasattr(convo, "open"))
 
 
+class TestWarmVoiceWiring(unittest.TestCase):
+    # the model layer reached through the core: mode follows availability,
+    # research delegates. no key needed - the layer is mocked.
+
+    def setUp(self):
+        from core import llm
+        self.llm = llm
+        self._av, self._rs = llm.available, llm.research
+
+    def tearDown(self):
+        self.llm.available, self.llm.research = self._av, self._rs
+
+    def test_mode_follows_availability(self):
+        self.llm.available = lambda: False
+        self.assertEqual(echoself_core.companion_mode(), "offline")
+        self.assertFalse(echoself_core.llm_available())
+        self.llm.available = lambda: True
+        self.assertEqual(echoself_core.companion_mode(), "warm")
+
+    def test_research_delegates_to_the_layer(self):
+        self.llm.research = lambda q: f"looked up: {q}"
+        self.assertEqual(echoself_core.research("seoul weather"), "looked up: seoul weather")
+
+
 if __name__ == "__main__":
     unittest.main()

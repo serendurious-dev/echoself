@@ -79,6 +79,25 @@ def is_crisis(text):
     return emotion.is_crisis(text)
 
 
+# -- the warm voice -----------------------------------------------------------
+
+def llm_available():
+    # is the model layer reachable (a key + the SDK)? if not, offline answers.
+    from core import llm
+    return llm.available()
+
+
+def companion_mode():
+    return "warm" if llm_available() else "offline"
+
+
+def research(query):
+    # look something up, grounded, never made up. raises on failure so the
+    # frontend can say so plainly rather than invent an answer.
+    from core import llm
+    return llm.research(query)
+
+
 # -- where you stand ----------------------------------------------------------
 
 def echo_distance(profile=None):

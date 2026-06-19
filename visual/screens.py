@@ -217,16 +217,16 @@ def _converse(screen, clock, character):
         if said.startswith("?"):
             # a question to look up. only when the mirror-self layer is on (your own
             # key); grounded and never made up - if she can't verify it, she says so.
-            from core import llm
+            import echoself_core
             q = said[1:].strip()
             if not q:
                 answer = "ask me something after the ?, and i'll look it up."
-            elif not llm.available():
+            elif not echoself_core.llm_available():
                 answer = ("i can look things up only when the mirror-self layer is on - your "
                           "own key. without it i can't promise the answer's real, so i won't guess.")
             else:
                 try:
-                    answer = llm.research(q)
+                    answer = echoself_core.research(q)
                 except Exception:
                     answer = ("i tried to look that up but couldn't reach an answer i trust. "
                               "better to give you nothing than something made up.")
