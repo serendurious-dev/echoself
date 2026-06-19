@@ -10,6 +10,7 @@ DEFAULTS = {
     "outreach":       True,         # may she send a daily check-in at all
     "outreach_style": "general",    # "general" | "personal"
     "learning_track": "python",     # which language CodePath is teaching
+    "region":         "KR",         # which country's crisis lines she points to
 }
 
 STYLES = ("general", "personal")

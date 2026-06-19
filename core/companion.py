@@ -36,15 +36,17 @@ EXPRESSION = {"joy": "happy", "neutral": "neutral", "sadness": "patient", "anger
               "overwhelm": "patient", "guilt": "thinking", "grief": "patient", "numbness": "drift"}
 
 # crisis safety: not a counseling script. care, plus a push toward real human help.
-CRISIS_REPLY = (
-    "I'm really glad you told me, and I'm staying right here with you.\n"
-    "What you're carrying sounds like more than anyone should carry alone - and I'm a program, "
-    "not a person who can keep you safe tonight. Please reach out to someone who can, right now: "
-    "a crisis line, a doctor, or someone you trust.\n"
-    "If you're in immediate danger, contact your local emergency number. In South Korea you can "
-    "call 109 (suicide prevention), or 1393. You deserve a real voice on the other end. "
-    "I'll be here when you come back."
-)
+# the lines come from core/crisis, picked for the user's region - deterministic and
+# offline, never the model's call. CRISIS_REPLY is the default-region text; the live
+# reply is built per-region at call time.
+from core import crisis
+
+CRISIS_REPLY = crisis.reply()
+
+
+def crisis_reply():
+    from core import settings
+    return crisis.reply(settings.get("region"))
 
 # per emotion: stance, `lines` (first thing she says), `follow_ups` (the question
 # that keeps the thread open), `deepen` (when you stay on the feeling).
@@ -340,7 +342,7 @@ def respond(text, llm=None):
     # `llm` is an optional seam, auto-wired to the mirror-self when a key is set
     # (below); offline library by default and on any failure.
     if emotion.is_crisis(text):
-        return {"emotion": "crisis", "intensity": 1.0, "crisis": True, "reply": CRISIS_REPLY}
+        return {"emotion": "crisis", "intensity": 1.0, "crisis": True, "reply": crisis_reply()}
 
     read = emotion.analyze(text)
     emo  = read["primary"] or "neutral"
@@ -453,9 +455,10 @@ class Conversation:
         if emotion.is_crisis(text):
             self.ended   = True
             self._offered = None
+            reply = crisis_reply()
             self.history.append(("you", text, "crisis"))
-            self.history.append(("her", CRISIS_REPLY, "crisis"))
-            return {"emotion": "crisis", "intensity": 1.0, "crisis": True, "reply": CRISIS_REPLY}
+            self.history.append(("her", reply, "crisis"))
+            return {"emotion": "crisis", "intensity": 1.0, "crisis": True, "reply": reply}
 
         emo, intensity, _ = emotion.detect(text)
 
