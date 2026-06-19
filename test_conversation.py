@@ -77,9 +77,11 @@ class TestConversationThread(unittest.TestCase):
         r1 = conv.say("I feel so empty and sad")
         r2 = conv.say("still sad, it won't lift")
         self.assertNotEqual(r1["reply"], r2["reply"])
-        # the second turn comes from the deepen pool - she goes with you, no
-        # second interrogation
-        self.assertIn(r2["reply"], companion.RESPONSES["sadness"]["deepen"])
+        # the second turn opens from the deepen pool - she goes with you, no second
+        # interrogation. a gentle tool offer may ride along after it, so match the start.
+        self.assertTrue(any(r2["reply"].startswith(line)
+                            for line in companion.RESPONSES["sadness"]["deepen"]),
+                        r2["reply"])
 
     def test_she_does_not_repeat_herself_across_a_thread(self):
         conv = self._conv()

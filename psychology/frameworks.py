@@ -145,6 +145,36 @@ FRAMEWORKS = {
             "taste - something small, slowly.\n"
             "you don't have to earn comfort. give your body one honest minute of it."),
     },
+    # CBT - working with the thought itself, slowly and fairly. (Beck.)
+    "cbt_thought_record": {
+        "name":   "a thought record",
+        "for":    "a harsh thought you've started to believe",
+        "source": "Cognitive behavioural therapy (Beck) - the thought record / cognitive restructuring.",
+        "offer":  "want to put that thought on the table and actually check it, step by step? say yes.",
+        "walk": (
+            "okay - like weighing evidence, not arguing:\n"
+            "one - the thought, in a single line. what exactly are you telling yourself?\n"
+            "two - what's the proof it's true? real facts, not the feeling.\n"
+            "three - what's the proof it isn't, or isn't the whole story? there's almost always some.\n"
+            "four - what would you say to a friend who said this about themselves?\n"
+            "five - so what's a fairer, truer line to hold instead?\n"
+            "you don't have to win the argument. just loosen its grip a little."),
+    },
+    "behavioral_activation": {
+        "name":   "doing before feeling",
+        "for":    "the heavy days when nothing seems worth the effort",
+        "source": "Behavioural activation, a core CBT treatment for depression (Lewinsohn; Jacobson).",
+        "offer":  "the heaviness says wait till you feel like it - it's lying. want to try it backwards, one tiny thing first? say yes.",
+        "walk": (
+            "depression flips the order. it says feel better, then do. it's backwards - the doing "
+            "comes first, and the feeling follows a little after.\n"
+            "pick one small thing that used to matter or feel okay: a shower, a short walk, one "
+            "text to someone, two minutes outside.\n"
+            "not because you feel like it - you won't, and that's fine. do it anyway, small and "
+            "kind, then just notice your mood after. it usually nudges up a notch.\n"
+            "that notch is real. it's how you climb out - one tiny action at a time, not one big "
+            "burst of motivation that never comes."),
+    },
 }
 
 

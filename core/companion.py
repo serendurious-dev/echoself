@@ -59,6 +59,7 @@ def crisis_reply():
 RESPONSES = {
     "sadness": {
         "stance": "validate first, then presence",
+        "technique": "behavioral_activation",   # the heavy, low days - doing before feeling
         "lines": [
             "That sounds heavy. You don't have to make it smaller than it is - I can sit with it.",
             "It makes sense that you'd feel this. Heavy days are allowed to be heavy.",
@@ -174,6 +175,7 @@ RESPONSES = {
     "guilt": {
         "stance": "weigh it honestly, without the pile-on",
         "technique": "cbt_reframe",
+        "acute_technique": "cbt_thought_record",   # heavy self-blame -> the full record
         "lines": [
             "Guilt usually means you care - that you'd have done it differently if you could.",
             "It makes sense to feel this. But let's look at it honestly, not just harshly.",
