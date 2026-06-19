@@ -361,26 +361,18 @@ def run(args=None):
     from core.session_manager import load_profile
     from core.echo_builder import run_builder
 
-    # --demo runs in a sandboxed data_demo/ dir, seeded with a lived-in month,
-    # so the slow features have something to show. --timelapse adds a day each run.
-    if getattr(args, "demo", False):
-        from core import demo_mode
-        demo_mode.use_demo_dir()
-        demo_mode.ensure_seeded()
-        if getattr(args, "timelapse", False):
-            demo_mode.advance_day()
-
-    # clean up after any unclean exit before we touch the data
-    from osutil import recovery
-    from core import datastore
-    recovery.audit(datastore.DATA_DIR)
+    # the brain's headless prep lives in the core: demo sandbox + crash recovery.
+    # --timelapse adds a day each run.
+    import echoself_core
+    echoself_core.prepare_environment(demo=getattr(args, "demo", False),
+                                      timelapse=getattr(args, "timelapse", False))
 
     pygame.init()
     screen = pygame.display.set_mode(WINDOW_SIZE)
     pygame.display.set_caption("EchoSelf")
     clock  = pygame.time.Clock()
 
-    first_run = load_profile() is None
+    first_run = echoself_core.needs_onboarding()
     if first_run:
         run_builder(screen, clock)
         from visual.screens import show_help
@@ -396,32 +388,19 @@ def run(args=None):
         who = make_character(spec_from_profile(profile))
         daily_checkin(screen, clock, who, profile)
 
-    # the inner world wakes: read the logs, classify the state, get the plan.
-    # this is also where the drift nudges, one small step per launch.
-    from ml.behavioral_model import wake
-    from ml.psychology_layer import plan_for
-    from core.narrative_engine import dark_days_active
-    plan = plan_for(wake())
-
-    # a low-mood streak overrides everything toward presence - no pushing.
-    if dark_days_active():
-        plan["expression"]  = "drift"
-        plan["offer_drift"] = True
-        plan["dark_days"]   = True
-
-    # the monthly letter, written quietly so it's waiting when you look for it
-    from core import letters
-    if letters.due():
-        letters.write_monthly(profile)
+    # the inner world wakes: read the logs, classify the state, get the day's
+    # plan, fold in dark days and a due letter, measure how close you are. all of
+    # it headless in the core - the drift nudges here too, one step per launch.
+    state = echoself_core.today(profile)
+    plan  = state["plan"]
 
     worlds = WorldManager(WINDOW_SIZE, default_worlds(WINDOW_SIZE, plan))
 
     # the soundscape: a drone warmed by how close the Echo Distance is
-    from core import echo_distance
     from audio.soundscape import Soundscape
     sound = Soundscape()
     sound.start()
-    sound.set_closeness(1.0 - sum(echo_distance.compute(profile).values()) / 4.0)
+    sound.set_closeness(state["closeness"])
 
     running = True
     while running:
