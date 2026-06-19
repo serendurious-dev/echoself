@@ -110,6 +110,36 @@ def echo_history(days=30):
     return ed.history(days)
 
 
+# -- learning -----------------------------------------------------------------
+
+def mastery_report():
+    from learning import mastery
+    return mastery.report()
+
+
+def learning_tracks():
+    from learning import mastery
+    return mastery.TRACKS
+
+
+def set_learning_track(track):
+    from core import settings
+    settings.set("learning_track", track)
+
+
+# -- what she remembers (the portrait) ----------------------------------------
+
+def portrait_facts(limit=None):
+    from core import portrait
+    facts = portrait.facts()
+    return facts[:limit] if limit else facts
+
+
+def forget_fact(fact_id):
+    from core import portrait
+    return portrait.forget(fact_id)
+
+
 # -- your data, your call -----------------------------------------------------
 
 def export_data():

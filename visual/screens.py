@@ -346,15 +346,15 @@ def show_help(screen, clock):
 def show_mastery(screen, clock, character):
     # how far you've come - the don't-give-up dashboard. per-topic progress, the
     # single next step, momentum without guilt, a welcome back if you've been away.
-    from learning import mastery
-    from core import settings
+    import echoself_core
     w, h    = screen.get_size()
     title   = _font(38)
     font    = _font(26)
     soft    = _font(20)
     big     = _font(30)
     accent  = character.spec.palette[0]
-    report  = mastery.report()
+    tracks  = echoself_core.learning_tracks()
+    report  = echoself_core.mastery_report()
     while True:
         dt = clock.tick(60) / 1000.0
         for e in pygame.event.get():
@@ -365,9 +365,9 @@ def show_mastery(screen, clock, character):
                     return
                 if pygame.K_1 <= e.key <= pygame.K_4:        # switch language
                     i = e.key - pygame.K_1
-                    if i < len(mastery.TRACKS):
-                        settings.set("learning_track", mastery.TRACKS[i][0])
-                        report = mastery.report()
+                    if i < len(tracks):
+                        echoself_core.set_learning_track(tracks[i][0])
+                        report = echoself_core.mastery_report()
         character.update(dt)
         screen.fill(BG)
         character.pos = (int(w * 0.84), int(h * 1.02))
@@ -376,7 +376,7 @@ def show_mastery(screen, clock, character):
         screen.blit(title.render("how far you've come", True, INK), (60, 44))
         # which language, and how to switch
         switch = "   ".join(f"{i + 1} {name}" + (" <-" if tr == report["track"] else "")
-                            for i, (tr, name) in enumerate(mastery.TRACKS))
+                            for i, (tr, name) in enumerate(tracks))
         screen.blit(soft.render(switch, True, SOFT), (60, 92))
         y = 132
         # the topic bars
@@ -461,14 +461,14 @@ def show_portrait(screen, clock):
     # what she remembers about you. everything she's gathered is here, in plain
     # words, and any line can be removed with a keypress - model A, made literal.
     # nothing is hidden, nothing ever left the machine.
-    from core import portrait
+    import echoself_core
     w, h    = screen.get_size()
     title   = _font(38)
     font    = _font(26)
     soft    = _font(20)
     label   = _font(18)
     while True:
-        items = portrait.facts()[:9]      # the strongest nine; number keys remove
+        items = echoself_core.portrait_facts(9)   # the strongest nine; number keys remove
         clock.tick(60)
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
@@ -479,7 +479,7 @@ def show_portrait(screen, clock):
                 if pygame.K_1 <= e.key <= pygame.K_9:
                     i = e.key - pygame.K_1
                     if i < len(items):
-                        portrait.forget(items[i]["id"])
+                        echoself_core.forget_fact(items[i]["id"])
         screen.fill(BG)
         screen.blit(title.render("what she remembers about you", True, INK), (60, 44))
         screen.blit(soft.render("everything she's kept is here. nothing left this machine.",

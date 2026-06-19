@@ -46,6 +46,37 @@ class TestCoreApi(unittest.TestCase):
         self.assertTrue(hasattr(convo, "open"))
 
 
+class TestLearningAndMemorySurface(unittest.TestCase):
+    # the learning + portrait flows a frontend needs, through the core
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self._old = datastore.DATA_DIR
+        datastore.DATA_DIR = self._tmp.name
+
+    def tearDown(self):
+        datastore.DATA_DIR = self._old
+        self._tmp.cleanup()
+
+    def test_mastery_report_and_tracks(self):
+        report = echoself_core.mastery_report()
+        self.assertIn("track", report)
+        tracks = echoself_core.learning_tracks()
+        self.assertTrue(any(t[0] == "python" for t in tracks))
+
+    def test_set_track_sticks(self):
+        echoself_core.set_learning_track("java")
+        self.assertEqual(echoself_core.mastery_report()["track"], "java")
+
+    def test_portrait_facts_and_forget(self):
+        from core import portrait
+        portrait.remember("thesis is hanging over them", kind="weight", source="you")
+        facts = echoself_core.portrait_facts()
+        self.assertTrue(facts)
+        echoself_core.forget_fact(facts[0]["id"])
+        self.assertEqual(len(echoself_core.portrait_facts()), len(facts) - 1)
+
+
 class TestWarmVoiceWiring(unittest.TestCase):
     # the model layer reached through the core: mode follows availability,
     # research delegates. no key needed - the layer is mocked.
