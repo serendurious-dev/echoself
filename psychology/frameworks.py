@@ -175,6 +175,34 @@ FRAMEWORKS = {
             "that notch is real. it's how you climb out - one tiny action at a time, not one big "
             "burst of motivation that never comes."),
     },
+    # ACT - not changing the thought or the feeling, but your grip on it. (Hayes.)
+    "act_defusion": {
+        "name":   "unhooking from the thought",
+        "for":    "a thought you've fused with - 'i'm worthless,' 'i'm a failure' - as if it were just true",
+        "source": "Acceptance and Commitment Therapy (Hayes) - cognitive defusion.",
+        "offer":  "that thought's got its hooks in deep right now. want a way to unhook from it, just a little? say yes.",
+        "walk": (
+            "you don't have to fight it or believe it - just step back from it.\n"
+            "take the thought, say it's 'i'm a failure,' and put four words in front: 'i'm having "
+            "the thought that i'm a failure.' notice the small gap that opens.\n"
+            "now: 'i notice i'm having the thought that...' - a little more room again.\n"
+            "the thought is something your mind is doing, not a fact about you. you can let it be "
+            "there, loud even, and still not hand it the wheel. it's weather, not the sky."),
+    },
+    "act_values": {
+        "name":   "one step toward what matters",
+        "for":    "feeling lost, flat, cut off from the point of it all",
+        "source": "Acceptance and Commitment Therapy (Hayes) - values and committed action.",
+        "offer":  "want to find one thread back to something that matters to you? doesn't have to be big. say yes.",
+        "walk": (
+            "not goals - values. the direction, not the destination.\n"
+            "name one thing you care about underneath all this: being kind, making something, a "
+            "person, learning, honesty. just one.\n"
+            "now the smallest move in that direction today - a sentence, a message, five minutes. "
+            "tiny counts.\n"
+            "the caring follows the action here too. you don't wait to care again and then act; you "
+            "do one small thing you'd do if you cared, and the caring catches up."),
+    },
 }
 
 

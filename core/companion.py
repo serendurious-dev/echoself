@@ -137,6 +137,7 @@ RESPONSES = {
     "shame": {
         "stance": "separate the person from the verdict",
         "technique": "self_compassion",
+        "acute_technique": "act_defusion",   # fused with the verdict -> unhook from it
         "lines": [
             "A hard day doesn't make you a failure. It makes you someone who had a hard day.",
             "Be as kind to yourself as you'd be to someone you love. You're allowed that.",
@@ -214,6 +215,7 @@ RESPONSES = {
     "numbness": {
         "stance": "presence without pressure, no forcing feeling",
         "technique": "dbt_self_soothe",
+        "acute_technique": "act_values",   # deeply cut off -> one thread back to what matters
         "lines": [
             "Numb is its own kind of heavy. Feeling nothing can be harder than feeling sad.",
             "You don't have to manufacture a feeling for me. Blank is allowed to be where you are.",

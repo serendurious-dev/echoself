@@ -39,9 +39,10 @@ class TestAcuteOffer(unittest.TestCase):
         self.assertIn(frameworks.offer_line("dbt_radical_acceptance"), r["reply"])
 
     def test_numbness_offers_self_soothe(self):
+        # mild numbness -> the gentle default (deep numbness goes to act_values)
         c = Conversation()
-        c.say("i feel hollow and detached and blank")
-        r = c.say("i feel hollow and detached and blank")
+        c.say("i feel kind of hollow")
+        r = c.say("i feel kind of hollow")
         self.assertIn(frameworks.offer_line("dbt_self_soothe"), r["reply"])
 
 
