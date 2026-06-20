@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "python",
   "cluster": 1,
   "lesson": 4,
@@ -10,15 +10,38 @@
   "concept": "A list keeps values in order. append() adds to the end, len() counts, [0] is the first thing in it.",
   "explanation": "A list is the first container you actually need: it holds things in the order you put them there. Indexing starts at zero - moods[0] is the first entry, not the second. append() always adds at the end, and len() tells you how many are inside right now.",
   "code_example": "moods = [\"heavy\", \"okay\"]\nmoods.append(\"lighter\")\nprint(len(moods), moods[0])",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": ["2 heavy", "3 heavy", "3 lighter", "2 okay"],
-    "answer_index": 1
-  },
-  "hints": [
-    "Count what is in the list after the append.",
-    "len() answers after all three are in. And [0] starts counting at zero.",
-    "Three entries, and moods[0] is still \"heavy\" - append never touches the front."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["2 heavy", "3 heavy", "3 lighter", "2 okay"],
+      "answer_index": 1,
+      "hints": [
+        "Count what is in the list after the append.",
+        "len() answers after all three are in. And [0] starts counting at zero.",
+        "Three entries, and moods[0] is still \"heavy\" - append never touches the front."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\nnums = [10, 20, 30]\nprint(nums[-1])",
+      "options": ["10", "30", "-1", "it errors"],
+      "answer_index": 1,
+      "hints": [
+        "A negative index counts from the end backwards.",
+        "[-1] is the last item, [-2] the one before it.",
+        "The last item is 30."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Which list method adds a value onto the end?\n\nmoods._(\"lighter\")",
+      "answer": "append",
+      "hints": [
+        "It's the one from the worked example.",
+        "Five letters, means 'add to the end'.",
+        "It's append."
+      ]
+    }
   ]
 }

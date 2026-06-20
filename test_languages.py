@@ -15,19 +15,21 @@ class TestTracksLoad(unittest.TestCase):
             lessons = codepath.load_track(track)
             self.assertTrue(lessons, f"{track} has no lessons")
             for lesson in lessons:
-                # every lesson must be answerable: a quiz and hints, like the engine needs
-                self.assertIn("quiz", lesson)
-                self.assertIn("hints", lesson)
-                q = lesson["quiz"]
-                self.assertIn(q["type"], ("mcq", "predict_output", "fill_blank"))
+                # every lesson must be answerable: at least one exercise with hints,
+                # whatever shape it's in (old single-quiz or the new exercise list)
+                exercises = codepath.lesson_exercises(lesson)
+                self.assertTrue(exercises, lesson["id"])
+                for ex in exercises:
+                    self.assertIn(ex["type"], ("mcq", "predict_output", "fill_blank"))
+                    self.assertTrue(ex["hints"], lesson["id"])
 
     def test_quiz_answers_are_in_range(self):
         for track in ("c", "cpp", "java"):
             for lesson in codepath.load_track(track):
-                q = lesson["quiz"]
-                if q["type"] in ("mcq", "predict_output"):
-                    self.assertTrue(0 <= q["answer_index"] < len(q["options"]),
-                                    f"{lesson['id']} bad answer_index")
+                for ex in codepath.lesson_exercises(lesson):
+                    if ex["type"] in ("mcq", "predict_output"):
+                        self.assertTrue(0 <= ex["answer_index"] < len(ex["options"]),
+                                        f"{lesson['id']} bad answer_index")
 
     def test_python_stays_the_deep_one(self):
         self.assertGreaterEqual(len(codepath.load_track("python")), 15)

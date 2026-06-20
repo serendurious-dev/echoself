@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "python",
   "cluster": 1,
   "lesson": 2,
@@ -10,15 +10,38 @@
   "concept": "Python has int and float. / always gives a float, // divides and floors, % gives the remainder.",
   "explanation": "7 / 2 is 3.5 - regular division never throws information away. 7 // 2 is 3 - floor division keeps only the whole part. 7 % 2 is 1 - the remainder, which is how you check if a number is even. Three little operators, three different questions you can ask.",
   "code_example": "print(7 / 2)    # 3.5\nprint(7 // 2)   # 3\nprint(7 % 2)    # 1",
-  "quiz": {
-    "type": "mcq",
-    "question": "What type does 8 / 4 give you?",
-    "options": ["int, because it divides evenly", "float, always", "it depends on the numbers", "str"],
-    "answer_index": 1
-  },
-  "hints": [
-    "The result value is 2.0, not 2. What does the .0 tell you?",
-    "/ does not look at whether the division is clean. It always answers the same way.",
-    "Even 8 / 4 gives 2.0 - regular division always returns a float."
+  "exercises": [
+    {
+      "type": "mcq",
+      "question": "What type does 8 / 4 give you?",
+      "options": ["int, because it divides evenly", "float, always", "it depends on the numbers", "str"],
+      "answer_index": 1,
+      "hints": [
+        "The result value is 2.0, not 2. What does the .0 tell you?",
+        "/ does not look at whether the division is clean. It always answers the same way.",
+        "Even 8 / 4 gives 2.0 - regular division always returns a float."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\nprint(17 // 5, 17 % 5)",
+      "options": ["3 2", "3.4 2", "2 3", "3 3"],
+      "answer_index": 0,
+      "hints": [
+        "// is the whole part of the division, % is what's left over.",
+        "17 split into 5s: three full fives, with 2 to spare.",
+        "17 // 5 is 3, and 17 % 5 is 2."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Which operator gives the remainder (and tells you if a number is even)?\n\nis_even = (n _ 2 == 0)",
+      "answer": "%",
+      "hints": [
+        "It's a single symbol.",
+        "The remainder operator - 'modulo'.",
+        "It's % , the percent sign."
+      ]
+    }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "python",
   "cluster": 3,
   "lesson": 5,
@@ -10,15 +10,38 @@
   "concept": "A class is a blueprint. __init__ sets up each new object's data; methods are functions that belong to it and act on self.",
   "explanation": "When a bundle of data and the things you do to it keep travelling together, a class names that bundle. __init__ runs when you make one, storing values on self. A method like deposit() reaches into self to change it. self is just 'this particular object' - the one the method was called on.",
   "code_example": "class Counter:\n    def __init__(self):\n        self.n = 0\n    def tick(self):\n        self.n += 1\n\nc = Counter()\nc.tick()\nc.tick()\nprint(c.n)",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": ["0", "1", "2", "None"],
-    "answer_index": 2
-  },
-  "hints": [
-    "n starts at 0 when the Counter is made.",
-    "Each tick() adds one to self.n.",
-    "Two ticks: 2."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["0", "1", "2", "None"],
+      "answer_index": 2,
+      "hints": [
+        "n starts at 0 when the Counter is made.",
+        "Each tick() adds one to self.n.",
+        "Two ticks: 2."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Which method runs automatically when you create a new object?",
+      "options": ["tick", "__init__", "self", "return"],
+      "answer_index": 1,
+      "hints": [
+        "It's the setup method.",
+        "The one with the double underscores, for 'initialize'.",
+        "It's __init__."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Inside a method, the current object - the one the method was called on - is named what?\n\ndef tick(_):\n    _.n += 1",
+      "answer": "self",
+      "hints": [
+        "It's the first parameter of every method.",
+        "Four letters - 'this particular object'.",
+        "It's self."
+      ]
+    }
   ]
 }

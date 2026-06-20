@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "python",
   "cluster": 1,
   "lesson": 5,
@@ -10,15 +10,39 @@
   "concept": "Comparisons produce True or False. An if runs its block only when its condition is True. == asks, = assigns.",
   "explanation": "Every if statement is just a question with a yes or no answer. score >= 5 is not magic, it is a value - True or False - that you could print like anything else. The classic trap: = gives a name a value, == asks whether two things are equal. One symbol apart, completely different sentence.",
   "code_example": "score = 6\nif score >= 5:\n    print(\"enough\")\nelse:\n    print(\"not yet\")",
-  "quiz": {
-    "type": "mcq",
-    "question": "score = 4. What does the example print?",
-    "options": ["enough", "not yet", "True", "nothing, it errors"],
-    "answer_index": 1
-  },
-  "hints": [
-    "Put 4 into the question the if is asking: is 4 >= 5?",
-    "The answer is False, so the if block is skipped. Where does it go instead?",
-    "False means the else branch runs - \"not yet\"."
+  "exercises": [
+    {
+      "type": "mcq",
+      "question": "score = 4. What does the example print?",
+      "options": ["enough", "not yet", "True", "nothing, it errors"],
+      "answer_index": 1,
+      "hints": [
+        "Put 4 into the question the if is asking: is 4 >= 5?",
+        "The answer is False, so the if block is skipped. Where does it go instead?",
+        "False means the else branch runs - \"not yet\"."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\nprint(5 == 5, 5 == 6)",
+      "options": ["True True", "True False", "False False", "5 6"],
+      "answer_index": 1,
+      "hints": [
+        "== asks 'are these equal?' and answers with True or False.",
+        "5 equals 5, but 5 does not equal 6.",
+        "True, then False."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Which one asks 'are these two things equal?'",
+      "options": ["=", "==", "=>", ":="],
+      "answer_index": 1,
+      "hints": [
+        "One equals sign assigns a value - that's not a question.",
+        "The question form doubles it up.",
+        "It's == , two equals signs."
+      ]
+    }
   ]
 }

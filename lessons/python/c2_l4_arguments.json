@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "python",
   "cluster": 2,
   "lesson": 4,
@@ -10,15 +10,39 @@
   "concept": "Functions take arguments by position. A parameter can have a default value, used when the caller leaves it out.",
   "explanation": "def greet(name, greeting=\"hello\") has a required parameter and an optional one. greet(\"Aria\") uses the default; greet(\"Aria\", \"hey\") overrides it. Defaults let one function cover the common case and the special case without you writing it twice.",
   "code_example": "def power(base, exp=2):\n    return base ** exp\n\nprint(power(3), power(2, 3))",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": ["9 8", "6 6", "9 6", "3 2"],
-    "answer_index": 0
-  },
-  "hints": [
-    "power(3) uses the default exp - what is it?",
-    "power(3) is 3 ** 2; power(2, 3) is 2 ** 3.",
-    "3 squared is 9, and 2 cubed is 8."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["9 8", "6 6", "9 6", "3 2"],
+      "answer_index": 0,
+      "hints": [
+        "power(3) uses the default exp - what is it?",
+        "power(3) is 3 ** 2; power(2, 3) is 2 ** 3.",
+        "3 squared is 9, and 2 cubed is 8."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\ndef greet(name, greeting=\"hi\"):\n    return f\"{greeting}, {name}\"\n\nprint(greet(\"Aria\"))",
+      "options": ["hi, Aria", "Aria, hi", "greeting, name", "it errors"],
+      "answer_index": 0,
+      "hints": [
+        "Only name was given, so greeting falls back to its default.",
+        "The default greeting is \"hi\".",
+        "It reads: hi, Aria."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "When is a parameter's default value used?",
+      "options": ["always", "never, if there's a return", "when the caller leaves that argument out", "only on the first call"],
+      "answer_index": 2,
+      "hints": [
+        "The default is a fallback, not a fixed value.",
+        "It fills in only what the caller didn't supply.",
+        "It's used when the caller leaves that argument out."
+      ]
+    }
   ]
 }

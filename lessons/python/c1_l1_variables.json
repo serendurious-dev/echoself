@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "python",
   "cluster": 1,
   "lesson": 1,
@@ -10,15 +10,38 @@
   "concept": "A variable is a name bound to a value. Assignment with = creates or rebinds the name.",
   "explanation": "When you write city = 'Seoul', Python does not put the value in a box - it ties a name to it, like a label on a string. Names can be retied to new values at any time, and the old value quietly lets go.",
   "code_example": "city = \"Seoul\"\nyear = 2026\ncity = \"Busan\"   # retied\nprint(city, year)",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": ["Seoul 2026", "Busan 2026", "city year", "Busan year"],
-    "answer_index": 1
-  },
-  "hints": [
-    "Read the lines top to bottom - what happens to 'city' on line 3?",
-    "Assignment does not keep history. A name only remembers its latest value.",
-    "By the time print() runs, 'city' was last assigned \"Busan\"."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["Seoul 2026", "Busan 2026", "city year", "Busan year"],
+      "answer_index": 1,
+      "hints": [
+        "Read the lines top to bottom - what happens to 'city' on line 3?",
+        "Assignment does not keep history. A name only remembers its latest value.",
+        "By the time print() runs, 'city' was last assigned \"Busan\"."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "And this one?\n\nx = 5\ny = x\nx = 9\nprint(y)",
+      "options": ["9", "5", "x", "it errors"],
+      "answer_index": 1,
+      "hints": [
+        "y was tied to the value of x at that moment, not to x itself.",
+        "When x is retied to 9, y doesn't follow - it kept the value it was given.",
+        "y was set to 5 and nothing touched it again."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Which single symbol binds a name to a value?\n\nmood _ \"okay\"",
+      "answer": "=",
+      "hints": [
+        "It's one character, between the name and the value.",
+        "Not == (that asks a question) - the one that assigns.",
+        "It's = , a single equals sign."
+      ]
+    }
   ]
 }

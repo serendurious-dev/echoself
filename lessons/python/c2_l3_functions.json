@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "python",
   "cluster": 2,
   "lesson": 3,
@@ -10,15 +10,38 @@
   "concept": "def names a block of work so you can run it again by calling it. return hands a value back to whoever called.",
   "explanation": "A function is a verb you get to invent. def double(x): defines it; double(5) runs it. return is the door the answer comes back through - without a return, a function hands back None. That distinction (returning a value versus just doing something) is the one that trips everyone up first.",
   "code_example": "def double(x):\n    return x * 2\n\nresult = double(double(3))\nprint(result)",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": ["6", "12", "9", "None"],
-    "answer_index": 1
-  },
-  "hints": [
-    "Work the inside call first: double(3).",
-    "double(3) is 6, and then double(6).",
-    "double(6) is 12."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["6", "12", "9", "None"],
+      "answer_index": 1,
+      "hints": [
+        "Work the inside call first: double(3).",
+        "double(3) is 6, and then double(6).",
+        "double(6) is 12."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\ndef one():\n    return 1\n\nprint(one() + one())",
+      "options": ["1", "2", "one one", "None"],
+      "answer_index": 1,
+      "hints": [
+        "Each call to one() hands back its value.",
+        "1 + 1.",
+        "It's 2."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Which keyword hands a value back to whoever called the function?\n\ndef double(x):\n    _ x * 2",
+      "answer": "return",
+      "hints": [
+        "Without it, the function gives back None.",
+        "Six letters - it's the door the answer comes back through.",
+        "It's return."
+      ]
+    }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "python",
   "cluster": 1,
   "lesson": 3,
@@ -10,14 +10,38 @@
   "concept": "Strings hold text. An f-string (f\"...\") lets you fold variables straight into the text with {braces}.",
   "explanation": "Gluing text together with + works but gets ugly fast. An f-string reads the way you would say it: put an f before the opening quote, and anything inside {braces} becomes its value. The f is the whole trick - without it, the braces are just braces.",
   "code_example": "name = \"Aria\"\nstreak = 4\nline = f\"{name} showed up {streak} days in a row\"\nprint(line)",
-  "quiz": {
-    "type": "fill_blank",
-    "question": "One character makes the braces come alive. Which letter goes before the quote?\n\ngreeting = _\"hello, {name}\"",
-    "answer": "f"
-  },
-  "hints": [
-    "It is a single letter, sitting right before the opening quote.",
-    "It stands for 'formatted'.",
-    "f - as in f\"hello, {name}\"."
+  "exercises": [
+    {
+      "type": "fill_blank",
+      "question": "One character makes the braces come alive. Which letter goes before the quote?\n\ngreeting = _\"hello, {name}\"",
+      "answer": "f",
+      "hints": [
+        "It is a single letter, sitting right before the opening quote.",
+        "It stands for 'formatted'.",
+        "f - as in f\"hello, {name}\"."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\nname = \"Aria\"\nprint(f\"{name} has {2 + 3} stars\")",
+      "options": ["Aria has 5 stars", "{name} has {2 + 3} stars", "Aria has 2 + 3 stars", "it errors"],
+      "answer_index": 0,
+      "hints": [
+        "An f-string runs whatever is inside the braces, then drops the result in.",
+        "{name} becomes Aria, and {2 + 3} is worked out, not left as text.",
+        "2 + 3 is 5, so it reads: Aria has 5 stars."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Without the f, what does print(\"{name}\") show?",
+      "options": ["the value of name", "the literal text {name}", "an error", "an empty line"],
+      "answer_index": 1,
+      "hints": [
+        "The braces are only special inside an f-string.",
+        "With no f, it's just ordinary text - nothing gets folded in.",
+        "It prints {name}, braces and all."
+      ]
+    }
   ]
 }

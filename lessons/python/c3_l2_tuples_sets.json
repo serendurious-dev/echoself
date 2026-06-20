@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "python",
   "cluster": 3,
   "lesson": 2,
@@ -10,15 +10,39 @@
   "concept": "A tuple is an ordered group that can't be changed. A set is an unordered collection with no duplicates.",
   "explanation": "Use a tuple when a group belongs together and shouldn't shift - (x, y) coordinates, a row. Use a set when you only care whether something is in it, and want duplicates gone automatically. set([1, 2, 2, 3]) is {1, 2, 3}. Asking 'is this in the set' is fast.",
   "code_example": "seen = set()\nfor c in \"banana\":\n    seen.add(c)\nprint(len(seen))",
-  "quiz": {
-    "type": "predict_output",
-    "question": "How many unique letters are in 'banana'?",
-    "options": ["6", "3", "2", "5"],
-    "answer_index": 1
-  },
-  "hints": [
-    "A set drops repeats. Which distinct letters appear?",
-    "The letters used are b, a, n.",
-    "Three unique letters: 3."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "How many unique letters are in 'banana'?",
+      "options": ["6", "3", "2", "5"],
+      "answer_index": 1,
+      "hints": [
+        "A set drops repeats. Which distinct letters appear?",
+        "The letters used are b, a, n.",
+        "Three unique letters: 3."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Which one cannot be changed after you create it?",
+      "options": ["a list", "a tuple", "a set", "a dict"],
+      "answer_index": 1,
+      "hints": [
+        "Think about which is meant to stay fixed - like coordinates.",
+        "It's the ordered group that won't shift.",
+        "A tuple."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\nprint(len(set([1, 2, 2, 3, 3, 3])))",
+      "options": ["6", "3", "2", "1"],
+      "answer_index": 1,
+      "hints": [
+        "A set keeps only the distinct values.",
+        "The distinct numbers are 1, 2, 3.",
+        "That's 3."
+      ]
+    }
   ]
 }

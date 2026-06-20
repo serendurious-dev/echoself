@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "python",
   "cluster": 2,
   "lesson": 1,
@@ -10,15 +10,38 @@
   "concept": "A for loop runs its body once for each item in a sequence, with the item bound to a name you choose.",
   "explanation": "for mood in moods: reads almost like English - 'for each mood in moods, do this'. The name (mood) is yours; each time around the loop it points at the next item. range(n) gives you the numbers 0 to n-1 when you want to count instead of walk a list.",
   "code_example": "total = 0\nfor n in [3, 5, 2]:\n    total = total + n\nprint(total)",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": ["3", "10", "0", "[3, 5, 2]"],
-    "answer_index": 1
-  },
-  "hints": [
-    "Walk the loop by hand: what is total after each pass?",
-    "3, then 3+5, then 3+5+2.",
-    "The three numbers add up to 10."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["3", "10", "0", "[3, 5, 2]"],
+      "answer_index": 1,
+      "hints": [
+        "Walk the loop by hand: what is total after each pass?",
+        "3, then 3+5, then 3+5+2.",
+        "The three numbers add up to 10."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\ntotal = 0\nfor i in range(4):\n    total += i\nprint(total)",
+      "options": ["4", "6", "10", "3"],
+      "answer_index": 1,
+      "hints": [
+        "range(4) is 0, 1, 2, 3 - it stops before 4.",
+        "Add them: 0 + 1 + 2 + 3.",
+        "That's 6."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "range(5) counts from 0 up to but not including 5. What is the last number it gives?\n\n_",
+      "answer": "4",
+      "hints": [
+        "It never reaches the number you pass in.",
+        "It stops one short of 5.",
+        "The last value is 4."
+      ]
+    }
   ]
 }

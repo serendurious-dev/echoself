@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "python",
   "cluster": 2,
   "lesson": 2,
@@ -10,15 +10,39 @@
   "concept": "A while loop keeps running its body as long as its condition stays True. You change something inside so it eventually stops.",
   "explanation": "Use for when you know the items, while when you only know the stopping condition. The danger is forgetting to move toward the end - if the condition never becomes False, the loop runs forever. Something inside the loop has to change the answer to the question at the top.",
   "code_example": "n = 3\nwhile n > 0:\n    print(n)\n    n = n - 1",
-  "quiz": {
-    "type": "mcq",
-    "question": "How many lines does this print?",
-    "options": ["2", "3", "4", "forever"],
-    "answer_index": 1
-  },
-  "hints": [
-    "List the values of n that pass the test n > 0.",
-    "n is 3, then 2, then 1 - then 0 stops it.",
-    "Three values print: 3, 2, 1."
+  "exercises": [
+    {
+      "type": "mcq",
+      "question": "How many lines does this print?",
+      "options": ["2", "3", "4", "forever"],
+      "answer_index": 1,
+      "hints": [
+        "List the values of n that pass the test n > 0.",
+        "n is 3, then 2, then 1 - then 0 stops it.",
+        "Three values print: 3, 2, 1."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\nn = 0\nwhile n < 3:\n    n = n + 1\nprint(n)",
+      "options": ["2", "3", "0", "forever"],
+      "answer_index": 1,
+      "hints": [
+        "The loop stops the moment n < 3 is no longer true.",
+        "n climbs 1, 2, 3 - at 3 the test fails.",
+        "After the loop, n is 3."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "What makes a while loop run forever?",
+      "options": ["using range()", "the condition never becomes False", "printing inside it", "starting n at 0"],
+      "answer_index": 1,
+      "hints": [
+        "Think about what tells the loop to stop.",
+        "If nothing inside ever changes the answer at the top...",
+        "...the condition stays True forever, and so does the loop."
+      ]
+    }
   ]
 }

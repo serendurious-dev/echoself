@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "python",
   "cluster": 2,
   "lesson": 5,
@@ -10,15 +10,39 @@
   "concept": "print shows a value to a human. return hands a value back to the code. They are not the same, and confusing them is the most common early bug.",
   "explanation": "A function that prints but does not return gives back None - so result = noisy() leaves result as None even though something appeared on screen. If you want to use a function's answer later, it has to return. print is for people; return is for the program.",
   "code_example": "def add(a, b):\n    print(a + b)\n\nresult = add(2, 3)\nprint(result)",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What two lines print, in order?",
-    "options": ["5 then 5", "5 then None", "None then 5", "5 then 0"],
-    "answer_index": 1
-  },
-  "hints": [
-    "add prints the sum - that's the first line.",
-    "But add has no return, so what is result?",
-    "It printed 5, then result is None, so: 5 then None."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What two lines print, in order?",
+      "options": ["5 then 5", "5 then None", "None then 5", "5 then 0"],
+      "answer_index": 1,
+      "hints": [
+        "add prints the sum - that's the first line.",
+        "But add has no return, so what is result?",
+        "It printed 5, then result is None, so: 5 then None."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "You want to use a function's answer later in your code. The function must...",
+      "options": ["print the value", "return the value", "use an f-string", "take a default argument"],
+      "answer_index": 1,
+      "hints": [
+        "print is for a human reading the screen.",
+        "To hand the answer back to the code, you need the other one.",
+        "It must return the value."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\ndef add(a, b):\n    return a + b\n\nprint(add(2, 3))",
+      "options": ["None", "5", "5 then None", "it errors"],
+      "answer_index": 1,
+      "hints": [
+        "This time add returns instead of printing.",
+        "add(2, 3) hands back 5, and print shows it.",
+        "Just 5."
+      ]
+    }
   ]
 }

@@ -17,7 +17,9 @@ def load_track(track):
         try:
             with open(path, encoding="utf-8") as f:
                 lesson = json.load(f)
-            if "quiz" in lesson and "hints" in lesson:
+            # a lesson is anything that yields at least one exercise (old single-quiz
+            # shape or the new exercises list); challenges/projects have neither
+            if lesson_exercises(lesson):
                 lessons.append(lesson)
         except (OSError, ValueError):
             continue

@@ -45,6 +45,29 @@ class LessonTest(unittest.TestCase):
     def session(self):
         return LessonSession("python", self.who, self.voice)
 
+    def answer_current(self, s, right=True):
+        # answer whatever exercise is on screen (works for any lesson shape)
+        ex = s.ex
+        if ex["type"] == "fill_blank":
+            s.typed = str(ex["answer"]) if right else "definitely-wrong"
+            s.handle(key(pygame.K_RETURN))
+        else:
+            idx = ex["answer_index"] if right else (ex["answer_index"] + 1) % len(ex["options"])
+            s.handle(key(pygame.K_1 + idx))
+
+    def solve_current_lesson(self, s):
+        # walk every exercise of the current lesson until it advances
+        start = s.lesson["id"]
+        if s.state == "reading":
+            s.handle(key(pygame.K_RETURN))
+        guard = 0
+        while s.lesson and s.lesson["id"] == start and s.state != "track_done" and guard < 60:
+            if s.state == "question":
+                self.answer_current(s)
+            elif s.state == "done":
+                s.handle(key(pygame.K_RETURN))
+            guard += 1
+
 
 class TestCodepath(LessonTest):
 
@@ -66,9 +89,10 @@ class TestCodepath(LessonTest):
             progress_tracker.log_event("python", lesson["cluster"], lesson["id"], "lesson_done")
         self.assertIsNone(codepath.next_lesson("python"))
 
-    def test_every_lesson_has_three_hints(self):
+    def test_every_exercise_has_hints(self):
         for lesson in codepath.load_track("python"):
-            self.assertEqual(len(lesson["hints"]), 3, lesson["id"])
+            for ex in codepath.lesson_exercises(lesson):
+                self.assertTrue(ex["hints"], lesson["id"])
 
 
 class TestSession(LessonTest):
@@ -81,8 +105,7 @@ class TestSession(LessonTest):
     def test_right_answer_celebrates_and_logs(self):
         s = self.session()
         s.handle(key(pygame.K_RETURN))                  # reading -> question
-        answer = s.lesson["quiz"]["answer_index"]
-        s.handle(key(pygame.K_1 + answer))
+        self.answer_current(s, right=True)
         self.assertEqual(s.state, "done")
         self.assertEqual(s.character.target, __import__("character.renderer", fromlist=["EXPRESSIONS"]).EXPRESSIONS["celebrating"])
         rows = progress_tracker.read_learning_log()
@@ -91,8 +114,7 @@ class TestSession(LessonTest):
     def test_wrong_answer_stays_kind_and_lets_you_retry(self):
         s = self.session()
         s.handle(key(pygame.K_RETURN))
-        wrong = (s.lesson["quiz"]["answer_index"] + 1) % 4
-        s.handle(key(pygame.K_1 + wrong))
+        self.answer_current(s, right=False)
         self.assertEqual(s.state, "question")            # still here, not failed out
         self.assertIn(s.feedback, self.voice["incorrect"])
         self.assertEqual(progress_tracker.read_learning_log()[-1]["correct"], "no")
@@ -100,8 +122,7 @@ class TestSession(LessonTest):
     def test_a_miss_brings_both_voices(self):
         s = self.session()
         s.handle(key(pygame.K_RETURN))
-        wrong = (s.lesson["quiz"]["answer_index"] + 1) % 4
-        s.handle(key(pygame.K_1 + wrong))
+        self.answer_current(s, right=False)
         self.assertIsNotNone(s.pair)
         teacher, friend = s.pair
         self.assertIn(teacher, self.voice["teacher"])
@@ -123,8 +144,7 @@ class TestSession(LessonTest):
         # miss lesson one's quiz, then leave (as if quitting mid-session)
         s = self.session()
         s.handle(key(pygame.K_RETURN))
-        wrong = (s.lesson["quiz"]["answer_index"] + 1) % 4
-        s.handle(key(pygame.K_1 + wrong))
+        self.answer_current(s, right=False)
         missed_id = s.lesson["id"]
         # a fresh session: the character brings the missed one back first
         s2 = self.session()
@@ -133,14 +153,12 @@ class TestSession(LessonTest):
         self.assertIn("missed this one before", s2.opening)
         # answering it right mends it and moves on
         s2.handle(key(pygame.K_RETURN))
-        s2.handle(key(pygame.K_1 + s2.lesson["quiz"]["answer_index"]))
+        self.answer_current(s2, right=True)
         self.assertFalse(s2.reviewing)
 
     def test_finishing_advances_to_the_next_lesson(self):
         s = self.session()
-        s.handle(key(pygame.K_RETURN))
-        s.handle(key(pygame.K_1 + s.lesson["quiz"]["answer_index"]))
-        s.handle(key(pygame.K_RETURN))                   # done -> next lesson
+        self.solve_current_lesson(s)                     # all of lesson 1's exercises
         self.assertEqual(s.lesson["lesson"], 2)
         self.assertEqual(s.state, "reading")
 
@@ -149,9 +167,13 @@ class TestSession(LessonTest):
         for lesson in codepath.load_track("python")[:2]:
             progress_tracker.log_event("python", lesson["cluster"], lesson["id"], "lesson_done")
         s = self.session()
-        self.assertEqual(s.lesson["quiz"]["type"], "fill_blank")
+        self.assertTrue(any(e["type"] == "fill_blank" for e in s.exercises))
         s.handle(key(pygame.K_RETURN))
-        s.handle(key(pygame.K_f, "F"))
+        # answer the first fill_blank exercise, in the wrong case, and it still takes
+        while s.ex["type"] != "fill_blank":
+            self.answer_current(s, right=True)
+            s.handle(key(pygame.K_RETURN))
+        s.typed = str(s.ex["answer"]).swapcase()
         s.handle(key(pygame.K_RETURN))
         self.assertEqual(s.state, "done")
 
@@ -175,13 +197,7 @@ class TestSession(LessonTest):
             if s.state == "reading":
                 s.handle(key(pygame.K_RETURN))
             elif s.state == "question":
-                quiz = s.lesson["quiz"]
-                if quiz["type"] == "fill_blank":
-                    for ch in str(quiz["answer"]):
-                        s.handle(key(pygame.K_a, ch))
-                    s.handle(key(pygame.K_RETURN))
-                else:
-                    s.handle(key(pygame.K_1 + quiz["answer_index"]))
+                self.answer_current(s, right=True)
             elif s.state == "done":
                 s.draw(surface)
                 s.handle(key(pygame.K_RETURN))
