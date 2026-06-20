@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "java",
   "cluster": 1,
   "lesson": 2,
@@ -10,20 +10,38 @@
   "concept": "Java is statically typed: int, double, boolean, String - each declared explicitly.",
   "explanation": "You name the type before the variable, and Java holds you to it. String is a class (capital S); the small types like int are primitives.",
   "code_example": "int age = 20;\ndouble gpa = 4.3;\nboolean ok = true;\nSystem.out.println(age);",
-  "quiz": {
-    "type": "mcq",
-    "question": "Which is Java's type for whole numbers?",
-    "options": [
-      "int",
-      "number",
-      "whole",
-      "Integer string"
-    ],
-    "answer_index": 0
-  },
-  "hints": [
-    "The primitive for integers.",
-    "Lowercase, three letters.",
-    "It is int."
+  "exercises": [
+    {
+      "type": "mcq",
+      "question": "Which is Java's type for whole numbers?",
+      "options": ["int", "number", "whole", "Integer string"],
+      "answer_index": 0,
+      "hints": [
+        "The primitive for integers.",
+        "Lowercase, three letters.",
+        "It is int."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Which type holds true or false?",
+      "options": ["int", "boolean", "String", "double"],
+      "answer_index": 1,
+      "hints": [
+        "It's named after Boole.",
+        "Only two possible values.",
+        "It's boolean."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Which type holds text, and is written with a capital letter?\n\n_ name = \"Min\";",
+      "answer": "String",
+      "hints": [
+        "It's a class, not a primitive.",
+        "Capital S.",
+        "It's String."
+      ]
+    }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "java",
   "cluster": 1,
   "lesson": 5,
@@ -10,20 +10,38 @@
   "concept": "A method takes parameters and returns a value of its declared type.",
   "explanation": "cube multiplies its input three times over. cube(3) is 3 * 3 * 3.",
   "code_example": "static int cube(int x) {\n    return x * x * x;\n}\n// cube(3) is printed below\nSystem.out.println(cube(3));",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": [
-      "9",
-      "27",
-      "333",
-      "6"
-    ],
-    "answer_index": 1
-  },
-  "hints": [
-    "3 * 3 * 3.",
-    "Not 3 * 3.",
-    "It prints 27."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["9", "27", "333", "6"],
+      "answer_index": 1,
+      "hints": [
+        "3 * 3 * 3.",
+        "Not 3 * 3.",
+        "It prints 27."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does cube(2) print?\n\nstatic int cube(int x) {\n    return x * x * x;\n}\nSystem.out.println(cube(2));",
+      "options": ["6", "8", "4", "222"],
+      "answer_index": 1,
+      "hints": [
+        "2 * 2 * 2.",
+        "Not 2 * 3.",
+        "It's 8."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Which keyword hands the method's value back?\n\n_ x * x * x;",
+      "answer": "return",
+      "hints": [
+        "Six letters.",
+        "Same as in the other languages.",
+        "It's return."
+      ]
+    }
   ]
 }

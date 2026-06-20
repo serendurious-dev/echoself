@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "c",
   "cluster": 1,
   "lesson": 5,
@@ -10,20 +10,38 @@
   "concept": "A function takes inputs, does work, and returns a value of its declared type.",
   "explanation": "The type written before the name is what the function hands back. return ends the function and gives that value to whoever called it.",
   "code_example": "int square(int x) {\n    return x * x;\n}\n// square(5) is printed below\nprintf(\"%d\", square(5));",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": [
-      "10",
-      "25",
-      "55",
-      "5"
-    ],
-    "answer_index": 1
-  },
-  "hints": [
-    "square multiplies its input by itself.",
-    "5 * 5.",
-    "It prints 25."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["10", "25", "55", "5"],
+      "answer_index": 1,
+      "hints": [
+        "square multiplies its input by itself.",
+        "5 * 5.",
+        "It prints 25."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "In int square(int x), what does the int before the name describe?",
+      "options": ["the input type", "the type of value the function returns", "the function's name", "nothing"],
+      "answer_index": 1,
+      "hints": [
+        "The type in the parentheses is the input.",
+        "The one out front is about what comes back.",
+        "It's the type the function returns."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Which keyword ends a function and hands its value back?\n\n_ x * x;",
+      "answer": "return",
+      "hints": [
+        "Same word as in Python.",
+        "Six letters.",
+        "It's return."
+      ]
+    }
   ]
 }

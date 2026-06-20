@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "c",
   "cluster": 1,
   "lesson": 3,
@@ -10,20 +10,39 @@
   "concept": "if runs its block when the condition is true; else covers everything else.",
   "explanation": "A condition in C is just a number: zero is false, anything else is true. The modulo operator % gives the remainder, the usual way to test even or odd.",
   "code_example": "int n = 7;\nif (n % 2 == 0)\n    printf(\"even\");\nelse\n    printf(\"odd\");",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": [
-      "even",
-      "odd",
-      "7",
-      "nothing"
-    ],
-    "answer_index": 1
-  },
-  "hints": [
-    "7 % 2 is 1, not 0.",
-    "The condition is false, so else runs.",
-    "It prints odd."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["even", "odd", "7", "nothing"],
+      "answer_index": 1,
+      "hints": [
+        "7 % 2 is 1, not 0.",
+        "The condition is false, so else runs.",
+        "It prints odd."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\nint n = 4;\nif (n % 2 == 0)\n    printf(\"even\");\nelse\n    printf(\"odd\");",
+      "options": ["even", "odd", "4", "nothing"],
+      "answer_index": 0,
+      "hints": [
+        "4 % 2 is 0.",
+        "0 == 0 is true, so the if block runs.",
+        "It prints even."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "In C, which value counts as false?",
+      "options": ["0", "1", "-1", "any non-zero number"],
+      "answer_index": 0,
+      "hints": [
+        "C has no separate bool in the old style - it uses numbers.",
+        "Anything non-zero is true.",
+        "Only 0 is false."
+      ]
+    }
   ]
 }

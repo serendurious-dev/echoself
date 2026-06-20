@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "java",
   "cluster": 1,
   "lesson": 4,
@@ -10,20 +10,38 @@
   "concept": "A for loop counts through a range, running its body each pass.",
   "explanation": "i runs 1, 2, 3, 4; total collects them as it goes: 1, then 3, then 6, then 10.",
   "code_example": "int total = 0;\nfor (int i = 1; i <= 4; i++) {\n    total += i;\n}\nSystem.out.println(total);",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": [
-      "4",
-      "10",
-      "1234",
-      "0"
-    ],
-    "answer_index": 1
-  },
-  "hints": [
-    "Add 1 + 2 + 3 + 4.",
-    "Sum them step by step.",
-    "It prints 10."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["4", "10", "1234", "0"],
+      "answer_index": 1,
+      "hints": [
+        "Add 1 + 2 + 3 + 4.",
+        "Sum them step by step.",
+        "It prints 10."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\nint total = 0;\nfor (int i = 1; i <= 3; i++) {\n    total += i;\n}\nSystem.out.println(total);",
+      "options": ["3", "6", "123", "0"],
+      "answer_index": 1,
+      "hints": [
+        "i is 1, 2, 3.",
+        "1 + 2 + 3.",
+        "It prints 6."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Which operator adds one to i after each pass?\n\nfor (int i = 0; i < 4; i_)",
+      "answer": "++",
+      "hints": [
+        "Two characters.",
+        "The increment operator.",
+        "It's ++."
+      ]
+    }
   ]
 }

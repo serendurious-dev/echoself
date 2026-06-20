@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "c",
   "cluster": 1,
   "lesson": 2,
@@ -10,20 +10,38 @@
   "concept": "printf writes text with placeholders; each % is filled by an argument, in order.",
   "explanation": "printf walks the format string and, every time it meets a placeholder like %d or %f, it pulls the next argument to fill it. Match the specifier to the type or the output comes out wrong.",
   "code_example": "int n = 5;\nprintf(\"n is %d\\n\", n);",
-  "quiz": {
-    "type": "mcq",
-    "question": "Which specifier prints an integer?",
-    "options": [
-      "%d",
-      "%s",
-      "%c",
-      "%f"
-    ],
-    "answer_index": 0
-  },
-  "hints": [
-    "d is for decimal - a whole number.",
-    "%s is for strings, %f for floats.",
-    "It is %d."
+  "exercises": [
+    {
+      "type": "mcq",
+      "question": "Which specifier prints an integer?",
+      "options": ["%d", "%s", "%c", "%f"],
+      "answer_index": 0,
+      "hints": [
+        "d is for decimal - a whole number.",
+        "%s is for strings, %f for floats.",
+        "It is %d."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "What does %f print?",
+      "options": ["a single character", "a floating-point number", "a string", "a whole number"],
+      "answer_index": 1,
+      "hints": [
+        "f stands for float.",
+        "It's the one for decimals like 3.14.",
+        "A floating-point number."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Which specifier prints a string of text?\n\nprintf(\"hi %_\\n\", name);",
+      "answer": "s",
+      "hints": [
+        "s for string.",
+        "A single letter after the %.",
+        "It's s, as in %s."
+      ]
+    }
   ]
 }

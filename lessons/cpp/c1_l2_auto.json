@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "cpp",
   "cluster": 1,
   "lesson": 2,
@@ -10,20 +10,38 @@
   "concept": "C++ is statically typed, but auto lets the compiler infer the type from the value.",
   "explanation": "When the type is obvious from the right-hand side, auto saves you writing it out. The variable is still strongly typed - auto just works out what that type is.",
   "code_example": "auto count = 10;\nauto name = std::string(\"Min\");\nstd::cout << count;",
-  "quiz": {
-    "type": "mcq",
-    "question": "What type does 'auto count = 10;' give count?",
-    "options": [
-      "int",
-      "double",
-      "string",
-      "auto"
-    ],
-    "answer_index": 0
-  },
-  "hints": [
-    "10 is a whole-number literal.",
-    "auto copies the literal's type.",
-    "It is int."
+  "exercises": [
+    {
+      "type": "mcq",
+      "question": "What type does 'auto count = 10;' give count?",
+      "options": ["int", "double", "string", "auto"],
+      "answer_index": 0,
+      "hints": [
+        "10 is a whole-number literal.",
+        "auto copies the literal's type.",
+        "It is int."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "What does auto actually do?",
+      "options": ["makes the type changeable later", "infers the type from the value", "turns off type checking", "makes everything a string"],
+      "answer_index": 1,
+      "hints": [
+        "The variable is still strongly typed.",
+        "It just saves you writing the type out.",
+        "It infers the type from the value."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Which keyword lets the compiler work out the type for you?\n\n_ count = 10;",
+      "answer": "auto",
+      "hints": [
+        "Four letters.",
+        "It's the keyword this lesson is about.",
+        "It's auto."
+      ]
+    }
   ]
 }

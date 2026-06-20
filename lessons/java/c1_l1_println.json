@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "java",
   "cluster": 1,
   "lesson": 1,
@@ -10,20 +10,39 @@
   "concept": "Java prints with System.out.println, which writes its argument and then a newline.",
   "explanation": "Everything in Java lives in a class, and printing goes through System.out. println prints one value and moves to the next line; + joins text and a number into one string.",
   "code_example": "int year = 2026;\nSystem.out.println(\"Year \" + year);",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": [
-      "Year 2026",
-      "Year year",
-      "2026",
-      "Year + year"
-    ],
-    "answer_index": 0
-  },
-  "hints": [
-    "+ joins the text and the number.",
-    "year holds 2026.",
-    "Year 2026."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["Year 2026", "Year year", "2026", "Year + year"],
+      "answer_index": 0,
+      "hints": [
+        "+ joins the text and the number.",
+        "year holds 2026.",
+        "Year 2026."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\nSystem.out.println(1 + 2);",
+      "options": ["3", "12", "1 + 2", "1 2"],
+      "answer_index": 0,
+      "hints": [
+        "Here both sides of + are numbers, not text.",
+        "With two numbers, + adds.",
+        "It prints 3."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "When one side of + is text, what does + do?",
+      "options": ["adds them", "joins them into one string", "errors", "ignores the text"],
+      "answer_index": 1,
+      "hints": [
+        "Think about \"Year \" + year.",
+        "It glues the number onto the text.",
+        "It joins them into one string."
+      ]
+    }
   ]
 }

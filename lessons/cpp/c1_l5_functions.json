@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "cpp",
   "cluster": 1,
   "lesson": 5,
@@ -10,20 +10,38 @@
   "concept": "A function declares a return type, takes parameters, and returns a value.",
   "explanation": "twice adds its argument to itself. Calling twice(6) runs the body with n = 6 and hands back the result.",
   "code_example": "int twice(int n) {\n    return n + n;\n}\nstd::cout << twice(6);",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": [
-      "12",
-      "66",
-      "6",
-      "36"
-    ],
-    "answer_index": 0
-  },
-  "hints": [
-    "6 + 6.",
-    "Not 6 * 6.",
-    "It prints 12."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["12", "66", "6", "36"],
+      "answer_index": 0,
+      "hints": [
+        "6 + 6.",
+        "Not 6 * 6.",
+        "It prints 12."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\nint twice(int n) {\n    return n + n;\n}\nstd::cout << twice(10);",
+      "options": ["20", "100", "10", "1010"],
+      "answer_index": 0,
+      "hints": [
+        "twice adds the input to itself.",
+        "10 + 10.",
+        "It prints 20."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Which keyword hands the value back to the caller?\n\n_ n + n;",
+      "answer": "return",
+      "hints": [
+        "Same keyword across most languages.",
+        "Six letters.",
+        "It's return."
+      ]
+    }
   ]
 }

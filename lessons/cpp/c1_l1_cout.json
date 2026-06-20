@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "cpp",
   "cluster": 1,
   "lesson": 1,
@@ -10,20 +10,38 @@
   "concept": "C++ prints with std::cout and the << operator, and you can chain values together.",
   "explanation": "cout is the standard output stream. Each << sends one more thing to it, so you can line up text, variables, and endl (a newline) in a single row.",
   "code_example": "int year = 2026;\nstd::cout << \"Year: \" << year << std::endl;",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": [
-      "Year: 2026",
-      "Year: year",
-      "2026",
-      "Year: << year"
-    ],
-    "answer_index": 0
-  },
-  "hints": [
-    "<< sends each piece to the screen in turn.",
-    "The text, then the value of year.",
-    "Year: 2026."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["Year: 2026", "Year: year", "2026", "Year: << year"],
+      "answer_index": 0,
+      "hints": [
+        "<< sends each piece to the screen in turn.",
+        "The text, then the value of year.",
+        "Year: 2026."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Which operator sends a value to cout?",
+      "options": ["<<", ">>", "+", "->"],
+      "answer_index": 0,
+      "hints": [
+        "It points toward the stream.",
+        "Two angle brackets.",
+        "It's <<."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Which keyword adds a newline at the end of a cout line?\n\nstd::cout << year << std::_;",
+      "answer": "endl",
+      "hints": [
+        "Short for 'end line'.",
+        "Four letters.",
+        "It's endl."
+      ]
+    }
   ]
 }

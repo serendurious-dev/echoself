@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "cpp",
   "cluster": 1,
   "lesson": 3,
@@ -10,20 +10,39 @@
   "concept": "if and else choose between two paths based on a condition.",
   "explanation": "The comparison >= asks 'greater than or equal'. The branch under if runs when it is true, otherwise the else branch runs.",
   "code_example": "int score = 80;\nif (score >= 60)\n    std::cout << \"pass\";\nelse\n    std::cout << \"retry\";",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": [
-      "pass",
-      "retry",
-      "80",
-      "nothing"
-    ],
-    "answer_index": 0
-  },
-  "hints": [
-    "Is 80 >= 60?",
-    "Yes, so the if branch runs.",
-    "It prints pass."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["pass", "retry", "80", "nothing"],
+      "answer_index": 0,
+      "hints": [
+        "Is 80 >= 60?",
+        "Yes, so the if branch runs.",
+        "It prints pass."
+      ]
+    },
+    {
+      "type": "predict_output",
+      "question": "What does this print?\n\nint score = 40;\nif (score >= 60)\n    std::cout << \"pass\";\nelse\n    std::cout << \"retry\";",
+      "options": ["pass", "retry", "40", "nothing"],
+      "answer_index": 1,
+      "hints": [
+        "Is 40 >= 60?",
+        "No, so the else branch runs.",
+        "It prints retry."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "What does >= mean?",
+      "options": ["greater than", "greater than or equal", "not equal", "assign"],
+      "answer_index": 1,
+      "hints": [
+        "It's two symbols together.",
+        "It passes when the values are equal too.",
+        "Greater than or equal."
+      ]
+    }
   ]
 }

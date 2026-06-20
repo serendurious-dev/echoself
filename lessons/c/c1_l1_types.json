@@ -1,5 +1,5 @@
 {
-  "format_version": 1,
+  "format_version": 2,
   "track": "c",
   "cluster": 1,
   "lesson": 1,
@@ -10,20 +10,38 @@
   "concept": "C is statically typed: every variable is declared with a type, and that type never changes.",
   "explanation": "Before you use a name in C you tell the compiler what kind of value it holds - int for whole numbers, double for decimals, char for a single character. The type is a promise the compiler checks for you.",
   "code_example": "int year = 2026;\ndouble pi = 3.14;\nchar grade = 'A';\nprintf(\"%d %c\\n\", year, grade);",
-  "quiz": {
-    "type": "predict_output",
-    "question": "What does this print?",
-    "options": [
-      "2026 A",
-      "year grade",
-      "2026 3.14",
-      "A 2026"
-    ],
-    "answer_index": 0
-  },
-  "hints": [
-    "%d prints the int, %c prints the char.",
-    "year is 2026, grade is the character A.",
-    "The two values, a space between them."
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["2026 A", "year grade", "2026 3.14", "A 2026"],
+      "answer_index": 0,
+      "hints": [
+        "%d prints the int, %c prints the char.",
+        "year is 2026, grade is the character A.",
+        "The two values, a space between them."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Which type holds a single character like 'A'?",
+      "options": ["int", "double", "char", "string"],
+      "answer_index": 2,
+      "hints": [
+        "int is whole numbers, double is decimals.",
+        "It's the one named for 'character'.",
+        "It's char."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Which type holds a whole number?\n\n_ year = 2026;",
+      "answer": "int",
+      "hints": [
+        "Three letters, short for 'integer'.",
+        "Not double (that's decimals).",
+        "It's int."
+      ]
+    }
   ]
 }
