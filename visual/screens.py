@@ -542,6 +542,39 @@ def safety_plan_screen(screen, clock):
         pygame.display.flip()
 
 
+def mirror_consent(screen, clock):
+    # the one-time ask before the camera ever opens. plain about what happens.
+    body = ("the mirror lets me gently reflect your expression back to you - a way to "
+            "feel seen, not watched.\n\n"
+            "before you turn it on, the truth about your camera:\n"
+            "- it runs entirely on this machine. no image ever leaves it.\n"
+            "- i never save a single frame. i read the shape of your face and drop the "
+            "picture right away.\n"
+            "- it's the same key to turn it back off, any time.\n\n"
+            "press y to allow the camera, or esc to keep it off.")
+    w, h  = screen.get_size()
+    font  = _font(24)
+    tfont = _font(34)
+    lines = _wrap(font, body, w - 120)
+    while True:
+        clock.tick(60)
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                return False
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_y:
+                    return True
+                if e.key in (pygame.K_ESCAPE, pygame.K_n):
+                    return False
+        screen.fill(BG)
+        screen.blit(tfont.render("the mirror", True, INK), (60, 50))
+        y = 116
+        for ln in lines:
+            screen.blit(font.render(ln, True, INK), (60, y))
+            y += font.get_linesize()
+        pygame.display.flip()
+
+
 def open_vault(screen, clock):
     # the encrypted private writing space. the system holds it; it never reads it.
     from core import vault

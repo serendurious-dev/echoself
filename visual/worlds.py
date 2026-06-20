@@ -171,7 +171,7 @@ class SkyWorld(World):
 class AmbientWorld(SkyWorld):
     caption = ("h help   t talk   tab learn   c code   e how far   g progress   "
                "p memory   b remake   l letters   v vault   s settings   k safety   "
-               "d drift   esc quit")
+               "i mirror   d drift   esc quit")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -404,6 +404,7 @@ def run(args=None):
     sound.set_closeness(state["closeness"])
 
     running = True
+    mirror_runner = None    # the webcam affect-mirror, off until the user turns it on
     while running:
         dt = clock.tick(FPS) / 1000.0
         # worlds that take typing (the lesson panel) get the keys first, only
@@ -467,16 +468,45 @@ def run(args=None):
                     # the plan you wrote for the hard moments, yours to build and keep
                     from visual.screens import safety_plan_screen
                     safety_plan_screen(screen, clock)
+                elif event.key == pygame.K_i and not captured:
+                    # the webcam affect-mirror: opt-in, on-device, frames never kept.
+                    # same key turns it back off.
+                    import echoself_core
+                    from visual.screens import mirror_consent, _flash
+                    if mirror_runner is not None:
+                        mirror_runner.stop()
+                        mirror_runner = None
+                        echoself_core.set_mirror(False)
+                    elif not echoself_core.mirror_available():
+                        _flash(screen, clock,
+                               "the mirror needs the vision extra - see requirements-vision.txt")
+                    elif mirror_consent(screen, clock):
+                        echoself_core.set_mirror(True)
+                        from vision.capture import MirrorRunner
+                        mirror_runner = MirrorRunner()
+                        mirror_runner.start(lambda name: None)
                 elif event.key == pygame.K_m and not captured:
                     sound.toggle_mute()
                 else:
                     worlds.handle(event)
             else:
                 worlds.handle(event)
+        # the mirror drives her face from yours, read off the runner's latest
+        if mirror_runner is not None:
+            worlds.current.character.set_expression(mirror_runner.last)
+
         worlds.update(dt)
         worlds.draw(screen)
+
+        # a plain, honest "camera on" indicator whenever the mirror is running
+        if mirror_runner is not None:
+            pygame.draw.circle(screen, (220, 80, 80), (30, 30), 8)
+            screen.blit(pygame.font.Font(None, 26).render("camera on", True, (220, 80, 80)),
+                        (46, 20))
         pygame.display.flip()
 
+    if mirror_runner is not None:
+        mirror_runner.stop()
     sound.stop()
     pygame.quit()
     return 0
