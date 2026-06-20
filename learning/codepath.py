@@ -42,6 +42,24 @@ def lesson_by_id(track, lesson_id):
     return None
 
 
+def lesson_exercises(lesson):
+    # a lesson is a worked example plus a list of exercises now. old lessons had a
+    # single `quiz` with lesson-level `hints`; fold that into a one-item list so
+    # both shapes run through the same flow. each exercise carries its own hints.
+    if lesson.get("exercises"):
+        out = []
+        for ex in lesson["exercises"]:
+            ex = dict(ex)
+            ex.setdefault("hints", [])
+            out.append(ex)
+        return out
+    quiz = dict(lesson.get("quiz") or {})
+    if not quiz:
+        return []
+    quiz.setdefault("hints", lesson.get("hints", []))
+    return [quiz]
+
+
 def review_lesson(track):
     # spaced repetition: a question missed in an earlier session, brought back
     # so the character can revisit it - "you missed this one before." returns a

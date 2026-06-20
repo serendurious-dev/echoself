@@ -52,6 +52,7 @@ class LessonSession:
         else:
             self.lesson = codepath.next_lesson(track)
         self.state     = "reading" if self.lesson else "track_done"
+        self._load_exercises()
         self.typed     = ""
         self.hints     = 0
         self.feedback  = None
@@ -91,6 +92,21 @@ class LessonSession:
 
     # -- flow -----------------------------------------------------------------
 
+    def _load_exercises(self):
+        # the lesson's exercises, and a pointer to the one we're on
+        self.exercises = codepath.lesson_exercises(self.lesson) if self.lesson else []
+        self.ex_i = 0
+        self.ex   = self.exercises[0] if self.exercises else None
+
+    def _advance(self):
+        # next exercise in this lesson, or the lesson's done
+        if self.ex_i + 1 < len(self.exercises):
+            self.ex_i += 1
+            self.ex   = self.exercises[self.ex_i]
+            self._begin_question()
+        else:
+            self._finish_lesson()
+
     def _begin_question(self):
         self.state    = "question"
         self.typed    = ""
@@ -102,7 +118,7 @@ class LessonSession:
         self.character.set_expression("neutral")
 
     def _check(self, answer_text=None, choice=None):
-        quiz    = self.lesson["quiz"]
+        quiz    = self.ex
         elapsed = int(time.monotonic() - self.shown_at)
         if quiz["type"] == "fill_blank":
             right = answer_text.strip().lower() == str(quiz["answer"]).strip().lower()
@@ -119,6 +135,7 @@ class LessonSession:
             self.pair      = None
             self.lesson    = codepath.next_lesson(self.track)
             self.state     = "reading" if self.lesson else "track_done"
+            self._load_exercises()
             self.feedback  = None
             self.opening   = "there. that one's yours now. onward."
             self.character.set_expression("happy")
@@ -139,6 +156,7 @@ class LessonSession:
         progress_tracker.log_event(self.track, self.lesson["cluster"], self.lesson["id"],
                                    "lesson_done")
         self.lesson = codepath.next_lesson(self.track)
+        self._load_exercises()
         if self.lesson is None:
             self.state = "track_done"
             self.character.set_expression("happy")
@@ -155,8 +173,8 @@ class LessonSession:
             if event.key == pygame.K_RETURN:
                 self._begin_question()
         elif self.state == "question":
-            quiz = self.lesson["quiz"]
-            if event.key == pygame.K_h and self.hints < len(self.lesson["hints"]):
+            quiz = self.ex
+            if event.key == pygame.K_h and self.hints < len(self.ex["hints"]):
                 self.hints += 1
                 self.feedback = None
                 self.pair     = None
@@ -177,7 +195,7 @@ class LessonSession:
                         self._check(choice=choice)
         elif self.state == "done":
             if event.key == pygame.K_RETURN:
-                self._finish_lesson()
+                self._advance()
 
     # -- time -----------------------------------------------------------------
 
@@ -248,7 +266,12 @@ class LessonSession:
             self._text(surface, self.font_soft, footer, x, panel.bottom - 40, inner,
                        (140, 150, 162))
         else:
-            quiz = lesson["quiz"]
+            quiz = self.ex
+            if len(self.exercises) > 1:
+                y = self._text(surface, self.font_soft,
+                               f"question {self.ex_i + 1} of {len(self.exercises)}",
+                               x, y, inner, (150, 160, 172))
+                y += 4
             y = self._text(surface, self.font, quiz["question"], x, y, inner, (214, 220, 230))
             y += 10
             if quiz["type"] == "fill_blank":
@@ -262,7 +285,7 @@ class LessonSession:
                     y += 4
             y += 10
             for i in range(self.hints):
-                y = self._text(surface, self.font_soft, "hint: " + lesson["hints"][i],
+                y = self._text(surface, self.font_soft, "hint: " + self.ex["hints"][i],
                                x, y, inner, (168, 180, 156))
                 y += 4
             if self.feedback:
@@ -278,7 +301,7 @@ class LessonSession:
                     y += 4
                     y = self._text(surface, self.font_soft, friend, x, y, inner, (176, 200, 188))
             if self.state == "question":
-                left = len(lesson["hints"]) - self.hints
+                left = len(self.ex["hints"]) - self.hints
                 more = f"h - hint ({left} left)   " if left else ""
                 what = "type and enter" if quiz["type"] == "fill_blank" else "answer with 1-4"
                 self._text(surface, self.font_soft, f"{what}   {more}", x,

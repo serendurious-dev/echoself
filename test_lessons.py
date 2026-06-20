@@ -189,6 +189,79 @@ class TestSession(LessonTest):
         self.assertIsNone(codepath.next_lesson("python"))
 
 
+_RICH = {
+    "track": "python", "cluster": 1, "lesson": 1, "id": "py-test-rich", "title": "Rich",
+    "concept": "c", "explanation": "e", "code_example": "x = 1",
+    "exercises": [
+        {"type": "predict_output", "question": "q1", "options": ["a", "b"],
+         "answer_index": 1, "hints": ["h1"]},
+        {"type": "fill_blank", "question": "q2", "answer": "foo", "hints": ["h2"]},
+        {"type": "predict_output", "question": "q3", "options": ["a", "b", "c"],
+         "answer_index": 0, "hints": ["h3"]},
+    ],
+}
+
+_OLD = {"track": "python", "cluster": 1, "lesson": 1, "id": "py-old", "title": "Old",
+        "concept": "c", "explanation": "e", "code_example": "x = 1",
+        "quiz": {"type": "predict_output", "question": "q", "options": ["a", "b"],
+                 "answer_index": 0},
+        "hints": ["a", "b", "c"]}
+
+
+class TestExerciseNormalizing(unittest.TestCase):
+
+    def test_old_lesson_becomes_one_exercise_with_its_hints(self):
+        ex = codepath.lesson_exercises(_OLD)
+        self.assertEqual(len(ex), 1)
+        self.assertEqual(ex[0]["hints"], ["a", "b", "c"])
+
+    def test_rich_lesson_keeps_its_exercises(self):
+        ex = codepath.lesson_exercises(_RICH)
+        self.assertEqual(len(ex), 3)
+        self.assertEqual(ex[1]["type"], "fill_blank")
+
+
+class TestMultiExercise(LessonTest):
+
+    def setUp(self):
+        super().setUp()
+        self._next, self._review = codepath.next_lesson, codepath.review_lesson
+        self._served = []
+        def fake_next(track):
+            # serve the rich lesson once, then the track is done
+            self._served.append(1)
+            return _RICH if len(self._served) == 1 else None
+        codepath.next_lesson   = fake_next
+        codepath.review_lesson = lambda t: None
+
+    def tearDown(self):
+        codepath.next_lesson, codepath.review_lesson = self._next, self._review
+        super().tearDown()
+
+    def test_walks_every_exercise_before_the_lesson_is_done(self):
+        s = self.session()
+        self.assertEqual(len(s.exercises), 3)
+        s.handle(key(pygame.K_RETURN))               # reading -> first question
+        # exercise 1: multiple choice, answer index 1
+        s.handle(key(pygame.K_1 + 1))
+        self.assertEqual(s.state, "done")
+        s.handle(key(pygame.K_RETURN))               # -> exercise 2
+        self.assertEqual(s.ex_i, 1)
+        # exercise 2: fill blank
+        s.typed = "foo"
+        s.handle(key(pygame.K_RETURN))
+        self.assertEqual(s.state, "done")
+        s.handle(key(pygame.K_RETURN))               # -> exercise 3
+        self.assertEqual(s.ex_i, 2)
+        s.handle(key(pygame.K_1 + 0))                # last one, answer index 0
+        self.assertEqual(s.state, "done")
+        s.handle(key(pygame.K_RETURN))               # -> finishes the lesson
+        self.assertEqual(s.state, "track_done")
+        done = [r for r in progress_tracker.read_learning_log()
+                if r.get("event") == "lesson_done" and r["lesson"] == "py-test-rich"]
+        self.assertEqual(len(done), 1)               # the lesson completes exactly once
+
+
 class TestWrap(unittest.TestCase):
 
     @classmethod
