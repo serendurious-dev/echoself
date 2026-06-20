@@ -123,6 +123,18 @@ def read_emotion(text):
     return emotion.analyze(text)
 
 
+def explain_feeling(emotion_name):
+    # a plain, normalizing word on what a feeling is doing - never a diagnosis
+    from psychology import psychoeducation
+    return psychoeducation.explain(emotion_name)
+
+
+def notice_pattern():
+    # a gentle observation when one heavy feeling keeps recurring, else None
+    from psychology import patterns
+    return patterns.notice()
+
+
 def is_crisis(text):
     from core import emotion
     return emotion.is_crisis(text)

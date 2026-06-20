@@ -443,6 +443,14 @@ class Conversation:
         # use the name sometimes
         if self.name and "?" in line and random.random() < 0.6:
             line = line.replace("?", f", {self.name}?", 1)
+        # if a heavy feeling has kept coming back, gently name it first
+        try:
+            from psychology import patterns
+            pat = patterns.notice()
+            if pat:
+                line = pat["line"] + " " + line
+        except Exception:
+            pass
         self.history.append(("her", line, None))
         self._used.add(line)
         return line
@@ -499,12 +507,19 @@ class Conversation:
         continuation = self._awaiting or emo == self.last_emo
         reply = self._offline_reply(emo, bank, continuation)
 
+        # caught between wanting to change and not? meet it the MI way - reflect,
+        # don't push, leave the choice theirs (no tool offer on top of that).
+        from psychology import mi
+        ambivalent = mi.is_ambivalent(text)
+        if ambivalent:
+            reply = mi.reflect()
+
         if self.llm is not None:
             try:
                 reply = self._llm_reply(text, emo, bank["stance"])
             except Exception:
                 pass   # the offline line already stands; the conversation never breaks
-        else:
+        elif not ambivalent:
             # once validated and you've stayed on a feeling with a tool, offer it
             # (once, offline path only); plus a light touch on a bright moment.
             reply = self._maybe_offer(emo, bank, continuation, reply, intensity)
@@ -519,14 +534,21 @@ class Conversation:
 
     def _maybe_offer(self, emo, bank, continuation, reply, intensity=0.0):
         # when the feeling's at full volume, reach for the acute (DBT) skill if the
-        # bank has one - the fast, physical kind - instead of the gentler default.
-        tech = bank.get("technique")
-        if intensity >= 0.7 and bank.get("acute_technique"):
-            tech = bank["acute_technique"]
+        # bank has one - the fast, physical kind - instead of the gentler default,
+        # and lead with a word on what's happening, since understanding helps most
+        # exactly then.
+        acute = intensity >= 0.7 and bank.get("acute_technique")
+        tech  = bank["acute_technique"] if acute else bank.get("technique")
         if tech and continuation and tech not in self._offered_kinds:
             self._offered = tech
             self._offered_kinds.add(tech)
-            return reply + " " + frameworks.offer_line(tech)
+            lead = ""
+            if acute:
+                from psychology import psychoeducation
+                note = psychoeducation.line(emo)
+                if note:
+                    lead = note + " "
+            return reply + " " + lead + frameworks.offer_line(tech)
         return reply
 
     # -- offline wording -------------------------------------------------------
