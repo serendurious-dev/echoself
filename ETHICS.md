@@ -76,6 +76,29 @@ used for a crisis message, and the offline companion remains the default and the
 fallback. If privacy is what you want, simply don't enable it - nothing changes
 about the rest of the program.
 
+## The optional webcam mirror
+
+There is one more opt-in layer, off unless you turn it on: a webcam "affect
+mirror." With it on, the character gently reflects your own expression back to
+you - a way to feel seen, not watched. Being plain about exactly how it works,
+because a camera is the most personal sensor there is:
+
+- It is **off by default** and asks once, clearly, before it ever opens the
+  camera. While it's running there is a visible indicator that the camera is on.
+- It runs **entirely on your machine**. The reading is done locally (MediaPipe);
+  no image and no video ever leaves your computer, ever.
+- **Raw frames are never stored.** A frame becomes a few numbers - the shape of a
+  smile, how open your eyes are - and is dropped immediately. The picture is never
+  saved, never logged.
+- If you teach it your own expressions, only those few numbers and the labels you
+  gave them are kept, locally, and `--forget` erases them with everything else.
+- It is **one keypress to turn off**, and turning it off is the default state it
+  returns to.
+
+This has to feel like *you choosing to be reflected*, never like being monitored.
+If it ever feels like the latter, that's a bug, and it matters more than the
+feature.
+
 ## My promise
 
 I built this to lower pressure, never to add it. If anything here ever makes

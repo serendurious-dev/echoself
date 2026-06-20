@@ -12,6 +12,7 @@ DEFAULTS = {
     "learning_track": "python",     # which language CodePath is teaching
     "region":         "KR",         # which country's crisis lines she points to
     "nlp_backend":    "off",         # "off" (lexicon) | "local" (transformer, if installed)
+    "mirror":         "off",         # "off" | "on" - webcam affect mirror, opt-in, on-device
 }
 
 STYLES = ("general", "personal")

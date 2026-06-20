@@ -47,6 +47,28 @@ def set_nlp(on):
     return enable_nlp()
 
 
+# -- the optional webcam affect-mirror (opt-in, on-device, never stores frames) --
+
+def mirror_available():
+    from vision import capture
+    return capture.available()
+
+
+def mirror_enabled():
+    from core import settings
+    return settings.get("mirror") == "on"
+
+
+def set_mirror(on):
+    # the user's switch. only flips on if they opted in AND the deps are installed;
+    # the actual camera only opens when a frontend starts a MirrorRunner.
+    from core import settings
+    if on and not mirror_available():
+        return False
+    settings.set("mirror", "on" if on else "off")
+    return mirror_enabled()
+
+
 def needs_onboarding():
     # no profile yet - the frontend runs its own session-zero
     from core.session_manager import load_profile

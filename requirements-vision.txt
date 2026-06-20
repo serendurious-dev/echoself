@@ -1,0 +1,9 @@
+# Optional, and off by default. The webcam affect-mirror: she gently reflects
+# your expression so you feel seen. Everything runs ON YOUR MACHINE - mediapipe
+# reads the camera locally, frames are turned into a few numbers and dropped, and
+# nothing is ever stored or sent anywhere. install only if you want it, and read
+# the webcam section of ETHICS.md first:
+#   pip install -r requirements-vision.txt
+# (pytorch comes from requirements-nlp.txt; the learned mirror reuses it.)
+mediapipe>=0.10
+opencv-python>=4.8
