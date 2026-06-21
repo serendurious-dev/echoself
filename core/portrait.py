@@ -50,6 +50,21 @@ def _today(when=None):
     return when.isoformat()
 
 
+def _daypart_of(t):
+    # "HH:MM" -> which quarter of the day it falls in
+    try:
+        hour = int(str(t).split(":")[0])
+    except (ValueError, AttributeError):
+        return None
+    if 5 <= hour < 12:
+        return "morning"
+    if 12 <= hour < 17:
+        return "afternoon"
+    if 17 <= hour < 22:
+        return "evening"
+    return "night"
+
+
 def remember(text, kind="note", source="you", when=None):
     # add a fact, or refresh one she already holds. refreshing bumps its weight
     # and its last-seen, so the things that keep coming up rise to the top.
@@ -157,6 +172,41 @@ def refresh_patterns(when=None):
     if len(weekend) >= 3 and len(weekday) >= 3:
         if sum(weekend) / len(weekend) - sum(weekday) / len(weekday) >= 0.2:
             found.append("weekends seem to sit heavier than weekdays")
+
+    # time of day: which part of the day the heaviness clusters in
+    by_part = {}
+    for r in rows:
+        if r["emotion"] not in _HEAVY:
+            continue
+        part = _daypart_of(r.get("time"))
+        try:
+            i = float(r.get("intensity") or 0)
+        except ValueError:
+            continue
+        if part:
+            by_part.setdefault(part, []).append(i)
+    means = {p: sum(v) / len(v) for p, v in by_part.items() if len(v) >= 3}
+    if len(means) >= 2:
+        heaviest = max(means, key=means.get)
+        rest = [m for p, m in means.items() if p != heaviest]
+        if means[heaviest] - sum(rest) / len(rest) >= 0.2:
+            found.append(f"{heaviest}s tend to be the heaviest part of your day")
+
+    # trend: is the weight easing or building across the recent stretch?
+    heavy = [float(r["intensity"]) for r in rows
+             if r["emotion"] in _HEAVY and (r.get("intensity") or "").strip()]
+    if len(heavy) >= 10:
+        half  = len(heavy) // 2
+        older = sum(heavy[:half]) / half
+        newer = sum(heavy[half:]) / (len(heavy) - half)
+        if newer <= older - 0.15:
+            found.append("the weight's been easing a little lately")
+        elif newer >= older + 0.15:
+            found.append("it's been getting a bit heavier lately")
+
+    # the bright side, when it's there - so the read isn't only the hard stuff
+    if len(recent) >= 6 and sum(1 for r in recent if r["emotion"] == "joy") / len(recent) >= 0.35:
+        found.append("good moments have been showing up more")
 
     for text in found:
         remember(text, kind="pattern", source="pattern", when=when)
