@@ -575,6 +575,66 @@ def mirror_consent(screen, clock):
         pygame.display.flip()
 
 
+# the six expressions, with plain human prompts to demonstrate each
+_MIRROR_FACES = [
+    ("neutral",     "just relax - your resting face"),
+    ("happy",       "a small, easy smile"),
+    ("celebrating", "a big grin"),
+    ("patient",     "a soft, tired look"),
+    ("thinking",    "concentrate - brow a little down"),
+    ("drift",       "let your eyes go soft and heavy"),
+]
+
+
+def mirror_calibrate(screen, clock):
+    # teach the model your own expressions so she mirrors YOU, not an average.
+    # captures a couple seconds per face, trains, and saves. esc skips (baseline).
+    import echoself_core
+    from vision import capture
+    w, h  = screen.get_size()
+    font  = _font(24)
+    tfont = _font(34)
+    intro = ("want to teach me your expressions, so i mirror the way YOU show them?\n\n"
+             "i'll name six looks; just make each one and hold it for a second. nothing is "
+             "recorded - i only read the shape of your face.\n\n"
+             "press y to start, or esc to skip and use the basic read.")
+    while True:
+        clock.tick(60)
+        start = None
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                return
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_y:
+                    start = True
+                elif e.key in (pygame.K_ESCAPE, pygame.K_n):
+                    return
+        screen.fill(BG)
+        screen.blit(tfont.render("teach me your face", True, INK), (60, 50))
+        y = 116
+        for ln in _wrap(font, intro, w - 120):
+            screen.blit(font.render(ln, True, INK), (60, y))
+            y += font.get_linesize()
+        pygame.display.flip()
+        if start:
+            break
+
+    def on_label(label):
+        prompt = dict(_MIRROR_FACES)[label]
+        screen.fill(BG)
+        screen.blit(tfont.render("show me: " + prompt, True, WARM), (60, h // 2 - 30))
+        screen.blit(_font(22).render("hold it... (look at the camera)", True, SOFT),
+                    (60, h // 2 + 24))
+        pygame.draw.circle(screen, (220, 80, 80), (30, 30), 8)
+        pygame.display.flip()
+
+    demos = capture.collect_demos([name for name, _ in _MIRROR_FACES], on_label=on_label)
+    if demos and echoself_core.calibrate_mirror(demos):
+        _flash(screen, clock, "got it - i'll mirror you now.")
+    else:
+        _flash(screen, clock, "couldn't get a clear read - i'll use the basic mirror for now.")
+
+
 def open_vault(screen, clock):
     # the encrypted private writing space. the system holds it; it never reads it.
     from core import vault

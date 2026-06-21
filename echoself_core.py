@@ -69,6 +69,34 @@ def set_mirror(on):
     return mirror_enabled()
 
 
+def _mirror_model_path():
+    import os
+    from core import datastore
+    return os.path.join(datastore.DATA_DIR, "vision_model.pt")
+
+
+def calibrate_mirror(demos):
+    # train the learned mapper on your own labelled faces and save it, so she keeps
+    # imitating you between sittings. returns True if it trained + saved.
+    from vision.expression_model import Mirror
+    m = Mirror()
+    if not m.calibrate(demos):
+        return False
+    m.save(_mirror_model_path())
+    return True
+
+
+def load_mirror():
+    # a Mirror with your calibrated model if you've taught it, else the baseline
+    from vision.expression_model import Mirror
+    return Mirror.load(_mirror_model_path())
+
+
+def mirror_calibrated():
+    import os
+    return os.path.exists(_mirror_model_path())
+
+
 def needs_onboarding():
     # no profile yet - the frontend runs its own session-zero
     from core.session_manager import load_profile

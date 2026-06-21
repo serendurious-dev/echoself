@@ -17,6 +17,11 @@ def torch_available():
     return importlib.util.find_spec("torch") is not None
 
 
+def _build_net():
+    import torch.nn as nn
+    return nn.Sequential(nn.Linear(len(FEATURES), 16), nn.ReLU(), nn.Linear(16, len(LABELS)))
+
+
 class BaselineMapper:
     # plain thresholds. rough on purpose - it's the floor, the learned mapper is
     # where it gets personal. tuned against the normalized features (eye-distance
@@ -52,8 +57,7 @@ class LearnedMapper:
         torch.manual_seed(seed)
         xs = torch.tensor([v for v, _ in samples], dtype=torch.float32)
         ys = torch.tensor([LABELS.index(l) for _, l in samples], dtype=torch.long)
-        self.net = nn.Sequential(nn.Linear(len(FEATURES), 16), nn.ReLU(),
-                                 nn.Linear(16, len(LABELS)))
+        self.net = _build_net()
         opt  = torch.optim.Adam(self.net.parameters(), lr=0.05)
         loss = nn.CrossEntropyLoss()
         for _ in range(epochs):
@@ -70,6 +74,20 @@ class LearnedMapper:
         with torch.no_grad():
             out = self.net(torch.tensor([vector], dtype=torch.float32))
             return LABELS[int(out.argmax(dim=1)[0])]
+
+    def save(self, path):
+        import torch
+        torch.save(self.net.state_dict(), path)
+
+    @classmethod
+    def load(cls, path):
+        import torch
+        m = cls()
+        m.net = _build_net()
+        m.net.load_state_dict(torch.load(path))
+        m.net.eval()
+        m.trained = True
+        return m
 
 
 class Mirror:
@@ -93,3 +111,25 @@ class Mirror:
         if self.learned is not None and self.learned.trained:
             return self.learned.predict(to_vector(feat))
         return self.baseline.predict(feat)
+
+    def calibrated(self):
+        return self.learned is not None and self.learned.trained
+
+    def save(self, path):
+        # persist the learned model, if there is one. returns True if it saved.
+        if self.calibrated():
+            self.learned.save(path)
+            return True
+        return False
+
+    @classmethod
+    def load(cls, path):
+        # a Mirror with your saved model if it's there, else just the baseline
+        import os
+        m = cls()
+        if os.path.exists(path) and torch_available():
+            try:
+                m.learned = LearnedMapper.load(path)
+            except Exception:
+                m.learned = None
+        return m

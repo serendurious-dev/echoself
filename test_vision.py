@@ -83,6 +83,40 @@ class TestMirror(unittest.TestCase):
         self.assertEqual(m.to_expression(drift), "drift")
 
 
+class TestCalibration(unittest.TestCase):
+    # teaching the model your faces, saving it, and getting it back
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self._old = datastore.DATA_DIR
+        datastore.DATA_DIR = self._tmp.name
+        self.demos = (
+            [({"mouth_curve": 0.2, "mouth_open": 0.3, "eye_open": 0.3, "brow": 0.1, "tilt": 0}, "happy")] * 8 +
+            [({"mouth_curve": -0.1, "mouth_open": 0.05, "eye_open": 0.3, "brow": -0.1, "tilt": 0}, "thinking")] * 8 +
+            [({"mouth_curve": 0.0, "mouth_open": 0.1, "eye_open": 0.08, "brow": 0.0, "tilt": 0}, "drift")] * 8
+        )
+        self.happy = {"mouth_curve": 0.2, "mouth_open": 0.3, "eye_open": 0.3, "brow": 0.1, "tilt": 0}
+
+    def tearDown(self):
+        datastore.DATA_DIR = self._old
+        self._tmp.cleanup()
+
+    @unittest.skipUnless(torch_available(), "needs pytorch")
+    def test_calibrate_saves_and_reloads(self):
+        self.assertTrue(echoself_core.calibrate_mirror(self.demos))
+        self.assertTrue(echoself_core.mirror_calibrated())
+        # a fresh Mirror loaded from disk still knows your faces
+        m = echoself_core.load_mirror()
+        self.assertTrue(m.calibrated())
+        self.assertEqual(m.to_expression(self.happy), "happy")
+
+    def test_no_calibration_means_baseline(self):
+        m = echoself_core.load_mirror()
+        self.assertFalse(m.calibrated())
+        # baseline still gives a sensible read
+        self.assertEqual(m.to_expression(self.happy), "celebrating")
+
+
 class TestMirrorGate(unittest.TestCase):
     # opt-in, off by default, and only switchable on when the deps are installed
 

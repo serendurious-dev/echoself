@@ -472,7 +472,7 @@ def run(args=None):
                     # the webcam affect-mirror: opt-in, on-device, frames never kept.
                     # same key turns it back off.
                     import echoself_core
-                    from visual.screens import mirror_consent, _flash
+                    from visual.screens import mirror_consent, mirror_calibrate, _flash
                     if mirror_runner is not None:
                         mirror_runner.stop()
                         mirror_runner = None
@@ -482,8 +482,11 @@ def run(args=None):
                                "the mirror needs the vision extra - see requirements-vision.txt")
                     elif mirror_consent(screen, clock):
                         echoself_core.set_mirror(True)
+                        # first time on: offer to teach it your own expressions
+                        if not echoself_core.mirror_calibrated():
+                            mirror_calibrate(screen, clock)
                         from vision.capture import MirrorRunner
-                        mirror_runner = MirrorRunner()
+                        mirror_runner = MirrorRunner(mirror=echoself_core.load_mirror())
                         mirror_runner.start(lambda name: None)
                 elif event.key == pygame.K_m and not captured:
                     sound.toggle_mute()
