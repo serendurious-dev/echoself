@@ -398,6 +398,10 @@ def respond(text, llm=None):
             reply = random.choice(bank["lines"])
     else:
         reply = random.choice(bank["lines"])
+    # not a crisis, but a quiet sinking? add a soft word that real help exists -
+    # never a substitute for the crisis path above, just more care than comfort.
+    if crisis.is_concern(text):
+        reply = reply + "\n" + crisis.concern_note()
     # secondary + confidence ride along for the screen and future tone work; the
     # four old keys keep their shape so nothing downstream has to change.
     return {"emotion": emo, "intensity": read["intensity"], "crisis": False,
@@ -432,6 +436,7 @@ class Conversation:
         self.last_emo  = None
         self.turns     = 0
         self.ended     = False   # set on crisis; informational, doesn't gag her
+        self._concerned = False  # so the soft "real help exists" word lands once a sitting
         self.now       = now
         self._offered  = None    # a technique she's offered and is waiting a yes on
         self._offered_kinds = set()   # so she offers each tool at most once a sitting
@@ -552,6 +557,12 @@ class Conversation:
             shift = shift_line(self.last_emo, emo)
             if shift:
                 reply = shift + " " + reply
+
+        # a quiet sinking (not crisis) gets a soft word that real help exists, once
+        # a sitting - more than comfort, never instead of the crisis path.
+        if crisis.is_concern(text) and not self._concerned:
+            reply = reply + "\n" + crisis.concern_note()
+            self._concerned = True
 
         self.last_emo = emo
         self.history.append(("her", reply, emo))

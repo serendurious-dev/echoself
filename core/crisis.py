@@ -66,3 +66,34 @@ def reply(region=None):
     # the full crisis message: care first, then the lines, then a way back
     lines = "\n".join(resources_for(region))
     return f"{_CARE}\n{lines}\n{_CLOSE}"
+
+
+# -- the concern tier: below crisis, above ordinary heaviness -------------------
+# sustained sinking that isn't an explicit crisis but deserves more than comfort.
+# this NEVER replaces the crisis check above (which still runs first and wins) -
+# it only adds a soft, non-alarming word that real help exists.
+CONCERN_PHRASES = [
+    "what's the point anymore", "whats the point anymore", "what's the point of any",
+    "whats the point of any", "what is the point anymore", "what's the use", "whats the use",
+    "i can't keep going", "i cant keep going", "i can't keep doing this", "i cant keep doing this",
+    "can't do this much longer", "cant do this much longer",
+    "feel like a burden", "such a burden", "burden to everyone", "burden on everyone",
+    "tired of all of this", "tired of all this", "so done with everything", "done with all of it",
+    "nothing ever gets better", "nothing will get better", "nothing ever changes",
+    "don't see it getting better", "dont see it getting better",
+    "can't see a way out", "cant see a way out", "no way out of this",
+]
+
+_CONCERN_NOTE = (
+    "and - gently - you don't have to carry this by yourself. if it keeps sitting this "
+    "heavy, a real person can help: someone you trust, or a crisis line if you ever need "
+    "one. i'm not going anywhere either.")
+
+
+def is_concern(text):
+    t = text.lower()
+    return any(p in t for p in CONCERN_PHRASES)
+
+
+def concern_note():
+    return _CONCERN_NOTE

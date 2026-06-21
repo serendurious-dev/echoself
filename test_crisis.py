@@ -1,5 +1,6 @@
 """crisis safety: the right lines for the region, deterministic and offline."""
 
+import datetime
 import tempfile
 import unittest
 
@@ -71,6 +72,49 @@ class TestCrisisInCompanion(unittest.TestCase):
         self.assertTrue(r["crisis"])
         self.assertIn("988", r["reply"])
         self.assertNotIn("109", r["reply"])
+
+
+class TestConcernTier(unittest.TestCase):
+    # below crisis, above ordinary heaviness - adds care, never downgrades anything
+
+    _NOTE = "carry this by yourself"
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self._old = datastore.DATA_DIR
+        datastore.DATA_DIR = self._tmp.name
+
+    def tearDown(self):
+        datastore.DATA_DIR = self._old
+        self._tmp.cleanup()
+
+    def test_detects_sinking_not_crisis_not_ordinary(self):
+        self.assertTrue(crisis.is_concern("honestly i can't keep going like this"))
+        self.assertTrue(crisis.is_concern("i feel like such a burden to everyone"))
+        self.assertFalse(crisis.is_concern("i feel a bit sad today"))
+        self.assertFalse(crisis.is_concern("i want to die"))     # crisis, handled first
+
+    def test_respond_adds_the_soft_help_word(self):
+        r = companion.respond("i can't keep going like this")
+        self.assertFalse(r["crisis"])
+        self.assertIn(self._NOTE, r["reply"])
+
+    def test_crisis_still_wins_and_is_not_just_a_concern(self):
+        r = companion.respond("i want to die, i can't keep going")
+        self.assertTrue(r["crisis"])
+        self.assertIn("109", r["reply"])
+        self.assertNotIn(self._NOTE, r["reply"])      # the full crisis reply, not the soft note
+
+    def test_ordinary_heaviness_gets_no_note(self):
+        self.assertNotIn(self._NOTE, companion.respond("i feel so sad and empty")["reply"])
+
+    def test_conversation_says_it_once(self):
+        c = companion.Conversation(now=datetime.datetime(2026, 6, 13, 14, 0))
+        c.open()
+        r1 = c.say("i can't keep going like this")
+        r2 = c.say("i can't keep doing this either")
+        self.assertIn(self._NOTE, r1["reply"])
+        self.assertNotIn(self._NOTE, r2["reply"])     # once a sitting, not nagging
 
 
 if __name__ == "__main__":
