@@ -106,6 +106,51 @@ class TestConversationThread(unittest.TestCase):
         self.assertTrue(conv.ended)
 
 
+class TestEmotionalShift(unittest.TestCase):
+    # she notices when the feeling moves a real distance during a sitting
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self._old = datastore.DATA_DIR
+        datastore.DATA_DIR = self._tmp.name
+
+    def tearDown(self):
+        datastore.DATA_DIR = self._old
+        self._tmp.cleanup()
+
+    def _conv(self):
+        return companion.Conversation(now=datetime.datetime(2026, 6, 13, 14, 0))
+
+    def test_a_lift_is_noticed(self):
+        conv = self._conv()
+        conv.open()
+        conv.say("honestly i feel so empty and sad")
+        r = conv.say("actually i feel really happy and grateful now")
+        self.assertEqual(r["emotion"], "joy")
+        self.assertTrue(any(line in r["reply"] for line in companion._LIFTED), r["reply"])
+
+    def test_a_dip_is_noticed(self):
+        conv = self._conv()
+        conv.open()
+        conv.say("today was wonderful, i feel proud and hopeful")
+        r = conv.say("but now i just feel so empty and worthless")
+        self.assertTrue(any(line in r["reply"] for line in companion._DIPPED), r["reply"])
+
+    def test_no_shift_when_the_feeling_holds(self):
+        conv = self._conv()
+        conv.open()
+        conv.say("i feel so sad and empty")
+        r = conv.say("still sad, it won't lift")
+        self.assertFalse(any(line in r["reply"] for line in companion._LIFTED + companion._DIPPED),
+                         r["reply"])
+
+    def test_shift_line_logic(self):
+        self.assertIsNone(companion.shift_line(None, "joy"))       # nothing before
+        self.assertIsNone(companion.shift_line("sadness", "sadness"))
+        self.assertIn(companion.shift_line("sadness", "joy"), companion._LIFTED)
+        self.assertIn(companion.shift_line("joy", "sadness"), companion._DIPPED)
+
+
 class TestFriendVsTeacher(unittest.TestCase):
     # she reads how you are and how you've been, and answers as the right one - a
     # friend when you're hurting, a gentle teacher when you're just dodging.

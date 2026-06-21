@@ -27,6 +27,28 @@ def playful_touch(emo, drift):
     return None
 
 
+# when the feeling shifts mid-conversation, she notices out loud - the way a real
+# listener does. lines for a lift (heavy -> lighter) and a dip (lighter -> heavier).
+_LIFTED = ["something just eased - i can hear it.", "there's a little more light in that.",
+           "that lifted a bit, didn't it?", "i felt that soften just now."]
+_DIPPED = ["something shifted just now.", "that landed heavier - what happened?",
+           "i felt the air change there.", "wait - that just got harder."]
+
+
+def shift_line(prev_emo, emo):
+    # a gentle acknowledgment when the feeling moves a real distance, else None.
+    from core.echo_distance import _EMO_VALENCE
+    if not prev_emo or prev_emo == emo:
+        return None
+    pv = _EMO_VALENCE.get(prev_emo, 0.5)
+    cv = _EMO_VALENCE.get(emo, 0.5)
+    if cv - pv >= 0.3:
+        return random.choice(_LIFTED)
+    if pv - cv >= 0.3:
+        return random.choice(_DIPPED)
+    return None
+
+
 CONV_LOG    = "conversation.csv"
 CONV_FIELDS = ["date", "time", "emotion", "intensity"]
 
@@ -526,6 +548,10 @@ class Conversation:
             light = playful_touch(emo, self.drift)
             if light:
                 reply = reply + " " + light
+            # if the feeling just moved a real distance, name it first - attunement
+            shift = shift_line(self.last_emo, emo)
+            if shift:
+                reply = shift + " " + reply
 
         self.last_emo = emo
         self.history.append(("her", reply, emo))
