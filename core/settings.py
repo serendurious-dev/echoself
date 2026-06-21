@@ -13,6 +13,8 @@ DEFAULTS = {
     "region":         "KR",         # which country's crisis lines she points to
     "nlp_backend":    "off",         # "off" (lexicon) | "local" (transformer, if installed)
     "mirror":         "off",         # "off" | "on" - webcam affect mirror, opt-in, on-device
+    "voice_speak":    "off",         # "off" | "on" - she speaks aloud (local Piper TTS)
+    "voice_listen":   "off",         # "off" | "on" - she listens (local Vosk STT), on-device
 }
 
 STYLES = ("general", "personal")

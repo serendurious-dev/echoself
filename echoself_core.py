@@ -97,6 +97,68 @@ def mirror_calibrated():
     return os.path.exists(_mirror_model_path())
 
 
+# -- the optional voice: she speaks (Piper) and listens (Vosk), all on-device ----
+
+def tts_available():
+    from voice import tts
+    return tts.available()
+
+
+def stt_available():
+    from voice import stt
+    return stt.available()
+
+
+def voice_speaking():
+    from core import settings
+    return settings.get("voice_speak") == "on" and tts_available()
+
+
+def voice_listening():
+    from core import settings
+    return settings.get("voice_listen") == "on" and stt_available()
+
+
+def set_speak(on):
+    from core import settings
+    if on and not tts_available():
+        return False
+    settings.set("voice_speak", "on" if on else "off")
+    return settings.get("voice_speak") == "on"
+
+
+def set_listen(on):
+    from core import settings
+    if on and not stt_available():
+        return False
+    settings.set("voice_listen", "on" if on else "off")
+    return settings.get("voice_listen") == "on"
+
+
+def speak(text):
+    # say it aloud if she has a voice and it's on; otherwise stay silent. never
+    # raises - speech is never allowed to break the conversation.
+    if not voice_speaking():
+        return False
+    from voice import tts
+    try:
+        tts.speak(text)
+        return True
+    except Exception:
+        return False
+
+
+def listen():
+    # her ears: return the recognized text, or "" if listening's off/unavailable/failed
+    if not voice_listening():
+        return ""
+    from voice import stt
+    try:
+        return stt.listen()
+    except Exception:
+        return ""
+
+
 def needs_onboarding():
     # no profile yet - the frontend runs its own session-zero
     from core.session_manager import load_profile

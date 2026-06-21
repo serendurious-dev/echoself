@@ -99,6 +99,22 @@ This has to feel like *you choosing to be reflected*, never like being monitored
 If it ever feels like the latter, that's a bug, and it matters more than the
 feature.
 
+## The optional voice
+
+She can speak and listen, if you want a spoken conversation - both off unless you
+turn them on, and both entirely on your machine:
+
+- **Her voice** is synthesized locally (Piper). Nothing she says is sent anywhere.
+- **Her ears** turn your speech into text locally (Vosk). The audio is processed
+  on the spot and dropped - never recorded, never saved, never sent. Only the
+  text you'd have typed anyway is used, and that's held to the same rules as
+  everything else (the emotion is read, the words aren't stored).
+- A microphone is a personal thing, so listening only runs when you switch it on,
+  and it's one toggle to switch it back off.
+
+Same promise as the camera: this is for you, on your machine, and it leaves no
+trace you didn't choose.
+
 ## My promise
 
 I built this to lower pressure, never to add it. If anything here ever makes

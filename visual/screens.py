@@ -63,8 +63,9 @@ def _scroll_text(screen, clock, title, body):
         pygame.display.flip()
 
 
-def _ask_line(screen, clock, prompt, masked=False):
-    # one line of typed input. returns the string, or None if cancelled.
+def _ask_line(screen, clock, prompt, masked=False, allow_voice=False):
+    # one line of typed input. returns the string, or None if cancelled. with
+    # allow_voice and listening turned on, F2 lets you speak the line instead.
     w, h  = screen.get_size()
     font  = _font(30)
     pfont = _font(30)
@@ -79,7 +80,17 @@ def _ask_line(screen, clock, prompt, masked=False):
                     return None
                 if e.key == pygame.K_RETURN:
                     return typed.strip() if typed.strip() else None
-                if e.key == pygame.K_BACKSPACE:
+                if allow_voice and e.key == pygame.K_F2:
+                    import echoself_core
+                    if echoself_core.voice_listening():
+                        screen.fill(BG)
+                        screen.blit(font.render("listening...", True, WARM), (60, h // 2))
+                        pygame.draw.circle(screen, (220, 80, 80), (30, 30), 8)
+                        pygame.display.flip()
+                        heard = echoself_core.listen()
+                        if heard:
+                            return heard
+                elif e.key == pygame.K_BACKSPACE:
                     typed = typed[:-1]
                 elif e.unicode and e.unicode.isprintable() and len(typed) < 60:
                     typed += e.unicode
@@ -208,8 +219,12 @@ def _converse(screen, clock, character):
     turns = [("her", conv.open())]
     character.set_expression("neutral")
 
+    import echoself_core
     while True:
-        said = _ask_line(screen, clock, "say anything, or start with ? to look something up. esc to leave")
+        prompt = "say anything, or start with ? to look something up. esc to leave"
+        if echoself_core.voice_listening():
+            prompt += "   (F2 to speak)"
+        said = _ask_line(screen, clock, prompt, allow_voice=True)
         if said is None:
             conv.end()      # she keeps what's worth keeping; the words still go
             return conv
@@ -243,6 +258,9 @@ def _converse(screen, clock, character):
                 personality_drift.save(d)
             character.set_expression(companion.EXPRESSION.get(r["emotion"], "neutral"))
             turns.append(("her", r["reply"]))
+
+        # if she has a voice and it's on, she says her last line aloud (no-op otherwise)
+        echoself_core.speak(turns[-1][1])
 
         showing = True
         while showing:
@@ -412,9 +430,15 @@ def show_mastery(screen, clock, character):
         pygame.display.flip()
 
 
+def _voice_label(s, key, available):
+    if s.get(key) == "on":
+        return "on"
+    return "off" if available else "off - needs the voice extra"
+
+
 def settings_screen(screen, clock):
     # the choices that are the user's to make: whether she reaches out, how she
-    # reads you, where to point for crisis help, and the webcam mirror.
+    # reads you, where to point for crisis help, the webcam mirror, and her voice.
     import echoself_core
     from core import settings, crisis
     w, h   = screen.get_size()
@@ -446,6 +470,10 @@ def settings_screen(screen, clock):
                     # re-teach the mirror your expressions (needs the vision extra)
                     if echoself_core.mirror_available():
                         mirror_calibrate(screen, clock)
+                elif e.key == pygame.K_6:
+                    echoself_core.set_speak(settings.get("voice_speak") != "on")
+                elif e.key == pygame.K_7:
+                    echoself_core.set_listen(settings.get("voice_listen") != "on")
 
         nlp_on  = s.get("nlp_backend") == "local"
         nlp_txt = ("on (local model)" if nlp_on else
@@ -465,14 +493,18 @@ def settings_screen(screen, clock):
              "which country's real-help numbers she points to. press to cycle."),
             ("5.  the mirror:  " + mirror_txt,
              "show her your own expressions so she mirrors you, not an average."),
+            ("6.  she speaks:  " + _voice_label(s, "voice_speak", echoself_core.tts_available()),
+             "say her replies aloud, in a real voice - all on your machine."),
+            ("7.  she listens:  " + _voice_label(s, "voice_listen", echoself_core.stt_available()),
+             "talk to her instead of typing (F2 in a chat). audio never leaves here."),
         ]
         screen.fill(BG)
-        screen.blit(title.render("settings", True, INK), (60, 40))
-        y = 116
+        screen.blit(title.render("settings", True, INK), (60, 36))
+        y = 104
         for line, note in rows:
             screen.blit(font.render(line, True, WARM), (60, y))
-            screen.blit(soft.render(note, True, SOFT), (60, y + 32))
-            y += 84
+            screen.blit(soft.render(note, True, SOFT), (60, y + 30))
+            y += 74
         screen.blit(soft.render("press a number to change it   -   esc to close", True, SOFT),
                     (60, h - 44))
         pygame.display.flip()

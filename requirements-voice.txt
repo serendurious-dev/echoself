@@ -1,0 +1,12 @@
+# Optional, and off by default. Her voice (Piper, local neural TTS) and her ears
+# (Vosk, local speech-to-text). Everything runs ON YOUR MACHINE - she synthesizes
+# speech and turns your voice into text locally, and the audio is never stored or
+# sent anywhere. install only if you want a spoken conversation, and read the
+# microphone section of ETHICS.md first:
+#   pip install -r requirements-voice.txt
+# you also need to download models (they're large, not bundled):
+#   - a Piper voice (.onnx + .onnx.json) -> voice/models/  (or set ECHOSELF_TTS_MODEL)
+#   - a Vosk model folder -> voice/models/vosk/            (or set ECHOSELF_STT_MODEL)
+piper-tts>=1.2
+vosk>=0.3.45
+sounddevice>=0.4
