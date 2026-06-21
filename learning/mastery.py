@@ -21,6 +21,7 @@ _CLUSTER_TITLES = {
     ("java", 1): "Java basics",
     ("dsa", 1):  "the essentials",
     ("dsa", 2):  "recursion, search & trees",
+    ("dsa", 3):  "graphs, heaps & DP",
 }
 
 _AWAY_DAYS = 3        # the gap after which she gently says "welcome back"

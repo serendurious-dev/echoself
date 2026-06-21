@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "dsa",
+  "cluster": 3,
+  "lesson": 4,
+  "id": "dsa-c3-l4-dynamic-programming",
+  "title": "Dynamic programming - solve it once, remember it",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "When a problem keeps re-solving the same subproblems, store each answer the first time (memoize) so you compute it once - turning exponential work into linear.",
+  "explanation": "Naive recursive fibonacci is a trap: fib(n) calls fib(n-1) and fib(n-2), which both recompute the same smaller values, again and again, exploding to O(2^n). But there are only n distinct answers. Dynamic programming is the simple fix: keep a cache, and before computing fib(n), check if you already have it. Each value is worked out once, so it collapses to O(n). The whole idea is overlapping subproblems plus a memory.",
+  "code_example": "cache = {}\ndef fib(n):\n    if n < 2:\n        return n\n    if n not in cache:\n        cache[n] = fib(n - 1) + fib(n - 2)\n    return cache[n]\n\nprint(fib(10))",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["10", "55", "89", "100"],
+      "answer_index": 1,
+      "hints": [
+        "The sequence is 0,1,1,2,3,5,8,13,21,34,55...",
+        "fib(10) is the eleventh term (counting fib(0)=0).",
+        "It's 55."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Dynamic programming speeds things up by...",
+      "options": ["using more loops", "remembering answers to repeated subproblems", "sorting the input", "skipping the base case"],
+      "answer_index": 1,
+      "hints": [
+        "The cache is the heart of it.",
+        "Don't solve the same small problem twice.",
+        "It remembers (memoizes) repeated subproblems."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Memoizing fibonacci changes it from exponential to...",
+      "options": ["O(1)", "O(log n)", "O(n)", "still exponential"],
+      "answer_index": 2,
+      "hints": [
+        "There are only n distinct values to compute.",
+        "Each computed once.",
+        "Linear, O(n)."
+      ]
+    }
+  ]
+}

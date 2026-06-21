@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "dsa",
+  "cluster": 3,
+  "lesson": 5,
+  "id": "dsa-c3-l5-hash-collisions",
+  "title": "Hash collisions - when two keys want the same slot",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "Different keys can hash to the same slot - a collision. A common fix is chaining: each slot holds a small list, and lookup scans it. Collisions are why a hash map is O(1) on average, not always.",
+  "explanation": "Back to the hash map. The hash function turns a key into a slot, but it can't give every key its own - two keys may land together. That's a collision, and it's normal, not a bug. The usual handling is chaining: each slot holds a little list of the pairs that landed there, and a lookup hashes to the slot then scans that short list. Keep collisions rare (enough slots, a good hash) and the lists stay tiny, so lookup stays effectively constant. Let them pile up and it slides toward O(n) - which is why 'O(1) on average' has that 'on average' in it.",
+  "code_example": "# \"cat\" and \"dog\" happen to hash to the same slot.\n# chaining: that one slot holds a list of both pairs.\nbucket = [(\"cat\", 1), (\"dog\", 2)]\nprint(dict(bucket)[\"dog\"])",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["1", "2", "cat", "dog"],
+      "answer_index": 1,
+      "hints": [
+        "Look up the value paired with \"dog\".",
+        "(\"dog\", 2).",
+        "It's 2."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Two different keys hashing to the same slot is a...",
+      "options": ["collision", "rotation", "rehash", "leaf"],
+      "answer_index": 0,
+      "hints": [
+        "They 'collide' on the same slot.",
+        "It's expected, not a failure.",
+        "A collision."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Handling collisions by keeping a list in each slot is called...",
+      "options": ["sorting", "chaining", "balancing", "indexing"],
+      "answer_index": 1,
+      "hints": [
+        "The pairs form a little chain in the slot.",
+        "Lookup scans that short list.",
+        "Chaining."
+      ]
+    }
+  ]
+}

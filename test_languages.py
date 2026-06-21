@@ -33,7 +33,7 @@ class TestTracksLoad(unittest.TestCase):
 
     def test_dsa_course_loads_and_is_well_formed(self):
         lessons = codepath.load_track("dsa")
-        self.assertEqual(len(lessons), 10)               # two clusters of five
+        self.assertEqual(len(lessons), 15)               # three clusters of five
         self.assertEqual([(l["cluster"], l["lesson"]) for l in lessons],
                          sorted((l["cluster"], l["lesson"]) for l in lessons))
         self.assertEqual(mastery.track_name("dsa"), "Data Structures")

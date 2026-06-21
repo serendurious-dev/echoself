@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "dsa",
+  "cluster": 3,
+  "lesson": 1,
+  "id": "dsa-c3-l1-graphs",
+  "title": "Graphs - things and how they connect",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A graph is a set of nodes connected by edges. It models anything about relationships - maps, networks, who-follows-whom. A common way to store it is an adjacency list: each node mapped to its neighbours.",
+  "explanation": "A tree was a graph with rules (one root, no loops). A graph drops the rules: any node can connect to any other, loops allowed, and an edge can run one way or both. That generality is why graphs model the messy real world - roads, friendships, dependencies. The everyday representation is an adjacency list: a dictionary from each node to the list of nodes it links to. Cheap to store, and exactly what you walk when you explore it.",
+  "code_example": "graph = {\n    \"a\": [\"b\", \"c\"],\n    \"b\": [\"d\"],\n    \"c\": [],\n    \"d\": []\n}\nprint(graph[\"a\"])",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["['b', 'c']", "['a']", "['b', 'c', 'd']", "a"],
+      "answer_index": 0,
+      "hints": [
+        "Look up the neighbours of \"a\".",
+        "The list stored under the key \"a\".",
+        "['b', 'c']."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "A connection between two nodes in a graph is called an...",
+      "options": ["edge", "leaf", "root", "index"],
+      "answer_index": 0,
+      "hints": [
+        "The nodes are the dots; this is the line between them.",
+        "Nodes and ___.",
+        "An edge."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Storing each node with a list of its neighbours is called an...",
+      "options": ["index table", "adjacency list", "edge stack", "ordered set"],
+      "answer_index": 1,
+      "hints": [
+        "Neighbours are 'adjacent' nodes.",
+        "It's the dictionary-of-lists form.",
+        "An adjacency list."
+      ]
+    }
+  ]
+}

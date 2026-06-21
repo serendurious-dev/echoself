@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "dsa",
+  "cluster": 3,
+  "lesson": 3,
+  "id": "dsa-c3-l3-heaps",
+  "title": "Heaps - the smallest, always on top",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A heap keeps the smallest (or largest) item always reachable at the top, with push and pop both costing about log n. A priority queue is its everyday use.",
+  "explanation": "Sometimes you don't want order - you want 'give me the smallest, over and over'. Sorting the whole list each time is wasteful. A heap is a tree shaped so the top is always the minimum; pushing a new item or popping the min reshuffles only one path down, so both are O(log n). That's exactly a priority queue: tasks by urgency, the cheapest edge next, the closest point first. Python's heapq is a min-heap over a plain list.",
+  "code_example": "import heapq\nh = []\nheapq.heappush(h, 5)\nheapq.heappush(h, 1)\nheapq.heappush(h, 3)\nprint(heapq.heappop(h))",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["5", "3", "1", "[1, 3, 5]"],
+      "answer_index": 2,
+      "hints": [
+        "heappop takes the smallest from a min-heap.",
+        "Of 5, 1, 3, which is smallest?",
+        "1."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "A min-heap always gives you which item first?",
+      "options": ["the largest", "the smallest", "the most recently added", "a random one"],
+      "answer_index": 1,
+      "hints": [
+        "It's a 'min'-heap.",
+        "The top is kept as the minimum.",
+        "The smallest."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Pushing or popping a heap of n items costs...",
+      "options": ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+      "answer_index": 1,
+      "hints": [
+        "It only fixes one path up or down the tree.",
+        "Tree height is the logarithm.",
+        "O(log n)."
+      ]
+    }
+  ]
+}

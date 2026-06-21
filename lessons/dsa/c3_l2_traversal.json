@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "dsa",
+  "cluster": 3,
+  "lesson": 2,
+  "id": "dsa-c3-l2-traversal",
+  "title": "BFS and DFS - two ways to explore",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "Breadth-first search (BFS) explores a graph level by level using a queue; depth-first search (DFS) goes as deep as it can before backtracking, using a stack or recursion.",
+  "explanation": "Once you have a graph, you need to walk it without going in circles (so you track what you've seen). The order is the choice. BFS spreads out evenly - all the immediate neighbours, then their neighbours - which is how it finds the shortest path in an unweighted graph; it uses a queue. DFS plunges down one path to the end, then backs up and tries another; it uses a stack, or just recursion. Same nodes, very different journeys.",
+  "code_example": "from collections import deque\ngraph = {\"a\": [\"b\", \"c\"], \"b\": [\"d\"], \"c\": [], \"d\": []}\norder, seen, q = [], {\"a\"}, deque([\"a\"])\nwhile q:\n    n = q.popleft()\n    order.append(n)\n    for m in graph[n]:\n        if m not in seen:\n            seen.add(m)\n            q.append(m)\nprint(order)",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this BFS print?",
+      "options": ["['a', 'b', 'c', 'd']", "['a', 'b', 'd', 'c']", "['a', 'd', 'c', 'b']", "['a']"],
+      "answer_index": 0,
+      "hints": [
+        "BFS visits a, then a's neighbours b and c, then b's neighbour d.",
+        "Level by level, left to right.",
+        "['a', 'b', 'c', 'd']."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Breadth-first search explores using a...",
+      "options": ["stack", "queue", "tree", "hash map"],
+      "answer_index": 1,
+      "hints": [
+        "First-in, first-out keeps it level by level.",
+        "The code used a deque as one.",
+        "A queue."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Depth-first search goes ___ before backtracking.",
+      "options": ["one level at a time", "as deep as possible down a path", "to the smallest node", "in sorted order"],
+      "answer_index": 1,
+      "hints": [
+        "The 'depth' in the name is the clue.",
+        "It plunges down a single path first.",
+        "As deep as possible, then backs up."
+      ]
+    }
+  ]
+}
