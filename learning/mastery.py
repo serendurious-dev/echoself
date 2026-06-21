@@ -20,6 +20,7 @@ _CLUSTER_TITLES = {
     ("cpp", 1):  "C++ basics",
     ("java", 1): "Java basics",
     ("dsa", 1):  "the essentials",
+    ("dsa", 2):  "recursion, search & trees",
 }
 
 _AWAY_DAYS = 3        # the gap after which she gently says "welcome back"

@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "dsa",
+  "cluster": 2,
+  "lesson": 4,
+  "id": "dsa-c2-l4-trees",
+  "title": "Trees - data that branches",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A tree is nodes in a hierarchy: one root at the top, each node holding children below it, no loops. A binary tree gives each node at most two children.",
+  "explanation": "Where a list is a single line, a tree branches. There's one node at the top - the root - and every other node hangs below a single parent, fanning out toward the leaves at the bottom. It's how you model anything nested: folders, family trees, the structure of a sentence. A binary tree limits each node to two children (left and right), which turns out to be exactly what you need to search quickly - the next lesson.",
+  "code_example": "class Node:\n    def __init__(self, val):\n        self.val = val\n        self.left = None\n        self.right = None\n\nroot = Node(1)\nroot.left = Node(2)\nroot.right = Node(3)\nprint(root.left.val, root.right.val)",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["1 2", "2 3", "1 3", "3 2"],
+      "answer_index": 1,
+      "hints": [
+        "root.left holds 2, root.right holds 3.",
+        "It prints the two children's values.",
+        "2 3."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "The single node at the top of a tree is called the...",
+      "options": ["leaf", "root", "head", "parent"],
+      "answer_index": 1,
+      "hints": [
+        "Trees are drawn upside down - the top is named after the bottom of a real one.",
+        "Everything grows from it.",
+        "The root."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "In a binary tree, a node has at most how many children?",
+      "options": ["1", "2", "3", "any number"],
+      "answer_index": 1,
+      "hints": [
+        "The clue is in the word 'binary'.",
+        "Left and right.",
+        "Two."
+      ]
+    }
+  ]
+}

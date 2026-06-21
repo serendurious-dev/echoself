@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "dsa",
+  "cluster": 2,
+  "lesson": 5,
+  "id": "dsa-c2-l5-bst",
+  "title": "Binary search trees - order that searches itself",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A binary search tree keeps an ordering rule - everything left of a node is smaller, everything right is larger - so searching follows one path down, in about log n steps when it's balanced.",
+  "explanation": "Take a binary tree and add one rule: for every node, the whole left side is smaller and the whole right side is bigger. Now searching is just binary search wearing a tree: at each node, go left if your target is smaller, right if it's bigger. You touch one node per level, so a balanced tree finds anything in about log n steps. The warning: if you insert already-sorted data, it can degrade into a single long line - and then search slumps back to O(n). Balance is the whole game.",
+  "code_example": "class Node:\n    def __init__(self, v):\n        self.v = v\n        self.left = None\n        self.right = None\n\nroot = Node(8)\nroot.left = Node(3)\nroot.right = Node(10)\n# searching for 3: is 3 < 8? go left.\nnode = root.left if 3 < root.v else root.right\nprint(node.v)",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["8", "3", "10", "None"],
+      "answer_index": 1,
+      "hints": [
+        "3 < 8 is true, so it goes left.",
+        "root.left holds 3.",
+        "It prints 3."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "In a binary search tree, everything to a node's left is...",
+      "options": ["larger than the node", "smaller than the node", "equal to the node", "unsorted"],
+      "answer_index": 1,
+      "hints": [
+        "That ordering rule is the whole point.",
+        "Left is the smaller side, right is larger.",
+        "Smaller than the node."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Searching a balanced binary search tree is...",
+      "options": ["O(n)", "O(log n)", "O(n^2)", "O(1)"],
+      "answer_index": 1,
+      "hints": [
+        "You drop one level per step, halving the rest.",
+        "Same shape as binary search.",
+        "O(log n) - when it's balanced."
+      ]
+    }
+  ]
+}

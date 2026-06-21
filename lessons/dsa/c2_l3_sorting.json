@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "dsa",
+  "cluster": 2,
+  "lesson": 3,
+  "id": "dsa-c2-l3-sorting",
+  "title": "Sorting - putting things in order, well or badly",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "Sorting arranges items in order. The naive way (compare every pair) is O(n^2); good general sorts (like the built-in one) are O(n log n).",
+  "explanation": "There are many ways to sort, and they're a clean lesson in why Big-O matters. The obvious approach - walk the list comparing neighbours, again and again - is a loop inside a loop, O(n^2): fine for ten items, painful for a million. Smarter sorts split the work in half repeatedly (merge sort) or partition around a pivot (quicksort) and land at O(n log n). You'll usually just call the built-in sort, which is one of the good ones - but knowing the difference is knowing when 'it's slow' has a cause.",
+  "code_example": "nums = [3, 1, 2]\nnums.sort()\nprint(nums)",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["[3, 1, 2]", "[1, 2, 3]", "[3, 2, 1]", "[1, 3, 2]"],
+      "answer_index": 1,
+      "hints": [
+        "sort() arranges in ascending order, in place.",
+        "Smallest to largest.",
+        "[1, 2, 3]."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "A good general-purpose sort runs in...",
+      "options": ["O(n)", "O(n log n)", "O(n^2)", "O(1)"],
+      "answer_index": 1,
+      "hints": [
+        "Better than the naive pair-by-pair way, not quite linear.",
+        "Merge sort and quicksort land here.",
+        "O(n log n)."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Comparing every pair (a loop inside a loop) to sort is...",
+      "options": ["O(n log n)", "O(n)", "O(n^2)", "O(log n)"],
+      "answer_index": 2,
+      "hints": [
+        "n outer steps, each doing n inner comparisons.",
+        "n times n.",
+        "O(n^2)."
+      ]
+    }
+  ]
+}

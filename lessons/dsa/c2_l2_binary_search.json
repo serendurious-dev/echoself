@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "dsa",
+  "cluster": 2,
+  "lesson": 2,
+  "id": "dsa-c2-l2-binary-search",
+  "title": "Binary search - halve it every time",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "Binary search finds a value in a sorted array by checking the middle and throwing away the half that can't contain it - so it needs only about log n steps.",
+  "explanation": "If the array is sorted, you don't have to look at every item. Check the middle: if it's your target, done; if your target is bigger, the answer is in the right half, so ignore the left; smaller, ignore the right. Each step halves what's left, which is why a million items take only about twenty checks. The catch is in the first word - the array must be sorted, or none of that reasoning holds.",
+  "code_example": "def bsearch(a, target):\n    lo, hi = 0, len(a) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if a[mid] == target:\n            return mid\n        if a[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1\n\nprint(bsearch([1, 3, 5, 7, 9], 7))",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print? (it returns the index)",
+      "options": ["7", "3", "4", "-1"],
+      "answer_index": 1,
+      "hints": [
+        "It returns the position of 7, not 7 itself.",
+        "The array is [1,3,5,7,9]; count from 0.",
+        "7 sits at index 3."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Binary search only works if the array is...",
+      "options": ["short", "sorted", "all numbers", "even-length"],
+      "answer_index": 1,
+      "hints": [
+        "The 'throw away half' logic depends on order.",
+        "Without it, smaller/bigger tells you nothing.",
+        "It must be sorted."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Searching n sorted items with binary search is...",
+      "options": ["O(n)", "O(log n)", "O(n^2)", "O(1)"],
+      "answer_index": 1,
+      "hints": [
+        "Each step halves what's left.",
+        "Halving repeatedly is the logarithm.",
+        "O(log n)."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "format_version": 2,
+  "track": "dsa",
+  "cluster": 2,
+  "lesson": 1,
+  "id": "dsa-c2-l1-recursion",
+  "title": "Recursion - a function that calls itself",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A recursive function solves a problem by calling itself on a smaller piece, until it hits a base case that stops the chain.",
+  "explanation": "Recursion needs two things: a base case (the smallest version, answered directly, no more calls) and a recursive case (do a little, then call yourself on something smaller). factorial(n) is n times factorial(n-1), and it stops at factorial(1) = 1. Miss the base case and it never stops - the calls stack up forever. Get it right and big problems fold neatly into small ones.",
+  "code_example": "def factorial(n):\n    if n <= 1:\n        return 1\n    return n * factorial(n - 1)\n\nprint(factorial(4))",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["4", "10", "24", "1"],
+      "answer_index": 2,
+      "hints": [
+        "factorial(4) is 4 * factorial(3), and so on down.",
+        "It's 4 * 3 * 2 * 1.",
+        "That's 24."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "What stops a recursion from calling itself forever?",
+      "options": ["the recursive case", "the base case", "the return type", "a for loop"],
+      "answer_index": 1,
+      "hints": [
+        "It's the smallest version, answered directly.",
+        "Here it's the n <= 1 branch.",
+        "The base case."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "What does factorial(1) return?\n\n_",
+      "answer": "1",
+      "hints": [
+        "Look at the base case.",
+        "n <= 1 returns this.",
+        "1."
+      ]
+    }
+  ]
+}
