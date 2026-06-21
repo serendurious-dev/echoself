@@ -34,6 +34,13 @@ _LIFTED = ["something just eased - i can hear it.", "there's a little more light
 _DIPPED = ["something shifted just now.", "that landed heavier - what happened?",
            "i felt the air change there.", "wait - that just got harder."]
 
+# when a heavy feeling she heard earlier in this same sitting comes back around -
+# she remembers it was here before, the way someone really listening would.
+_RETURNED = ["it keeps circling back to this, doesn't it.",
+             "we were here earlier too - it hasn't let go.",
+             "this one keeps returning tonight.",
+             "back to this again - it's really sitting with you."]
+
 
 def shift_line(prev_emo, emo):
     # a gentle acknowledgment when the feeling moves a real distance, else None.
@@ -437,6 +444,7 @@ class Conversation:
         self.turns     = 0
         self.ended     = False   # set on crisis; informational, doesn't gag her
         self._concerned = False  # so the soft "real help exists" word lands once a sitting
+        self._noted_returns = set()   # heavy feelings she's already noted circling back
         self.now       = now
         self._offered  = None    # a technique she's offered and is waiting a yes on
         self._offered_kinds = set()   # so she offers each tool at most once a sitting
@@ -553,10 +561,17 @@ class Conversation:
             light = playful_touch(emo, self.drift)
             if light:
                 reply = reply + " " + light
-            # if the feeling just moved a real distance, name it first - attunement
-            shift = shift_line(self.last_emo, emo)
-            if shift:
-                reply = shift + " " + reply
+            # if a heavy feeling from earlier this sitting has come back, she
+            # remembers it; otherwise, if the feeling just moved, she names the move.
+            prior = [e for role, _, e in self.history[:-1] if role == "you"]
+            if (emo in _HEAVY and emo != self.last_emo and emo in prior
+                    and emo not in self._noted_returns):
+                self._noted_returns.add(emo)
+                reply = random.choice(_RETURNED) + " " + reply
+            else:
+                shift = shift_line(self.last_emo, emo)
+                if shift:
+                    reply = shift + " " + reply
 
         # a quiet sinking (not crisis) gets a soft word that real help exists, once
         # a sitting - more than comfort, never instead of the crisis path.

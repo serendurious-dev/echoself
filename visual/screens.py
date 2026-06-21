@@ -83,11 +83,7 @@ def _ask_line(screen, clock, prompt, masked=False, allow_voice=False):
                 if allow_voice and e.key == pygame.K_F2:
                     import echoself_core
                     if echoself_core.voice_listening():
-                        screen.fill(BG)
-                        screen.blit(font.render("listening...", True, WARM), (60, h // 2))
-                        pygame.draw.circle(screen, (220, 80, 80), (30, 30), 8)
-                        pygame.display.flip()
-                        heard = echoself_core.listen()
+                        heard = _listen_with_animation(screen, clock)
                         if heard:
                             return heard
                 elif e.key == pygame.K_BACKSPACE:
@@ -117,6 +113,31 @@ def _flash(screen, clock, message, seconds=1.6):
         screen.blit(font.render(message, True, INK),
                     (60, h // 2 - 16))
         pygame.display.flip()
+
+
+def _listen_with_animation(screen, clock):
+    # record on a thread so the window stays alive while she listens, instead of
+    # freezing for the few seconds the mic is open
+    import threading
+    import echoself_core
+    w, h   = screen.get_size()
+    heard  = {}
+    worker = threading.Thread(target=lambda: heard.__setitem__("t", echoself_core.listen()))
+    worker.start()
+    frame = 0
+    while worker.is_alive():
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pass   # don't cut the recording off mid-word; let it finish
+        screen.fill(BG)
+        dots = "." * ((frame // 8) % 4)
+        screen.blit(_font(34).render("listening" + dots, True, WARM), (60, h // 2 - 20))
+        pygame.draw.circle(screen, (220, 80, 80), (30, 30), 8)
+        pygame.display.flip()
+        clock.tick(30)
+        frame += 1
+    worker.join()
+    return heard.get("t", "")
 
 
 # -- the public screens -------------------------------------------------------

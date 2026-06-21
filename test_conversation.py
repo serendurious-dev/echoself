@@ -151,6 +151,40 @@ class TestEmotionalShift(unittest.TestCase):
         self.assertIn(companion.shift_line("joy", "sadness"), companion._DIPPED)
 
 
+class TestWithinSittingMemory(unittest.TestCase):
+    # she remembers a heavy feeling came up earlier in the same talk
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self._old = datastore.DATA_DIR
+        datastore.DATA_DIR = self._tmp.name
+
+    def tearDown(self):
+        datastore.DATA_DIR = self._old
+        self._tmp.cleanup()
+
+    def _conv(self):
+        return companion.Conversation(now=datetime.datetime(2026, 6, 13, 14, 0))
+
+    def test_a_returning_feeling_is_remembered(self):
+        conv = self._conv()
+        conv.open()
+        conv.say("i feel so sad and empty")           # sad
+        conv.say("actually i feel happy now")         # left it for joy
+        r = conv.say("ugh, sad and empty again")      # sad comes back
+        self.assertTrue(any(line in r["reply"] for line in companion._RETURNED), r["reply"])
+
+    def test_a_return_is_noted_once_per_feeling(self):
+        conv = self._conv()
+        conv.open()
+        conv.say("i feel so sad and empty")
+        conv.say("i feel happy now")
+        conv.say("sad again")                         # first return - noted
+        conv.say("happy again")
+        r = conv.say("and sad once more")             # second return - not re-noted
+        self.assertFalse(any(line in r["reply"] for line in companion._RETURNED), r["reply"])
+
+
 class TestFriendVsTeacher(unittest.TestCase):
     # she reads how you are and how you've been, and answers as the right one - a
     # friend when you're hurting, a gentle teacher when you're just dodging.
