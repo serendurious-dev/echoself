@@ -107,6 +107,9 @@ class MirrorRunner:
                 name = self.mirror.to_expression(features.features_from_keypoints(kp))
                 self.last = name
                 on_expression(name)
+                # ~12 reads a second is plenty for an expression, and it stops the
+                # camera thread from pegging a whole core. wait() also wakes on stop.
+                self._stop.wait(0.08)
         finally:
             cap.release()
             mesh.close()
