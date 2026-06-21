@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "c",
+  "cluster": 2,
+  "lesson": 4,
+  "id": "c-c2-l4-structs",
+  "title": "Structs - bundling fields into one type",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A struct groups related values into a single type. You reach a field with a dot.",
+  "explanation": "When values belong together - an x and a y, a name and an age - a struct names that bundle as one type. You define the shape once, then make variables of it and reach inside with a dot: p.x. (When you have a pointer to a struct, you use -> instead, which is just a tidy way of writing (*ptr).field.) Structs are how C builds bigger ideas out of the small types.",
+  "code_example": "struct Point { int x; int y; };\nstruct Point p = {3, 4};\nprintf(\"%d\", p.y);",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["3", "4", "7", "0"],
+      "answer_index": 1,
+      "hints": [
+        "p was made with {3, 4} - x then y.",
+        "p.y is the second field.",
+        "It's 4."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "How do you reach a field of a struct variable?",
+      "options": ["with a dot: p.x", "with a colon: p:x", "with brackets: p[x]", "with &"],
+      "answer_index": 0,
+      "hints": [
+        "It's the most ordinary punctuation.",
+        "p.x.",
+        "A dot."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Through a pointer to a struct, which operator reaches a field?",
+      "options": [".", "->", "*", "&"],
+      "answer_index": 1,
+      "hints": [
+        "It's the arrow.",
+        "Short for (*ptr).field.",
+        "->"
+      ]
+    }
+  ]
+}

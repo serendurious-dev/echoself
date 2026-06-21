@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "c",
+  "cluster": 2,
+  "lesson": 5,
+  "id": "c-c2-l5-malloc",
+  "title": "malloc and free - memory you ask for and give back",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "malloc asks the system for a block of memory at run time and returns a pointer to it. free gives it back. What you malloc, you must free.",
+  "explanation": "Local variables vanish when a function returns. When you need memory that outlives that, or whose size you only learn while running, you ask for it with malloc - it hands back a pointer to a fresh block. The deal is strict: every malloc needs a matching free, or the memory leaks; and using a block after you free it is a serious bug. C gives you the keys to the memory and trusts you completely - which is its whole character.",
+  "code_example": "int *a = malloc(3 * sizeof(int));\na[0] = 42;\nprintf(\"%d\", a[0]);\nfree(a);",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["3", "42", "an address", "0"],
+      "answer_index": 1,
+      "hints": [
+        "a points at a block big enough for 3 ints.",
+        "a[0] was set to 42.",
+        "It prints 42."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Every malloc should be matched by a...",
+      "options": ["printf", "free", "return", "second malloc"],
+      "answer_index": 1,
+      "hints": [
+        "Otherwise the memory leaks.",
+        "You give it back.",
+        "A free."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Using a block of memory after you've freed it is...",
+      "options": ["fine, it's still yours", "a serious bug", "how you reuse it", "required"],
+      "answer_index": 1,
+      "hints": [
+        "Once freed, it isn't yours anymore.",
+        "The system may hand it to someone else.",
+        "A serious bug (use-after-free)."
+      ]
+    }
+  ]
+}

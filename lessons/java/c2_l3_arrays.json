@@ -1,0 +1,47 @@
+{
+  "format_version": 2,
+  "track": "java",
+  "cluster": 2,
+  "lesson": 3,
+  "id": "java-c2-l3-arrays",
+  "title": "Arrays - a fixed row of values",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A Java array holds a fixed number of same-type values, indexed from 0. Its length is fixed at creation and read with .length.",
+  "explanation": "int[] a = {10, 20, 30} makes a row of three ints, reached by index from 0. Java arrays know their own size - a.length - and check it: step outside the bounds and you get an exception, not silent corruption like C. The catch is that the size is fixed when you make it; when you need to grow, you reach for an ArrayList (next lesson).",
+  "code_example": "int[] a = {10, 20, 30};\nSystem.out.println(a.length + \" \" + a[2]);",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["3 20", "3 30", "2 30", "30 3"],
+      "answer_index": 1,
+      "hints": [
+        ".length is how many it holds; a[2] is the third item.",
+        "Three items, and a[2] is 30.",
+        "3 30."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "What happens if you read past the end of a Java array?",
+      "options": ["it returns 0", "it throws an exception", "it silently reads junk", "it grows the array"],
+      "answer_index": 1,
+      "hints": [
+        "Java checks bounds, unlike C.",
+        "It won't let you read off the end quietly.",
+        "It throws an exception."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Which property gives a Java array's size?\n\na._",
+      "answer": "length",
+      "hints": [
+        "It's not a method - no parentheses.",
+        "Six letters.",
+        "length."
+      ]
+    }
+  ]
+}

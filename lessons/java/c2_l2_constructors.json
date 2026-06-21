@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "java",
+  "cluster": 2,
+  "lesson": 2,
+  "id": "java-c2-l2-constructors",
+  "title": "Constructors - how an object starts life",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A constructor runs when you new an object, to set it up. It shares the class's name, takes no return type, and often uses this to name its own fields.",
+  "explanation": "A constructor is the setup method that fires the instant an object is born. It has the same name as the class and no return type. The parameter and the field often share a name, so this.x = x says 'set my field x to the value passed in'. After it runs, every object starts out valid - no half-built objects with garbage fields.",
+  "code_example": "class Point {\n    int x, y;\n    Point(int x, int y) {\n        this.x = x;\n        this.y = y;\n    }\n}\n\nPoint p = new Point(3, 4);\nSystem.out.println(p.x + p.y);",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["3", "4", "7", "34"],
+      "answer_index": 2,
+      "hints": [
+        "The constructor sets x=3, y=4.",
+        "x + y.",
+        "It's 7."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "What does this.x refer to inside a constructor?",
+      "options": ["the parameter", "the object's own field x", "a new variable", "the class name"],
+      "answer_index": 1,
+      "hints": [
+        "this means 'this object'.",
+        "It separates the field from the same-named parameter.",
+        "The object's own field x."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "A constructor's name is...",
+      "options": ["always init", "the same as the class", "main", "anything you like"],
+      "answer_index": 1,
+      "hints": [
+        "Point's constructor is called Point.",
+        "Not a free choice.",
+        "The same as the class."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "java",
+  "cluster": 2,
+  "lesson": 5,
+  "id": "java-c2-l5-inheritance",
+  "title": "Inheritance - building on an existing class",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A class can extend another, inheriting its fields and methods and adding or changing its own. The original is the superclass; the new one is the subclass.",
+  "explanation": "When a new kind of thing is a special case of an existing one, you don't start over - you extend. class Dog extends Animal gives Dog everything Animal has, for free, and Dog can add its own methods or override inherited ones with its own version. It's the 'is-a' relationship: a Dog is an Animal. Inheritance is how Java shares code between related classes without copying it.",
+  "code_example": "class Animal {\n    String sound() { return \"...\"; }\n}\nclass Dog extends Animal {\n    String sound() { return \"woof\"; }\n}\n\nSystem.out.println(new Dog().sound());",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["...", "woof", "Animal", "Dog"],
+      "answer_index": 1,
+      "hints": [
+        "Dog provides its own version of sound().",
+        "It overrides Animal's.",
+        "It prints woof."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Which keyword makes one class build on another?",
+      "options": ["inherits", "extends", "implements", "uses"],
+      "answer_index": 1,
+      "hints": [
+        "class Dog ___ Animal.",
+        "It's the Java keyword for inheritance.",
+        "extends."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "When a subclass replaces an inherited method with its own version, that's...",
+      "options": ["overloading", "overriding", "hiding", "extending"],
+      "answer_index": 1,
+      "hints": [
+        "Dog's sound() replaces Animal's.",
+        "It rides over the inherited one.",
+        "Overriding."
+      ]
+    }
+  ]
+}

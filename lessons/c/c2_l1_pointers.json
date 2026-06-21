@@ -1,0 +1,47 @@
+{
+  "format_version": 2,
+  "track": "c",
+  "cluster": 2,
+  "lesson": 1,
+  "id": "c-c2-l1-pointers",
+  "title": "Pointers - a variable that holds an address",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A pointer holds the memory address of another variable. & takes an address, * follows it to the value.",
+  "explanation": "Every variable lives somewhere in memory. & gives you that location; a pointer is a variable built to hold one. Once a pointer p points at x, *p means 'the value at that address' - reading it gets x, writing it changes x itself. That's the power and the danger of C: you're working with the memory directly.",
+  "code_example": "int x = 5;\nint *p = &x;\n*p = 10;\nprintf(\"%d\", x);",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["5", "10", "an address", "0"],
+      "answer_index": 1,
+      "hints": [
+        "p points at x, so *p is another name for x.",
+        "Writing *p = 10 changes x.",
+        "x is now 10."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Which operator gives you the address of a variable?",
+      "options": ["*", "&", "%", "->"],
+      "answer_index": 1,
+      "hints": [
+        "* follows a pointer; this one takes the address.",
+        "&x means 'the address of x'.",
+        "It's &."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "To read the value a pointer points at, you put which symbol before it?\n\n_p",
+      "answer": "*",
+      "hints": [
+        "It's the 'dereference' operator.",
+        "The same symbol used to declare the pointer.",
+        "It's *."
+      ]
+    }
+  ]
+}

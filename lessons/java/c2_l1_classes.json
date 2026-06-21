@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "java",
+  "cluster": 2,
+  "lesson": 1,
+  "id": "java-c2-l1-classes",
+  "title": "Classes and objects - the blueprint and the thing",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A class is a blueprint; an object is one thing built from it with new. Fields hold its data, methods are what it can do.",
+  "explanation": "Everything in Java lives in a class. A class describes a kind of thing - its fields (the data each one carries) and its methods (what it can do). new makes an actual object from that blueprint, and you reach into it with a dot: c.tick(), c.n. The class is written once; you can make as many objects from it as you like, each with its own data.",
+  "code_example": "class Counter {\n    int n = 0;\n    void tick() { n++; }\n}\n\nCounter c = new Counter();\nc.tick();\nc.tick();\nSystem.out.println(c.n);",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["0", "1", "2", "null"],
+      "answer_index": 2,
+      "hints": [
+        "n starts at 0.",
+        "Each tick() adds one.",
+        "Two ticks: 2."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Which keyword makes a new object from a class?",
+      "options": ["class", "new", "make", "object"],
+      "answer_index": 1,
+      "hints": [
+        "new Counter().",
+        "It builds one from the blueprint.",
+        "new."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "The data a class's objects carry are called its...",
+      "options": ["methods", "fields", "imports", "packages"],
+      "answer_index": 1,
+      "hints": [
+        "n is one of them.",
+        "Methods are the actions; these are the data.",
+        "Fields."
+      ]
+    }
+  ]
+}

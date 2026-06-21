@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "cpp",
+  "cluster": 2,
+  "lesson": 1,
+  "id": "cpp-c2-l1-references",
+  "title": "References - another name for the same thing",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A reference (int&) is an alias - a second name for an existing variable. Change one, you change the other. It's how C++ lets a function modify its caller's variable cleanly.",
+  "explanation": "Where C reaches for pointers, C++ often uses references: int& r = x makes r just another name for x, no addresses, no stars. Pass a parameter by reference (void f(int& n)) and the function works on the caller's actual variable, not a copy - so it can change it, and big objects don't get copied needlessly. Cleaner than a pointer, and it can't be null.",
+  "code_example": "int x = 5;\nint& r = x;\nr = 10;\nstd::cout << x;",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["5", "10", "an address", "0"],
+      "answer_index": 1,
+      "hints": [
+        "r is just another name for x.",
+        "Setting r = 10 sets x.",
+        "x is 10."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "What is a reference?",
+      "options": ["a copy of a variable", "an alias - a second name for the same variable", "a number", "a kind of loop"],
+      "answer_index": 1,
+      "hints": [
+        "It doesn't make a new value.",
+        "Two names, one variable.",
+        "An alias."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Passing a parameter by reference lets the function...",
+      "options": ["copy it safely", "change the caller's actual variable", "ignore it", "make it constant"],
+      "answer_index": 1,
+      "hints": [
+        "It works on the original, not a copy.",
+        "So changes stick after the call.",
+        "Modify the caller's variable."
+      ]
+    }
+  ]
+}

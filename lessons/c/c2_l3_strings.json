@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "c",
+  "cluster": 2,
+  "lesson": 3,
+  "id": "c-c2-l3-strings",
+  "title": "Strings - char arrays that end in a zero",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A C string is just an array of chars with a '\\0' (null terminator) marking the end. Functions like strlen count up to that zero.",
+  "explanation": "C has no real string type - a string is a char array, and the only way anything knows where it ends is the invisible '\\0' the compiler puts after your text. \"hi\" is really {'h','i','\\0'} - three chars for two letters. strlen walks until it meets the zero. Forget the terminator and functions read off the end of your array, which is a classic C bug.",
+  "code_example": "char name[] = \"hi\";\nprintf(\"%lu\", strlen(name));",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does strlen print for \"hi\"?",
+      "options": ["1", "2", "3", "0"],
+      "answer_index": 1,
+      "hints": [
+        "strlen counts the letters, not the hidden terminator.",
+        "\"hi\" has two visible characters.",
+        "It's 2."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "What marks the end of a C string?",
+      "options": ["a space", "the '\\0' null terminator", "a newline", "the array's length variable"],
+      "answer_index": 1,
+      "hints": [
+        "C doesn't store the length separately.",
+        "It's an invisible zero byte after the text.",
+        "The '\\0' null terminator."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "How many chars does the array for \"hi\" actually hold?",
+      "options": ["2", "3", "1", "4"],
+      "answer_index": 1,
+      "hints": [
+        "Two letters, plus one more.",
+        "Don't forget the terminator.",
+        "Three: 'h', 'i', '\\0'."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "cpp",
+  "cluster": 2,
+  "lesson": 2,
+  "id": "cpp-c2-l2-classes",
+  "title": "Classes - data and the code that works on it",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A class bundles data (members) with the functions that act on it (methods). public members are reachable from outside; private ones are the class's own business.",
+  "explanation": "A struct grouped data; a class groups data and behaviour, and adds a wall around it. Members are the variables an object holds; methods are functions that belong to the object and work on its members. public: marks what the outside world may touch, private: keeps the internals safe so the class controls its own state. That wall - encapsulation - is the point of object-oriented C++.",
+  "code_example": "class Counter {\npublic:\n    int n = 0;\n    void tick() { n++; }\n};\nCounter c;\nc.tick();\nc.tick();\nstd::cout << c.n;",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["0", "1", "2", "None"],
+      "answer_index": 2,
+      "hints": [
+        "n starts at 0.",
+        "Each tick() adds one.",
+        "Two ticks: 2."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "A function that belongs to a class and acts on its data is called a...",
+      "options": ["member", "method", "pointer", "header"],
+      "answer_index": 1,
+      "hints": [
+        "tick() is one.",
+        "The data are members; the functions are...",
+        "Methods."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Which keyword hides a class's internals from the outside?",
+      "options": ["public", "private", "static", "const"],
+      "answer_index": 1,
+      "hints": [
+        "public exposes; this one protects.",
+        "It's the class's own business.",
+        "private."
+      ]
+    }
+  ]
+}

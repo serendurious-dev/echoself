@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "java",
+  "cluster": 2,
+  "lesson": 4,
+  "id": "java-c2-l4-arraylist",
+  "title": "ArrayList - a list that grows",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "An ArrayList is a resizable list: add() puts an item on the end, get(i) reads one, size() counts. It holds objects, not raw primitives.",
+  "explanation": "When you don't know how many things you'll have, an ArrayList grows as you go. add() appends, get(i) reads by index, size() tells you how many - no fixed length to plan around. One wrinkle: it stores objects, so a list of numbers is ArrayList<Integer>, not int; Java quietly boxes the primitives for you. It's the everyday collection you reach for in Java.",
+  "code_example": "ArrayList<String> names = new ArrayList<>();\nnames.add(\"min\");\nnames.add(\"bo\");\nSystem.out.println(names.size() + \" \" + names.get(0));",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["2 min", "2 bo", "1 min", "min bo"],
+      "answer_index": 0,
+      "hints": [
+        "size() counts the items; get(0) is the first.",
+        "Two added, and get(0) is \"min\".",
+        "2 min."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Which method adds an item to the end of an ArrayList?",
+      "options": ["append()", "add()", "push()", "insert()"],
+      "answer_index": 1,
+      "hints": [
+        "It's the short one.",
+        "names.add(\"bo\").",
+        "add()."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Why is it ArrayList<Integer> and not ArrayList<int>?",
+      "options": ["int is too big", "an ArrayList holds objects, not primitives", "Integer is faster", "no reason, both work"],
+      "answer_index": 1,
+      "hints": [
+        "Collections work with objects.",
+        "Integer is the object wrapper for int.",
+        "It holds objects, not primitives."
+      ]
+    }
+  ]
+}

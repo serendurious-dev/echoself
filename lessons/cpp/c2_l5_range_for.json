@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "cpp",
+  "cluster": 2,
+  "lesson": 5,
+  "id": "cpp-c2-l5-range-for",
+  "title": "Range-based for - walk a container cleanly",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A range-based for (for (auto x : items)) visits each element of a container in turn, without indices or bounds.",
+  "explanation": "When you just want each element, the old counting loop is noise. for (int v : nums) hands you the values one by one - no index, no off-by-one. auto lets the compiler name the element's type for you. Add a reference (auto& v) when you want to change the elements in place rather than work on copies. It reads like the sentence you mean: 'for each v in nums'.",
+  "code_example": "std::vector<int> nums = {2, 4, 6};\nint total = 0;\nfor (int v : nums) {\n    total += v;\n}\nstd::cout << total;",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["6", "12", "246", "3"],
+      "answer_index": 1,
+      "hints": [
+        "It adds each value to total.",
+        "2 + 4 + 6.",
+        "It's 12."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "What does a range-based for give you each pass?",
+      "options": ["the index", "the element itself", "the container's length", "a pointer"],
+      "answer_index": 1,
+      "hints": [
+        "No counter is involved.",
+        "for (int v : nums) - v is...",
+        "The element itself."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "To change the elements in place, you loop with...",
+      "options": ["auto v", "auto& v (a reference)", "int v", "const v"],
+      "answer_index": 1,
+      "hints": [
+        "A plain copy won't stick.",
+        "You need to work on the original.",
+        "A reference, auto& v."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "format_version": 2,
+  "track": "c",
+  "cluster": 2,
+  "lesson": 2,
+  "id": "c-c2-l2-arrays",
+  "title": "Arrays - a row of values, and a pointer in disguise",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A C array is a fixed run of same-type values, indexed from 0. The array's name acts like a pointer to its first element.",
+  "explanation": "int a[3] reserves three ints in a row. a[0] is the first. The quiet truth of C: the name a is essentially the address of a[0], which is why arrays and pointers feel so tangled here - a[i] is really *(a + i). Indexing is fast, but C won't stop you from reading a[5] of a 3-slot array; staying in bounds is your job.",
+  "code_example": "int a[3] = {10, 20, 30};\nprintf(\"%d\", a[1]);",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["10", "20", "30", "1"],
+      "answer_index": 1,
+      "hints": [
+        "Indexing starts at 0.",
+        "a[0]=10, a[1]=...",
+        "a[1] is 20."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "The name of an array, used on its own, acts like...",
+      "options": ["its length", "a pointer to its first element", "its last element", "a copy of the array"],
+      "answer_index": 1,
+      "hints": [
+        "This is the array/pointer link.",
+        "a is the address of a[0].",
+        "A pointer to the first element."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "C arrays count positions starting from which number?\n\n_",
+      "answer": "0",
+      "hints": [
+        "Same as most languages here.",
+        "The first index.",
+        "0."
+      ]
+    }
+  ]
+}

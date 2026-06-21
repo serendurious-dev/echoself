@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "cpp",
+  "cluster": 2,
+  "lesson": 3,
+  "id": "cpp-c2-l3-constructors",
+  "title": "Constructors - setting an object up at birth",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A constructor is a special method that runs automatically when an object is created, to set its initial state. It has the same name as the class and no return type.",
+  "explanation": "You don't want a half-built object floating around. A constructor guarantees setup: it shares the class's name, takes whatever it needs, and runs the moment you create an object - Point p(3, 4) calls it with 3 and 4. After it finishes, the object is ready and valid. It's the class's promise that every one of its objects starts life correctly.",
+  "code_example": "class Point {\npublic:\n    int x, y;\n    Point(int a, int b) { x = a; y = b; }\n};\nPoint p(3, 4);\nstd::cout << p.x + p.y;",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["3", "4", "7", "12"],
+      "answer_index": 2,
+      "hints": [
+        "The constructor sets x=3, y=4.",
+        "x + y.",
+        "3 + 4 is 7."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "When does a constructor run?",
+      "options": ["when the object is created", "when you call print", "when the program ends", "only if you call it by name"],
+      "answer_index": 0,
+      "hints": [
+        "It's automatic.",
+        "Point p(3, 4) triggers it.",
+        "At object creation."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "What name does a constructor have?",
+      "options": ["init", "the same name as the class", "main", "new"],
+      "answer_index": 1,
+      "hints": [
+        "It's not a free choice.",
+        "Point's constructor is called Point.",
+        "The class's own name."
+      ]
+    }
+  ]
+}

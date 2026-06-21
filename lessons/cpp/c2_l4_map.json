@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "cpp",
+  "cluster": 2,
+  "lesson": 4,
+  "id": "cpp-c2-l4-map",
+  "title": "std::map - looking values up by key",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "std::map stores key-value pairs and lets you fetch a value by its key with [ ]. (It also keeps the keys sorted.)",
+  "explanation": "The STL hands you the containers you'd otherwise build by hand. std::map is the dictionary: ages[\"min\"] = 20 stores it, ages[\"min\"] reads it back. Indexing a key that isn't there quietly creates it. A std::map keeps its keys in sorted order (lookup is O(log n)); its cousin std::unordered_map drops the ordering for average O(1). Either way, it's lookup by name instead of by position.",
+  "code_example": "std::map<std::string, int> ages;\nages[\"min\"] = 20;\nages[\"bo\"] = 31;\nstd::cout << ages[\"min\"];",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["20", "31", "min", "2"],
+      "answer_index": 0,
+      "hints": [
+        "Read the value stored under \"min\".",
+        "Adding \"bo\" doesn't change \"min\".",
+        "It's 20."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "How do you store or read a value in a std::map?",
+      "options": ["by index number", "by key, with [ ]", "with push_back", "by position"],
+      "answer_index": 1,
+      "hints": [
+        "It's not a position-based container.",
+        "ages[\"min\"].",
+        "By key, with [ ]."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Compared to std::map, std::unordered_map gives up sorting for...",
+      "options": ["less memory", "average O(1) lookup", "type safety", "nothing"],
+      "answer_index": 1,
+      "hints": [
+        "It's the hash-table version.",
+        "Hashing buys average constant-time lookup.",
+        "Average O(1)."
+      ]
+    }
+  ]
+}
