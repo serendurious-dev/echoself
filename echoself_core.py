@@ -208,6 +208,18 @@ def conversation(llm=None, distiller=None, now=None):
     return companion.Conversation(llm=llm, distiller=distiller, now=now)
 
 
+def after_turn(result):
+    # the side effects of one conversation turn, shared by every frontend: log the
+    # emotion signal (never the words) and let the personality drift a little.
+    from core import companion
+    companion.log_emotion(result["emotion"], result["intensity"])
+    if not result.get("crisis"):
+        from character import personality_drift
+        d = personality_drift.load()
+        personality_drift.nudge_emotion(d, result["emotion"])
+        personality_drift.save(d)
+
+
 def read_emotion(text):
     from core import emotion
     return emotion.analyze(text)

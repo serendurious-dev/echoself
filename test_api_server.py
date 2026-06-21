@@ -25,6 +25,7 @@ class TestApiServer(unittest.TestCase):
         self.srv.shutdown()
         self.srv.server_close()
         self.thread.join(timeout=2)
+        apiserver._SESSIONS.clear()
         datastore.DATA_DIR = self._old
         self._tmp.cleanup()
 
@@ -76,6 +77,32 @@ class TestApiServer(unittest.TestCase):
 
     def test_unknown_endpoint_is_404(self):
         status, _ = self._get("/api/nope")
+        self.assertEqual(status, 404)
+
+    def test_a_multi_turn_session_holds_the_thread(self):
+        status, body = self._post("/api/session/start", {})
+        self.assertEqual(status, 200)
+        sid = body["session_id"]
+        self.assertTrue(body["opener"])
+
+        status, r1 = self._post("/api/session/say",
+                                {"session_id": sid, "text": "i feel so empty and sad"})
+        self.assertEqual(status, 200)
+        self.assertEqual(r1["emotion"], "sadness")
+
+        status, r2 = self._post("/api/session/say",
+                                {"session_id": sid, "text": "still sad, it won't lift"})
+        self.assertEqual(status, 200)
+        self.assertNotEqual(r1["reply"], r2["reply"])     # holds context, doesn't repeat
+
+        status, _ = self._post("/api/session/end", {"session_id": sid})
+        self.assertEqual(status, 200)
+        # ended -> the session is gone
+        status, _ = self._post("/api/session/say", {"session_id": sid, "text": "hello"})
+        self.assertEqual(status, 404)
+
+    def test_say_to_an_unknown_session_is_404(self):
+        status, _ = self._post("/api/session/say", {"session_id": "nope", "text": "hi"})
         self.assertEqual(status, 404)
 
 

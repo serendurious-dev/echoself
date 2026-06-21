@@ -10,12 +10,19 @@ never be reachable from the network. your data never leaves the machine. run wit
 `python main.py --serve [port]`."""
 
 import json
+import secrets
+import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import echoself_core
 
 HOST         = "127.0.0.1"   # local only - never open this to the network
 DEFAULT_PORT = 8765
+
+# live conversations, kept in memory only and dropped on end - same as the window:
+# nothing typed is ever written to disk, only the emotion behind it.
+_SESSIONS = {}
+_LOCK     = threading.Lock()
 
 
 def _get_routes():
@@ -70,6 +77,33 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(200, echoself_core.respond(text))
             if route == "/api/emotion":
                 return self._send(200, echoself_core.read_emotion(data.get("text") or ""))
+            if route == "/api/session/start":
+                sid  = secrets.token_hex(8)
+                conv = echoself_core.conversation()
+                opener = conv.open()
+                with _LOCK:
+                    _SESSIONS[sid] = conv
+                return self._send(200, {"session_id": sid, "opener": opener})
+            if route == "/api/session/say":
+                with _LOCK:
+                    conv = _SESSIONS.get(data.get("session_id"))
+                if conv is None:
+                    return self._send(404, {"error": "no such session"})
+                text = (data.get("text") or "").strip()
+                if not text:
+                    return self._send(400, {"error": "text is required"})
+                result = conv.say(text)
+                echoself_core.after_turn(result)
+                return self._send(200, result)
+            if route == "/api/session/end":
+                with _LOCK:
+                    conv = _SESSIONS.pop(data.get("session_id"), None)
+                if conv is not None:
+                    try:
+                        conv.end()
+                    except Exception:
+                        pass
+                return self._send(200, {"ended": True})
             self._send(404, {"error": "no such endpoint"})
         except Exception as e:
             self._send(500, {"error": str(e)})

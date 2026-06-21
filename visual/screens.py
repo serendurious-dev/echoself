@@ -271,13 +271,7 @@ def _converse(screen, clock, character):
             turns.append(("her", answer))
         else:
             r = conv.say(said)
-            companion.log_emotion(r["emotion"], r["intensity"])
-            # the conversation trains the personality: a little drift per exchange
-            if not r["crisis"]:
-                from character import personality_drift
-                d = personality_drift.load()
-                personality_drift.nudge_emotion(d, r["emotion"])
-                personality_drift.save(d)
+            echoself_core.after_turn(r)   # log the emotion + drift, same as every frontend
             character.set_expression(companion.EXPRESSION.get(r["emotion"], "neutral"))
             turns.append(("her", r["reply"]))
 
