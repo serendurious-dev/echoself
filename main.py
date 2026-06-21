@@ -23,6 +23,9 @@ def parse_args(argv=None):
                         help="export all your local data to a zip, and exit")
     parser.add_argument("--forget", action="store_true",
                         help="permanently delete all your local data, and exit")
+    parser.add_argument("--serve", nargs="?", const=8765, type=int, default=None,
+                        metavar="PORT",
+                        help="run the local API server (localhost only) instead of the window")
     parser.add_argument("--version", action="version", version=f"EchoSelf {__version__}")
     return parser.parse_args(argv)
 
@@ -60,6 +63,11 @@ def main(argv=None):
             print(f"removed {len(removed)} item(s). nothing kept.")
         else:
             print("cancelled. nothing was touched.")
+        return 0
+
+    if args.serve is not None:
+        from apiserver import serve
+        serve(args.serve)
         return 0
 
     from visual.worlds import run

@@ -241,6 +241,7 @@ def _converse(screen, clock, character):
     character.set_expression("neutral")
 
     import echoself_core
+    echoself_core.speak(turns[0][1])      # if her voice is on, she greets you aloud too
     while True:
         prompt = "say anything, or start with ? to look something up. esc to leave"
         if echoself_core.voice_listening():
