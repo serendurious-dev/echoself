@@ -5,8 +5,10 @@ import sys
 import json
 import subprocess
 
+from core import paths
+
 # overridable for tests, same pattern as datastore.DATA_DIR
-WORKSPACE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "workspace")
+WORKSPACE = os.path.join(paths.data_root(), "workspace")
 TIMEOUT_S = 10
 
 

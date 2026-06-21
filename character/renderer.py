@@ -7,7 +7,9 @@ import random
 
 import pygame
 
-PACK_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "characters")
+from core import paths
+
+PACK_DIR = os.path.join(paths.resource_root(), "characters")
 
 SS = 3   # supersampling factor. draw big, scale down, edges stay smooth and soft
 

@@ -6,7 +6,9 @@ import glob
 
 from learning import progress_tracker
 
-LESSON_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "lessons")
+from core import paths
+
+LESSON_DIR = os.path.join(paths.resource_root(), "lessons")
 
 
 def load_track(track):

@@ -4,7 +4,9 @@ import os
 import json
 import random
 
-EXCHANGE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "exchange")
+from core import paths
+
+EXCHANGE_DIR = os.path.join(paths.resource_root(), "exchange")
 _PATH        = os.path.join(EXCHANGE_DIR, "sentences.json")
 
 

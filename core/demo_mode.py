@@ -3,10 +3,10 @@
 import os
 import datetime
 
-from core import datastore, session_manager
+from core import datastore, session_manager, paths
 from learning import progress_tracker
 
-DEMO_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data_demo")
+DEMO_DIR = os.path.join(paths.data_root(), "data_demo")
 DAYS     = 35
 
 

@@ -7,8 +7,9 @@ import random
 
 import pygame
 
-ART_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                       "characters", "art")
+from core import paths
+
+ART_DIR = os.path.join(paths.resource_root(), "characters", "art")
 
 # the mouth shape each expression wants. the pack supplies whatever shapes it
 # has; we fall back to neutral, then to whatever exists.

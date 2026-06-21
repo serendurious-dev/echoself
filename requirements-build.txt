@@ -1,0 +1,5 @@
+# build tooling for the standalone desktop app - not needed to run from source.
+#   pip install -r requirements-build.txt
+#   pyinstaller echoself.spec
+# the build lands in dist/EchoSelf/. see BUILD.md.
+pyinstaller>=6.0
