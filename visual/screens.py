@@ -413,13 +413,14 @@ def show_mastery(screen, clock, character):
 
 
 def settings_screen(screen, clock):
-    # the few choices that are the user's to make: whether she reaches out, and
-    # whether her check-in stays general or leans on what she remembers.
-    from core import settings
+    # the choices that are the user's to make: whether she reaches out, how she
+    # reads you, where to point for crisis help, and the webcam mirror.
+    import echoself_core
+    from core import settings, crisis
     w, h   = screen.get_size()
     title  = _font(38)
-    font   = _font(28)
-    soft   = _font(20)
+    font   = _font(26)
+    soft   = _font(19)
     while True:
         s = settings.load()
         clock.tick(60)
@@ -433,21 +434,45 @@ def settings_screen(screen, clock):
                     settings.toggle_outreach()
                 elif e.key == pygame.K_2:
                     settings.toggle_style()
-        on    = s["outreach"]
-        style = s["outreach_style"]
-        screen.fill(BG)
-        screen.blit(title.render("settings", True, INK), (60, 48))
+                elif e.key == pygame.K_3:
+                    # smarter emotion read - only flips on if the model's installed
+                    if settings.get("nlp_backend") == "local":
+                        echoself_core.set_nlp(False)
+                    elif echoself_core.nlp_available():
+                        echoself_core.set_nlp(True)
+                elif e.key == pygame.K_4:
+                    settings.set("region", crisis.next_region(settings.get("region")))
+                elif e.key == pygame.K_5:
+                    # re-teach the mirror your expressions (needs the vision extra)
+                    if echoself_core.mirror_available():
+                        mirror_calibrate(screen, clock)
+
+        nlp_on  = s.get("nlp_backend") == "local"
+        nlp_txt = ("on (local model)" if nlp_on else
+                   "off (word list)" if echoself_core.nlp_available() else
+                   "off - needs the nlp extra")
+        region  = s.get("region")
+        mirror_txt = ("teach me your expressions" if echoself_core.mirror_available()
+                      else "needs the vision extra")
         rows = [
-            ("1.  she reaches out:  " + ("on" if on else "off"),
+            ("1.  she reaches out:  " + ("on" if s["outreach"] else "off"),
              "a gentle check-in once a day, only when you haven't come by."),
-            ("2.  her check-in:  " + ("proactive" if style == "personal" else "general"),
+            ("2.  her check-in:  " + ("proactive" if s["outreach_style"] == "personal" else "general"),
              "general asks how your day was; proactive leans on what she remembers."),
+            ("3.  how she reads you:  " + nlp_txt,
+             "the word list is the floor; the local model reads tone deeper, offline."),
+            ("4.  crisis lines:  " + crisis.region_name(region),
+             "which country's real-help numbers she points to. press to cycle."),
+            ("5.  the mirror:  " + mirror_txt,
+             "show her your own expressions so she mirrors you, not an average."),
         ]
-        y = 140
+        screen.fill(BG)
+        screen.blit(title.render("settings", True, INK), (60, 40))
+        y = 116
         for line, note in rows:
             screen.blit(font.render(line, True, WARM), (60, y))
-            screen.blit(soft.render(note, True, SOFT), (60, y + 36))
-            y += 96
+            screen.blit(soft.render(note, True, SOFT), (60, y + 32))
+            y += 84
         screen.blit(soft.render("press a number to change it   -   esc to close", True, SOFT),
                     (60, h - 44))
         pygame.display.flip()

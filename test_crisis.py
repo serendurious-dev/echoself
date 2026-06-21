@@ -27,6 +27,28 @@ class TestCrisisResources(unittest.TestCase):
         self.assertIn("988", r)
 
 
+class TestRegionPicker(unittest.TestCase):
+
+    def test_names_known_regions(self):
+        self.assertEqual(crisis.region_name("US"), "United States")
+        self.assertEqual(crisis.region_name("kr"), "South Korea")
+        self.assertEqual(crisis.region_name("ZZ"), "ZZ")     # unknown falls through
+
+    def test_cycle_wraps_and_covers_everything(self):
+        # walking next_region from KR visits every region and comes home
+        seen, code = [], "KR"
+        for _ in range(len(crisis.REGIONS)):
+            seen.append(code)
+            code = crisis.next_region(code)
+        self.assertEqual(set(seen), set(crisis.REGIONS))
+        self.assertEqual(code, "KR")                          # wrapped back
+
+    def test_every_resource_region_is_in_the_cycle_and_named(self):
+        for region in crisis.RESOURCES:
+            self.assertIn(region, crisis.REGIONS, region)
+            self.assertNotEqual(crisis.region_name(region), region)   # has a real name
+
+
 class TestCrisisInCompanion(unittest.TestCase):
 
     def setUp(self):

@@ -180,6 +180,12 @@ def companion_mode():
     return "warm" if llm_available() else "offline"
 
 
+def nlp_available():
+    # is the local transformer installed (so the smarter read can be turned on)?
+    from core import emotion_nn
+    return emotion_nn.available()
+
+
 def research(query):
     # look something up, grounded, never made up. raises on failure so the
     # frontend can say so plainly rather than invent an answer.

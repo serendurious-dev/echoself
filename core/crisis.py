@@ -35,6 +35,25 @@ _INTERNATIONAL = [
 
 DEFAULT_REGION = "KR"
 
+# the regions the settings screen cycles through, and their plain names
+REGIONS = ["KR", "US", "CA", "GB", "IN", "AU", "BD", "JP"]
+_NAMES = {"KR": "South Korea", "US": "United States", "CA": "Canada",
+          "GB": "UK & Ireland", "IN": "India", "AU": "Australia",
+          "BD": "Bangladesh", "JP": "Japan"}
+
+
+def region_name(code):
+    return _NAMES.get((code or "").upper(), code)
+
+
+def next_region(code):
+    # the next region in the cycle, wrapping around
+    try:
+        i = REGIONS.index((code or DEFAULT_REGION).upper())
+    except ValueError:
+        i = -1
+    return REGIONS[(i + 1) % len(REGIONS)]
+
 
 def resources_for(region=None):
     # the local lines (falling back to none if the region's unknown) plus the
