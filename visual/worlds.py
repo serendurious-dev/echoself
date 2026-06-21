@@ -373,6 +373,17 @@ def run(args=None):
     pygame.display.set_caption("EchoSelf")
     clock  = pygame.time.Clock()
 
+    # paint something at once so the window isn't black while the brain wakes (the
+    # first launch pays sklearn's import, a few seconds, before the sky can show)
+    cx, cy = WINDOW_SIZE[0] // 2, WINDOW_SIZE[1] // 2
+    screen.fill((10, 14, 28))
+    title = pygame.font.Font(None, 52).render("EchoSelf", True, (206, 198, 172))
+    screen.blit(title, title.get_rect(center=(cx, cy - 14)))
+    sub = pygame.font.Font(None, 26).render("waking up...", True, (150, 158, 172))
+    screen.blit(sub, sub.get_rect(center=(cx, cy + 30)))
+    pygame.event.pump()
+    pygame.display.flip()
+
     first_run = echoself_core.needs_onboarding()
     if first_run:
         run_builder(screen, clock)
@@ -389,10 +400,27 @@ def run(args=None):
         who = make_character(spec_from_profile(profile))
         daily_checkin(screen, clock, who, profile)
 
-    # the inner world wakes: read the logs, classify the state, get the day's
-    # plan, fold in dark days and a due letter, measure how close you are. all of
-    # it headless in the core - the drift nudges here too, one step per launch.
-    state = echoself_core.today(profile)
+    # the inner world wakes: read the logs, classify the state, get the day's plan.
+    # it's the slow bit (sklearn), so run it off-thread and keep a soft splash
+    # breathing meanwhile, instead of a frozen window.
+    import threading
+    _woke = {}
+    worker = threading.Thread(target=lambda: _woke.__setitem__("state",
+                                                               echoself_core.today(profile)))
+    worker.start()
+    frame = 0
+    while worker.is_alive():
+        pygame.event.pump()
+        screen.fill((10, 14, 28))
+        screen.blit(title, title.get_rect(center=(cx, cy - 14)))
+        dots = "." * ((frame // 10) % 4)
+        sub2 = pygame.font.Font(None, 26).render("waking up" + dots, True, (150, 158, 172))
+        screen.blit(sub2, sub2.get_rect(center=(cx, cy + 30)))
+        pygame.display.flip()
+        clock.tick(30)
+        frame += 1
+    worker.join()
+    state = _woke["state"]
     plan  = state["plan"]
 
     worlds = WorldManager(WINDOW_SIZE, default_worlds(WINDOW_SIZE, plan))
