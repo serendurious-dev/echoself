@@ -41,14 +41,46 @@ Full license: https://github.com/pandas-dev/pandas/blob/main/LICENSE
 Our CODE_OF_CONDUCT.md is adapted from the Contributor Covenant v2.1,
 © Coraline Ada Ehmke, licensed CC BY 4.0. https://www.contributor-covenant.org
 
-## Optional dependency (off by default)
+## Optional dependencies (all off by default)
+
+None of these are installed or used unless you choose to. Three of the four layers
+below run **entirely on your machine** - only the mirror-self / research layer uses
+the network, and only with your own key.
+
+| Optional layer | Dependency | License | On-device? |
+|---|---|---|---|
+| Mirror-self voice + research (`requirements-llm.txt`) | anthropic | MIT | no - your API key, over the network |
+| Sharper emotion reading (`requirements-nlp.txt`) | transformers | Apache-2.0 | yes |
+| | torch (PyTorch) | BSD-3-Clause | yes |
+| Webcam affect-mirror (`requirements-vision.txt`) | mediapipe | Apache-2.0 | yes |
+| | opencv-python | Apache-2.0 (OpenCV); MIT (packaging) | yes |
+| Her voice + ears (`requirements-voice.txt`) | piper-tts | MIT | yes |
+| | vosk | Apache-2.0 | yes |
+| | sounddevice | MIT | yes |
 
 ### anthropic - MIT
-The optional mirror-self conversation layer (see `requirements-llm.txt`) uses the
-`anthropic` Python SDK, © Anthropic, licensed MIT. It is **not** installed or used
-by default; it activates only when the user installs it and supplies their own
-`ANTHROPIC_API_KEY`. When enabled, that layer sends the conversation to the
-Anthropic API over the network; with it off, EchoSelf makes no network calls at all.
+The mirror-self conversation + research layer (`requirements-llm.txt`) uses the
+`anthropic` Python SDK, © Anthropic, licensed MIT. It activates only when the user
+installs it and supplies their own `ANTHROPIC_API_KEY`. When enabled, that layer -
+and only that layer - sends data to the Anthropic API over the network. Crisis
+messages never reach it.
+
+### transformers - Apache-2.0, torch - BSD-3-Clause
+The optional local emotion model (`requirements-nlp.txt`) uses Hugging Face
+`transformers` (© Hugging Face, Apache-2.0) over PyTorch (© Meta and contributors,
+BSD-3-Clause). The model runs locally; nothing is sent anywhere.
+
+### mediapipe - Apache-2.0, opencv-python - Apache-2.0 / MIT
+The optional webcam affect-mirror (`requirements-vision.txt`) uses Google
+`mediapipe` (© Google, Apache-2.0) and `opencv-python` (OpenCV © OpenCV team,
+Apache-2.0; the Python packaging MIT). Frames are read locally and dropped; no
+image ever leaves the machine.
+
+### piper-tts - MIT, vosk - Apache-2.0, sounddevice - MIT
+The optional voice (`requirements-voice.txt`) uses `piper-tts` (MIT) for local
+neural speech, `vosk` (© Alpha Cephei, Apache-2.0) for local speech-to-text, and
+`sounddevice` (© Matthias Geier, MIT) for audio I/O. All of it runs on your
+machine; audio is never stored or sent.
 
 ## EchoSelf's Own Licenses
 

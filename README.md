@@ -57,10 +57,22 @@ Everything happens in one of three places, with one ML brain underneath all of t
   female for now; a painted male pack (CC BY 4.0, to match) is on the roadmap.
 - **Personality drift.** Every session nudges the personality toward what works for you.
   After thirty sessions it has genuinely changed. It never says so.
-- **CodePath.** Learn Python deeply through lessons taught in the character's voice, with C,
-  C++ and Java as quiz-based intro tracks. Quizzes happen in-world; in Python, real coding
+- **CodePath - six courses.** Python, C, C++ and Java (each a few clusters deep), plus a full
+  Data Structures & Algorithms course and a How Computers Work / OS course. Lessons are taught in
+  the character's voice as a worked example then a set of mixed exercises; in Python, real coding
   challenges open as a starter file in *your own editor*, and the character runs the tests and
-  reacts when they pass. A mastery dashboard shows how far you have come, with no guilt for a break.
+  reacts when they pass. A mastery dashboard shows how far you've come, with no guilt for a break,
+  and spaced repetition brings back what you missed.
+- **She speaks, listens, and mirrors you (all opt-in, on-device).** Turn them on and she reads
+  the emotion under your words with a local model, reflects your own expression back through the
+  webcam (and can learn your face), speaks her replies in a local neural voice, and lets you talk
+  to her instead of typing. Off by default; nothing recorded; nothing sent.
+- **Four-axis Echo Distance.** The gap between your current self and your ideal self,
+  tracked across Mental, Behavioral, Emotional and Learning, drawn as a radar chart with a
+  30-day timeline.
+- **A safety plan.** One you write when you're okay, for the hard moments - your warning signs,
+  what helps, who you can reach - surfaced gently when she sees you sinking, never instead of real
+  human help.
 - **Four-axis Echo Distance.** The gap between your current self and your ideal self,
   tracked across Mental, Behavioral, Emotional and Learning, drawn as a radar chart with a
   30-day timeline.
@@ -83,13 +95,19 @@ Distance over a month:
 ## Status
 
 Feature-complete and then some. The course core: the character (painted or code-drawn), the ML
-brain and the silent personality drift, four language tracks, the three worlds, the four-axis Echo
+brain and the silent personality drift, six courses, the three worlds, the four-axis Echo
 Distance, the Dark Days Protocol, the Mirror Report, the Vault, Letters, Echo Exchange, the
 procedural soundscape, and demo + time-lapse modes. On top of that, the companion it was always
-meant to be: she reads how you feel, holds a real conversation, remembers you between days, reaches
-out once a day, offers gentle coping tools, switches between friend and teacher, and the brain
-learns you from how you talk. 244 tests, run on every push. The one optional layer (the mirror-self
-voice, bring your own key) is off by default; everything else runs offline.
+meant to be: she reads how you feel, holds a real conversation, remembers you between days and
+within one, reaches out once a day, draws on DBT/CBT/ACT coping tools, switches between friend and
+teacher, notices when your feeling shifts or sinks, and the brain learns you from how you talk.
+Over 350 tests, run on every push.
+
+It runs **offline by default** out of the box. Four opt-in layers extend it, and three of the four
+stay entirely on your machine: a sharper local emotion read, a webcam affect-mirror that reflects
+your expression (frames never stored), and a local voice so she can speak and listen (audio never
+stored). The one layer that uses the network is the mirror-self voice + ask-anything research, and
+only with your own API key; crisis never reaches it.
 
 ## Getting started
 
@@ -145,10 +163,15 @@ Local-first by default. No server, no account, no telemetry. Everything you do s
 accident. With the defaults, EchoSelf makes no network calls at all. The full promise is in
 [SECURITY.md](SECURITY.md).
 
-There is one **optional, off-by-default** layer: if you install `requirements-llm.txt` and add
-your *own* Anthropic API key, the character can answer in a richer "mirror-self" voice powered by
-a model. That layer - and only that layer - sends the conversation to the API over the network;
-leave it off and nothing ever leaves your machine. Crisis messages never reach it.
+There are **optional, off-by-default** layers, and they're honest about the network:
+
+- **On your machine** (install the extra, nothing leaves): a sharper emotion read
+  (`requirements-nlp.txt`), the webcam affect-mirror (`requirements-vision.txt` - frames read and
+  dropped, never stored), and her voice + ears (`requirements-voice.txt` - audio dropped, never
+  stored).
+- **Over the network, with your own key**: the mirror-self voice and ask-anything research
+  (`requirements-llm.txt` + your `ANTHROPIC_API_KEY`). That layer - and only that layer - sends data
+  to the Anthropic API; leave it off and nothing leaves your machine. Crisis messages never reach it.
 
 Because EchoSelf reads how you feel and tries to support you, it also carries a plain
 [ETHICS.md](ETHICS.md): it is a companion, not a clinician; crisis always comes first and

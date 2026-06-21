@@ -3,7 +3,43 @@
 How EchoSelf grew, layer by layer. It is built so the history itself shows the
 work - every feature came in on its own branch and merge.
 
-## v0.2 - the companion (current)
+## v0.3 - senses, depth, and more to learn (current)
+
+She got eyes, a voice, a sharper read of you, more to teach, and a deeper way of
+listening. The core still runs offline by default; everything new is opt-in, and
+nearly all of it runs on your own machine.
+
+- **A core you can build on** - the brain was pulled out from behind the screen
+  (`echoself_core`), so the same companion can drive a phone or the web later, not
+  just this window.
+- **The warm voice** - with your own key, the conversation and ask-anything
+  research can be written by a model in your better-self voice; offline stays the
+  default and the safety net, and crisis never reaches it.
+- **A sharper read** - an optional local transformer reads tone and context past
+  the word list, while the lexicon keeps the finer feelings it names; free,
+  offline, your switch.
+- **The mirror** (`i`) - an opt-in webcam affect-mirror: she gently reflects your
+  expression so you feel seen. On-device, frames never stored, and you can teach
+  it your own face so it imitates you.
+- **Her voice and ears** - optional local text-to-speech (Piper) and
+  speech-to-text (Vosk): she speaks her replies, and `F2` lets you talk to her.
+  All on your machine; audio never leaves it.
+- **Deeper psychology** - DBT, CBT, and ACT skills now (the right one by how
+  intense it is), a normalizing word on what a feeling is doing, a gentle notice
+  when one keeps recurring, and a motivational-interviewing stance for when you're
+  stuck. A concern tier between comfort and crisis, for the quiet sinking.
+- **She follows the conversation** - notices when your feeling shifts mid-talk,
+  and remembers when a heavy one comes back around.
+- **Six courses now** - Python, C, C++ and Java (each two or three clusters), plus
+  a full Data Structures & Algorithms course and a How Computers Work / OS course.
+  Switch with `g`, then `1`-`6`.
+- **Settings that settle things** (`s`) - toggles for the sharper read, the
+  region your crisis lines point to, the mirror, and her voice. A safety plan
+  (`k`) you write for the hard moments.
+- No more black screen on launch (she shows up while the brain wakes), and
+  over 350 tests.
+
+## v0.2 - the companion
 
 The learning app became what it was always meant to be: an ambient, fully offline
 companion that learns you and stays with you.
