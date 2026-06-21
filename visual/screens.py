@@ -306,7 +306,7 @@ def daily_checkin(screen, clock, character, profile):
 
 _HELP_WORLDS = [
     ("the ambient world", "where you are now. a sky, the character, and quiet. just be here, or reach for anything below."),
-    ("the learning world", "press tab. the character teaches you to code - python deep, with c, c++ and java to try."),
+    ("the learning world", "press tab. the character teaches you to code - python deep, with c, c++, java, and a data-structures course (switch in g)."),
     ("drift", "press d. the softest place: no lessons, no numbers, no demands. for the heavy days."),
 ]
 
@@ -381,7 +381,7 @@ def show_mastery(screen, clock, character):
             if e.type == pygame.KEYDOWN:
                 if e.key in (pygame.K_ESCAPE, pygame.K_RETURN, pygame.K_q):
                     return
-                if pygame.K_1 <= e.key <= pygame.K_4:        # switch language
+                if pygame.K_1 <= e.key <= pygame.K_5:        # switch course
                     i = e.key - pygame.K_1
                     if i < len(tracks):
                         echoself_core.set_learning_track(tracks[i][0])

@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "dsa",
+  "cluster": 1,
+  "lesson": 5,
+  "id": "dsa-c1-l5-big-o",
+  "title": "Big-O - how the work grows",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "Big-O describes how the work an algorithm does grows as the input (n) gets bigger - not the exact time, just the shape of the growth.",
+  "explanation": "Big-O is the language for 'how does this scale?' We ignore constants and small stuff and ask: as n doubles, what happens? O(1) means the work doesn't grow at all (a hash lookup). O(n) means it grows in step with the input (one loop). O(n^2) means a loop inside a loop - it grows much faster. O(log n) - halving each step, like a binary search - barely grows at all. Picking the right structure is mostly about picking the better Big-O.",
+  "code_example": "# one loop over n items - the work scales with n\nfor x in data:\n    print(x)",
+  "exercises": [
+    {
+      "type": "mcq",
+      "question": "A single loop over n items is...",
+      "options": ["O(1)", "O(n)", "O(n^2)", "O(log n)"],
+      "answer_index": 1,
+      "hints": [
+        "Double the items, double the work.",
+        "It grows in step with n.",
+        "O(n)."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "A loop inside a loop, each over n items, is...",
+      "options": ["O(n)", "O(2n)", "O(n^2)", "O(1)"],
+      "answer_index": 2,
+      "hints": [
+        "For each of the n outer steps, you do n inner steps.",
+        "n times n.",
+        "O(n^2)."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Looking one key up in a hash map is...",
+      "options": ["O(1)", "O(n)", "O(n^2)", "O(log n)"],
+      "answer_index": 0,
+      "hints": [
+        "It jumps straight to the slot - no searching.",
+        "The size of the map doesn't matter.",
+        "O(1) - constant."
+      ]
+    }
+  ]
+}

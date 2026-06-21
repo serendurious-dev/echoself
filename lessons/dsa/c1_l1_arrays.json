@@ -1,0 +1,47 @@
+{
+  "format_version": 2,
+  "track": "dsa",
+  "cluster": 1,
+  "lesson": 1,
+  "id": "dsa-c1-l1-arrays",
+  "title": "Arrays - values in a row, reachable at once",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "An array keeps items in order, side by side, so any one can be reached instantly by its position (index).",
+  "explanation": "An array is the simplest container: a block of slots in a row, numbered from 0. Because the slots sit together in memory, the computer can jump straight to slot 5 without walking past 0 to 4 - reading by index costs the same whether the array holds ten things or ten million. The trade-off comes later: growing it or inserting in the middle is the expensive part.",
+  "code_example": "a = [10, 20, 30, 40]\nprint(a[2])",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["20", "30", "40", "2"],
+      "answer_index": 1,
+      "hints": [
+        "Indexing starts at 0, so a[0] is 10.",
+        "Count along: a[0]=10, a[1]=20, a[2]=...",
+        "a[2] is the third slot - 30."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Reading an item by its index, a[i], takes...",
+      "options": ["the same time no matter how big the array is", "longer for bigger arrays", "longer for bigger values", "two steps per item"],
+      "answer_index": 0,
+      "hints": [
+        "The slots sit together, so the computer jumps straight there.",
+        "It doesn't walk through the earlier items.",
+        "Constant time - the same, whatever the size."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Arrays number their positions starting from which number?\n\n_",
+      "answer": "0",
+      "hints": [
+        "It's not 1.",
+        "The first slot's index.",
+        "Zero."
+      ]
+    }
+  ]
+}

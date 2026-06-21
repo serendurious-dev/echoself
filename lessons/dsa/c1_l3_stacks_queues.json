@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "dsa",
+  "cluster": 1,
+  "lesson": 3,
+  "id": "dsa-c1-l3-stacks-queues",
+  "title": "Stacks and queues - which one comes out first",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A stack is last-in, first-out (LIFO) - like a pile of plates. A queue is first-in, first-out (FIFO) - like a line at a door.",
+  "explanation": "Both hold things in order; they differ in which end you take from. A stack adds and removes at the same end (push, pop), so the most recent thing comes out first - think undo, or a pile of plates. A queue adds at one end and removes from the other (enqueue, dequeue), so the oldest waits its turn - think a line, or print jobs. The rule is the whole idea.",
+  "code_example": "stack = []\nstack.append(\"a\")\nstack.append(\"b\")\nprint(stack.pop())",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["a", "b", "ab", "None"],
+      "answer_index": 1,
+      "hints": [
+        "append adds to the end; pop removes from the end.",
+        "A stack is last-in, first-out.",
+        "'b' went in last, so it comes out first."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "A stack removes which item first?",
+      "options": ["the oldest one", "the most recently added one", "a random one", "the smallest one"],
+      "answer_index": 1,
+      "hints": [
+        "Same end in and out - a pile of plates.",
+        "LIFO: last in, first out.",
+        "The most recently added."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "A queue removes which item first?",
+      "options": ["the most recently added one", "the oldest one (added first)", "a random one", "the largest one"],
+      "answer_index": 1,
+      "hints": [
+        "Think of a line at a door.",
+        "FIFO: first in, first out.",
+        "The one that's been waiting longest."
+      ]
+    }
+  ]
+}

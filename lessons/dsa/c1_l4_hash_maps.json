@@ -1,0 +1,47 @@
+{
+  "format_version": 2,
+  "track": "dsa",
+  "cluster": 1,
+  "lesson": 4,
+  "id": "dsa-c1-l4-hash-maps",
+  "title": "Hash maps - finding things by name, fast",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A hash map stores key-value pairs and finds a value by its key in roughly constant time, by turning the key into a slot with a hash function.",
+  "explanation": "An array finds things by position; a hash map finds them by name. The trick is a hash function: it turns a key like \"min\" into a number, which points to the slot where its value lives - so the lookup doesn't search, it jumps. On average that's constant time no matter how many keys there are, which is why dictionaries are everywhere. (Two keys can collide on the same slot; handling that is the deeper story.)",
+  "code_example": "ages = {\"min\": 20}\nages[\"bo\"] = 31\nprint(ages[\"min\"])",
+  "exercises": [
+    {
+      "type": "predict_output",
+      "question": "What does this print?",
+      "options": ["20", "31", "min", "2"],
+      "answer_index": 0,
+      "hints": [
+        "Look up the value stored under the key \"min\".",
+        "Adding \"bo\" doesn't change \"min\".",
+        "It's 20."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Looking up a value by its key in a hash map is, on average...",
+      "options": ["constant time, no matter how many keys", "slower the more keys there are", "always slower than an array", "only fast if the keys are sorted"],
+      "answer_index": 0,
+      "hints": [
+        "It doesn't search through the keys.",
+        "The hash sends it straight to the slot.",
+        "Constant time, on average."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "A hash map turns a key into a slot using a ___ function.\n\n_",
+      "answer": "hash",
+      "hints": [
+        "It's in the name of the structure.",
+        "Four letters.",
+        "hash."
+      ]
+    }
+  ]
+}
