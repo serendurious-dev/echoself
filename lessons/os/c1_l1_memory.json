@@ -1,0 +1,47 @@
+{
+  "format_version": 2,
+  "track": "os",
+  "cluster": 1,
+  "lesson": 1,
+  "id": "os-c1-l1-memory",
+  "title": "Memory - bits, bytes, and addresses",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "Everything a computer stores is bits (0 or 1). Eight bits make a byte. Memory is one enormous array of bytes, each with a numbered address.",
+  "explanation": "Under all the languages and pictures, a computer holds only two things: 0 and 1, a bit. Eight of them group into a byte, which can hold a number from 0 to 255 - enough for a letter, part of a colour, a piece of anything. Memory (RAM) is just a vast row of these bytes, each at a numbered address, like houses on an endless street. A 'variable' is really a friendly name for one of those addresses. Everything else - text, images, programs - is a way of arranging bytes.",
+  "code_example": "address:   0     1     2     3\nbyte:      72    105   33    0\n#          'H'   'i'   '!'   end",
+  "exercises": [
+    {
+      "type": "mcq",
+      "question": "How many bits are in a byte?",
+      "options": ["4", "8", "16", "1024"],
+      "answer_index": 1,
+      "hints": [
+        "It's the classic grouping.",
+        "Enough for 0 to 255.",
+        "Eight."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Memory (RAM) is best pictured as...",
+      "options": ["a single number", "a huge array of bytes, each with an address", "a list of programs", "a folder of files"],
+      "answer_index": 1,
+      "hints": [
+        "Think houses on a street.",
+        "Each byte sits at a numbered spot.",
+        "A huge array of addressed bytes."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Everything in memory is ultimately stored as 0s and ___\n\n_",
+      "answer": "1",
+      "hints": [
+        "The other bit value.",
+        "Binary has two digits.",
+        "1."
+      ]
+    }
+  ]
+}

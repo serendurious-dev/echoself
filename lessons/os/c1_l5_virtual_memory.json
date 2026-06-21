@@ -1,0 +1,47 @@
+{
+  "format_version": 2,
+  "track": "os",
+  "cluster": 1,
+  "lesson": 5,
+  "id": "os-c1-l5-virtual-memory",
+  "title": "Virtual memory and scheduling - the friendly illusions",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "The OS gives each process its own private view of memory (virtual memory), mapped onto the real RAM behind the scenes, and rapidly switches the CPU between processes (scheduling) so many seem to run at once.",
+  "explanation": "Two illusions make modern computers feel simple. First, virtual memory: every process is told it has its own clean, full stretch of memory starting at address 0, and the OS quietly maps those fake addresses onto wherever the real RAM has room - so no process can see or corrupt another's memory. Second, scheduling: a CPU core can really only run one thing at a time, so the OS slices time into tiny pieces and switches between processes so fast that they all appear to run together. Both are the OS lying to you, kindly, so you don't have to think about the mess underneath.",
+  "code_example": "// process A and process B both use 'address 100',\n// but the OS maps each to different real RAM -\n// they never collide. that's virtual memory.",
+  "exercises": [
+    {
+      "type": "mcq",
+      "question": "Each process thinks it has its own full, private memory because of...",
+      "options": ["virtual memory", "the stack", "a system call", "a thread"],
+      "answer_index": 0,
+      "hints": [
+        "The OS maps fake addresses onto real RAM.",
+        "It keeps processes from seeing each other's memory.",
+        "Virtual memory."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "How does one CPU core appear to run many programs at once?",
+      "options": ["it doesn't, only one runs ever", "the OS slices time and switches between them quickly", "each gets its own core always", "by skipping some programs"],
+      "answer_index": 1,
+      "hints": [
+        "A core truly runs one thing at a time.",
+        "Switch fast enough and it looks simultaneous.",
+        "Time-slicing - the scheduler."
+      ]
+    },
+    {
+      "type": "fill_blank",
+      "question": "Virtual memory gives each process its own private view of ___\n\n_",
+      "answer": "memory",
+      "hints": [
+        "It's in the name of the feature.",
+        "RAM, addresses, all of it.",
+        "memory."
+      ]
+    }
+  ]
+}

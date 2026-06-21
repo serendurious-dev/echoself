@@ -9,7 +9,7 @@ from learning import codepath, progress_tracker
 # the languages CodePath teaches. python is the deep one (lessons + real coding
 # challenges run in your own editor); c / c++ / java are quiz-based intro tracks.
 TRACKS = [("python", "Python"), ("c", "C"), ("cpp", "C++"), ("java", "Java"),
-          ("dsa", "Data Structures")]
+          ("dsa", "Data Structures"), ("os", "How Computers Work")]
 
 # a human title for each cluster, so the dashboard reads like topics, not numbers
 _CLUSTER_TITLES = {
@@ -25,6 +25,7 @@ _CLUSTER_TITLES = {
     ("dsa", 1):  "the essentials",
     ("dsa", 2):  "recursion, search & trees",
     ("dsa", 3):  "graphs, heaps & DP",
+    ("os", 1):   "memory, processes & the OS",
 }
 
 _AWAY_DAYS = 3        # the gap after which she gently says "welcome back"

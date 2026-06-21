@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "os",
+  "cluster": 1,
+  "lesson": 2,
+  "id": "os-c1-l2-stack-heap",
+  "title": "The stack and the heap - two kinds of memory",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A running program splits its memory: the call stack holds each function call's local variables and is managed automatically; the heap holds memory you request at run time, which lives until it's released.",
+  "explanation": "When a function runs, its local variables go on the call stack - a new frame pushed on top for each call, popped off when it returns. That's why locals vanish after a function ends, and why endless recursion blows the stack (a stack overflow). For data that must outlive a single call, or whose size you only know while running, you ask for heap memory (malloc in C, new in Java/C++). The stack is fast and automatic; the heap is flexible but must be managed.",
+  "code_example": "// each call pushes a frame on the stack\nint add(int a, int b) {\n    int sum = a + b;   // 'sum' lives on the stack\n    return sum;        // frame popped on return\n}",
+  "exercises": [
+    {
+      "type": "mcq",
+      "question": "Where do a function's local variables live?",
+      "options": ["on the call stack", "on the heap", "in the CPU", "in a file"],
+      "answer_index": 0,
+      "hints": [
+        "They appear and vanish with the call.",
+        "A frame pushed and popped.",
+        "On the call stack."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "What typically causes a stack overflow?",
+      "options": ["too large a file", "too many nested or recursive calls", "dividing by zero", "a missing semicolon"],
+      "answer_index": 1,
+      "hints": [
+        "Each call adds a frame.",
+        "Recursion with no base case never stops adding them.",
+        "Too many nested/recursive calls."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Memory you request at run time, that outlives the function, lives on the...",
+      "options": ["stack", "heap", "CPU register", "disk"],
+      "answer_index": 1,
+      "hints": [
+        "Not the automatic one.",
+        "malloc / new give you this.",
+        "The heap."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "os",
+  "cluster": 1,
+  "lesson": 4,
+  "id": "os-c1-l4-os-syscalls",
+  "title": "The operating system - the manager in the middle",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "The operating system, with its kernel at the core, manages the hardware and shares it between programs. A program asks the OS to do anything privileged - open a file, get memory, talk to the network - through a system call.",
+  "explanation": "Your program never really touches the disk or the network itself. The operating system stands in the middle, and its core - the kernel - is the only code allowed to drive the hardware directly. When your program needs something real, it makes a system call: a controlled request across the line into the kernel ('open this file', 'give me memory', 'send these bytes'). This is what keeps one program from trampling another or crashing the machine - the OS mediates everything and decides who gets what.",
+  "code_example": "// print() looks simple, but underneath it makes a\n// system call asking the OS to write to the screen:\n//     write(1, \"hi\", 2)   <- a request into the kernel",
+  "exercises": [
+    {
+      "type": "mcq",
+      "question": "The core of the OS that's allowed to drive the hardware directly is the...",
+      "options": ["compiler", "kernel", "stack", "shell"],
+      "answer_index": 1,
+      "hints": [
+        "It's the privileged centre.",
+        "Everything else asks it.",
+        "The kernel."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "A program asks the OS to do something privileged through a...",
+      "options": ["system call", "for loop", "constructor", "pointer"],
+      "answer_index": 0,
+      "hints": [
+        "A request across the line into the kernel.",
+        "open(), write(), and the like.",
+        "A system call."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Why can't your program just write to the disk hardware itself?",
+      "options": ["it's too slow", "the OS mediates hardware so programs don't trample each other", "disks are read-only", "it can, always"],
+      "answer_index": 1,
+      "hints": [
+        "Think about many programs sharing one machine.",
+        "Something has to keep order and safety.",
+        "The OS mediates access to the hardware."
+      ]
+    }
+  ]
+}

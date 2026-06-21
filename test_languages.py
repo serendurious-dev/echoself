@@ -48,6 +48,21 @@ class TestTracksLoad(unittest.TestCase):
                     self.assertTrue(0 <= ex["answer_index"] < len(ex["options"]),
                                     f"{lesson['id']} bad answer_index")
 
+    def test_os_course_loads_and_is_well_formed(self):
+        lessons = codepath.load_track("os")
+        self.assertEqual(len(lessons), 5)
+        self.assertEqual(mastery.track_name("os"), "How Computers Work")
+        self.assertIn(("os", "How Computers Work"), mastery.TRACKS)
+        for lesson in lessons:
+            exercises = codepath.lesson_exercises(lesson)
+            self.assertTrue(exercises, lesson["id"])
+            for ex in exercises:
+                self.assertIn(ex["type"], ("mcq", "predict_output", "fill_blank"))
+                self.assertTrue(ex["hints"], lesson["id"])
+                if ex["type"] in ("mcq", "predict_output"):
+                    self.assertTrue(0 <= ex["answer_index"] < len(ex["options"]),
+                                    f"{lesson['id']} bad answer_index")
+
     def test_python_stays_the_deep_one(self):
         self.assertGreaterEqual(len(codepath.load_track("python")), 15)
         self.assertTrue(codepath.load_extras("python"))            # has real coding challenges

@@ -1,0 +1,48 @@
+{
+  "format_version": 2,
+  "track": "os",
+  "cluster": 1,
+  "lesson": 3,
+  "id": "os-c1-l3-processes-threads",
+  "title": "Processes and threads - programs that run",
+  "author": "Prodipta Acharjee",
+  "license": "CC BY 4.0",
+  "concept": "A process is a running program with its own private memory. A thread is a strand of execution inside a process; threads in the same process share its memory.",
+  "explanation": "A program on disk is just a file; start it and you get a process - a running instance with its own slice of memory, isolated from other processes. Inside one process you can have several threads, each running through the code on its own, but all sharing the same memory. That sharing is what makes threads powerful (easy to cooperate) and dangerous (they can step on each other's data - the source of a whole class of bugs). Doing more than one thing at a time is concurrency.",
+  "code_example": "// one process, two threads, sharing the same counter\n// thread A:  counter = counter + 1\n// thread B:  counter = counter + 1\n// they share memory, so order matters",
+  "exercises": [
+    {
+      "type": "mcq",
+      "question": "A running program, with its own private memory, is a...",
+      "options": ["thread", "process", "file", "function"],
+      "answer_index": 1,
+      "hints": [
+        "It's the bigger unit.",
+        "Start a program and you get one.",
+        "A process."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Threads within the same process share...",
+      "options": ["nothing", "the same memory", "separate copies of everything", "the same name"],
+      "answer_index": 1,
+      "hints": [
+        "That sharing is their whole point - and their danger.",
+        "They run in one process's memory.",
+        "The same memory."
+      ]
+    },
+    {
+      "type": "mcq",
+      "question": "Doing more than one thing at a time is called...",
+      "options": ["recursion", "concurrency", "compilation", "indexing"],
+      "answer_index": 1,
+      "hints": [
+        "Threads are how you get it.",
+        "Things happening together.",
+        "Concurrency."
+      ]
+    }
+  ]
+}
