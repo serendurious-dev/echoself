@@ -13,16 +13,16 @@ figure. A broken pack falls back too - the app never refuses to start.
 
 ```
 characters/art/<pack-id>/
-├── manifest.json
-├── back_hair.png
-├── body.png
-├── head.png
-├── eyes_open.png
-├── eyes_closed.png
-├── mouth_neutral.png
-├── mouth_happy.png
-├── mouth_open.png
-└── front_hair.png
+|-- manifest.json
+|-- back_hair.png
+|-- body.png
+|-- head.png
+|-- eyes_open.png
+|-- eyes_closed.png
+|-- mouth_neutral.png
+|-- mouth_happy.png
+|-- mouth_open.png
+`-- front_hair.png
 ```
 
 All layer images are the **same size** (one frame) with a transparent background, so they

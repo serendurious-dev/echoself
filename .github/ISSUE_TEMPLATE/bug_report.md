@@ -28,5 +28,5 @@ What should have happened instead.
 ## Traceback or screenshots
 
 Paste the traceback here if there is one. Please do not paste anything from your `data/`
-folder, that is your private data and I do not need it — describe the shape of it instead
+folder, that is your private data and I do not need it - describe the shape of it instead
 if it matters.

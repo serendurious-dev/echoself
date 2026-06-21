@@ -1,7 +1,7 @@
 # Changelog
 
-How EchoSelf grew, layer by layer. It is built so the history itself shows the
-work - every feature came in on its own branch and merge.
+How EchoSelf grew, layer by layer. The commits read in the order I built it, one
+piece at a time.
 
 ## v0.3 - senses, depth, and more to learn (current)
 
@@ -12,6 +12,12 @@ nearly all of it runs on your own machine.
 - **A core you can build on** - the brain was pulled out from behind the screen
   (`echoself_core`), so the same companion can drive a phone or the web later, not
   just this window.
+- **A way for a frontend to reach her** - `python main.py --serve` opens a small
+  local-only API (127.0.0.1, never the network) that hands the same core to a
+  desktop or web front-end. Sessions live in memory, your words are never stored.
+- **It runs on its own now** - a standalone desktop build (PyInstaller, see
+  `BUILD.md`): no Python install, assets bundled, your data kept apart under your
+  user folder. Still offline, still the opt-in layers off by default.
 - **The warm voice** - with your own key, the conversation and ask-anything
   research can be written by a model in your better-self voice; offline stays the
   default and the safety net, and crisis never reaches it.
@@ -37,7 +43,7 @@ nearly all of it runs on your own machine.
   region your crisis lines point to, the mirror, and her voice. A safety plan
   (`k`) you write for the hard moments.
 - No more black screen on launch (she shows up while the brain wakes), and
-  over 350 tests.
+  over 360 tests.
 
 ## v0.2 - the companion
 

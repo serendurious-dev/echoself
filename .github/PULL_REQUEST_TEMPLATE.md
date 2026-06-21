@@ -7,7 +7,7 @@ What it does, and the issue it closes: Closes #
 ## What kind of contribution
 
 - [ ] Engine code (**MIT**)
-- [ ] Creative content — personality / lesson / arc / exchange (**CC BY 4.0**, you get
+- [ ] Creative content - personality / lesson / arc / exchange (**CC BY 4.0**, you get
       credited as the author)
 - [ ] Documentation
 - [ ] Other

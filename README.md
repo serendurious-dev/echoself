@@ -101,7 +101,7 @@ procedural soundscape, and demo + time-lapse modes. On top of that, the companio
 meant to be: she reads how you feel, holds a real conversation, remembers you between days and
 within one, reaches out once a day, draws on DBT/CBT/ACT coping tools, switches between friend and
 teacher, notices when your feeling shifts or sinks, and the brain learns you from how you talk.
-Over 350 tests, run on every push.
+Over 360 tests, run on every push.
 
 It runs **offline by default** out of the box. Four opt-in layers extend it, and three of the four
 stay entirely on your machine: a sharper local emotion read, a webcam affect-mirror that reflects
@@ -128,7 +128,12 @@ python main.py --demo          a lived-in profile, ~35 days of history already t
 python main.py --timelapse     each session counts as a full day
 python main.py --doctor        prove the OS layer works (lock, atomic writes, daemon), then exit
 python main.py --daemon start  the companion daemon between sessions: start / stop / status
+python main.py --serve         open a local-only API (127.0.0.1) for a separate front-end
 ```
+
+To run EchoSelf without a Python install at all, there is a standalone desktop build - see
+[BUILD.md](BUILD.md). It bundles the assets, keeps your data under your own user folder, and
+stays offline with the same opt-in layers off by default.
 
 EchoSelf is local-first with no server, so it does its own systems work: a file lock keeps the
 app and a background companion daemon from corrupting your data, writes are atomic (a crash

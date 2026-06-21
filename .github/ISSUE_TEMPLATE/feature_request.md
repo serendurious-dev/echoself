@@ -12,7 +12,7 @@ What would it do?
 
 ## Why it belongs here
 
-The rule for every feature is presence over pressure — nothing that shames, guilts or
+The rule for every feature is presence over pressure - nothing that shames, guilts or
 pushes the user harder than they can take. How does this idea fit that?
 
 ## Which world does it live in?
