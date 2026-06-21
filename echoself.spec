@@ -23,6 +23,7 @@ a = Analysis(
         ('characters', 'characters'),
         ('exchange', 'exchange'),
         ('arcs', 'arcs'),
+        ('frontend', 'frontend'),
     ],
     # sklearn is imported lazily (inside the brain's wake), so PyInstaller can't see
     # it by following imports - name it here, with matplotlib for the charts

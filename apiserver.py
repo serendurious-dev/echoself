@@ -9,15 +9,22 @@ it binds to localhost ONLY, on purpose - a companion that knows how you feel mus
 never be reachable from the network. your data never leaves the machine. run with
 `python main.py --serve [port]`."""
 
+import os
 import json
 import secrets
 import threading
+import mimetypes
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import echoself_core
+from core import paths
 
 HOST         = "127.0.0.1"   # local only - never open this to the network
 DEFAULT_PORT = 8765
+
+# the web UI the desktop window (and later a browser, a phone) renders. served from
+# the same origin as the api so there's no cross-origin dance - it's all localhost.
+FRONTEND_DIR = os.path.join(paths.resource_root(), "frontend")
 
 # live conversations, kept in memory only and dropped on end - same as the window:
 # nothing typed is ever written to disk, only the emotion behind it.
@@ -52,8 +59,26 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _serve_static(self, route):
+        # the web UI. anything that isn't /api/ is a file under frontend/. "/" is the
+        # page itself. normalise and stay inside the folder - no climbing out with "..".
+        rel  = "index.html" if route in ("", "/") else route.lstrip("/")
+        full = os.path.normpath(os.path.join(FRONTEND_DIR, rel))
+        if not full.startswith(os.path.normpath(FRONTEND_DIR)) or not os.path.isfile(full):
+            return self._send(404, {"error": "not found"})
+        ctype = mimetypes.guess_type(full)[0] or "application/octet-stream"
+        with open(full, "rb") as f:
+            body = f.read()
+        self.send_response(200)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def do_GET(self):
         route = self.path.split("?")[0]
+        if not route.startswith("/api/"):
+            return self._serve_static(route)
         fn = _get_routes().get(route)
         if fn is None:
             return self._send(404, {"error": "no such endpoint"})

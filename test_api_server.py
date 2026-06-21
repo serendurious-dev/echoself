@@ -46,8 +46,40 @@ class TestApiServer(unittest.TestCase):
         c.close()
         return r.status, body
 
+    def _get_raw(self, path):
+        c = http.client.HTTPConnection("127.0.0.1", self.port, timeout=5)
+        c.request("GET", path)
+        r = c.getresponse()
+        body = r.read()
+        ctype = r.getheader("Content-Type")
+        c.close()
+        return r.status, ctype, body
+
     def test_binds_localhost_only(self):
         self.assertEqual(self.srv.server_address[0], "127.0.0.1")
+
+    def test_serves_the_web_ui_at_root(self):
+        status, ctype, body = self._get_raw("/")
+        self.assertEqual(status, 200)
+        self.assertIn("text/html", ctype)
+        self.assertIn(b"EchoSelf", body)
+
+    def test_serves_the_frontend_assets(self):
+        for path, want in (("/style.css", "css"), ("/app.js", "javascript")):
+            status, ctype, _ = self._get_raw(path)
+            self.assertEqual(status, 200, path)
+            self.assertIn(want, ctype, path)
+
+    def test_static_cannot_climb_out_of_the_frontend_dir(self):
+        # a path that tries to escape the folder must not leak files
+        status, _, _ = self._get_raw("/../apiserver.py")
+        self.assertEqual(status, 404)
+
+    def test_api_still_routes_under_static(self):
+        # /api/ is the api; everything else is the web ui - they don't collide
+        status, body = self._get("/api/health")
+        self.assertEqual(status, 200)
+        self.assertTrue(body["ok"])
 
     def test_health(self):
         status, body = self._get("/api/health")

@@ -26,6 +26,9 @@ def parse_args(argv=None):
     parser.add_argument("--serve", nargs="?", const=8765, type=int, default=None,
                         metavar="PORT",
                         help="run the local API server (localhost only) instead of the window")
+    parser.add_argument("--desktop", nargs="?", const=8765, type=int, default=None,
+                        metavar="PORT",
+                        help="open the desktop window: the web UI in a pywebview shell")
     parser.add_argument("--version", action="version", version=f"EchoSelf {__version__}")
     return parser.parse_args(argv)
 
@@ -68,6 +71,11 @@ def main(argv=None):
     if args.serve is not None:
         from apiserver import serve
         serve(args.serve)
+        return 0
+
+    if args.desktop is not None:
+        from desktop import launch
+        launch(args.desktop)
         return 0
 
     from visual.worlds import run

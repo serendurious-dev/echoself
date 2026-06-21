@@ -1,0 +1,6 @@
+# the desktop window: a pywebview shell around the local web UI.
+#   pip install -r requirements-desktop.txt
+#   python main.py --desktop
+# optional. without it, run  python main.py --serve  and open the page in a browser -
+# it's the same companion, same offline core, just framed by your browser instead.
+pywebview>=4.0
