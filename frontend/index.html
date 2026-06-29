@@ -8,6 +8,8 @@
 </head>
 <body>
   <main class="room">
+    <button id="memBtn" class="mem-btn" aria-label="what she remembers about you">memory</button>
+
     <header class="top">
       <img id="face" class="face" alt="" src="/api/face?emotion=neutral&h=320">
       <span class="here" id="here">she's here</span>
@@ -25,6 +27,15 @@
         </svg>
       </button>
     </form>
+
+    <section class="panel" id="panel" hidden aria-label="what she remembers about you">
+      <header class="panel-top">
+        <span class="panel-title">what i remember about you</span>
+        <button id="panelClose" class="panel-close" aria-label="back to the conversation">back</button>
+      </header>
+      <p class="panel-note">these are the things i've gathered. each one is yours - tap to let it go.</p>
+      <div class="facts" id="facts"></div>
+    </section>
   </main>
 
   <script src="/app.js"></script>

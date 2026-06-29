@@ -31,7 +31,83 @@ html, body {
   display: flex;
   flex-direction: column;
   padding: 0 18px;
+  position: relative;
 }
+
+/* a quiet way into what she remembers - tucked top-right, never shouting */
+.mem-btn {
+  position: absolute;
+  top: 16px; right: 18px;
+  z-index: 3;
+  background: transparent;
+  border: 1px solid var(--edge);
+  color: var(--ink-dim);
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  padding: 6px 12px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.mem-btn:hover { color: var(--ink); border-color: rgba(217,168,108,0.4); }
+
+/* the portrait room: what she's gathered about you, every line yours to drop */
+.panel {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  animation: rise 0.3s ease both;
+}
+.panel-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 2px 6px;
+}
+.panel-title { font-size: 16px; color: var(--ink); }
+.panel-close {
+  background: transparent;
+  border: 1px solid var(--edge);
+  color: var(--ink-dim);
+  font: inherit; font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 14px;
+  cursor: pointer;
+}
+.panel-close:hover { color: var(--ink); }
+.panel-note { color: var(--ink-dim); font-size: 13px; margin: 0 2px 12px; }
+.facts { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 9px; }
+.fact {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--her);
+  border: 1px solid var(--edge);
+  border-radius: 14px;
+  padding: 11px 14px;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.fact span { flex: 1; }
+.fact-forget {
+  flex: none;
+  background: transparent;
+  border: none;
+  color: var(--ink-dim);
+  font: inherit; font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+}
+.fact-forget::before { content: "\00d7"; }
+.fact-forget:hover { color: var(--care); }
+.facts-empty { color: var(--ink-dim); font-size: 15px; line-height: 1.6; padding: 8px 2px; }
 
 /* her presence - she's actually here, the same character the window draws */
 .top {

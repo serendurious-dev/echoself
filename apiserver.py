@@ -144,6 +144,13 @@ class Handler(BaseHTTPRequestHandler):
                 result = conv.say(text)
                 echoself_core.after_turn(result)
                 return self._send(200, result)
+            if route == "/api/portrait/forget":
+                # the same delete the `p` screen offers: a remembered line is yours to
+                # remove, any time. nothing here is permanent without your say.
+                fact_id = data.get("fact_id")
+                if not fact_id:
+                    return self._send(400, {"error": "fact_id is required"})
+                return self._send(200, {"forgotten": echoself_core.forget_fact(fact_id)})
             if route == "/api/session/end":
                 with _LOCK:
                     conv = _SESSIONS.pop(data.get("session_id"), None)

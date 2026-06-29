@@ -105,6 +105,52 @@ async function say(text) {
   }
 }
 
+// the portrait room - what she's gathered about you, each line yours to drop.
+const panel      = document.getElementById("panel");
+const memBtn     = document.getElementById("memBtn");
+const panelClose = document.getElementById("panelClose");
+const factsEl    = document.getElementById("facts");
+
+function renderFacts(facts) {
+  factsEl.innerHTML = "";
+  if (!facts || !facts.length) {
+    const empty = document.createElement("p");
+    empty.className = "facts-empty";
+    empty.textContent = "nothing yet - we're still getting to know each other. what i learn shows up here, and it stays yours.";
+    factsEl.appendChild(empty);
+    return;
+  }
+  for (const f of facts) {
+    const row = document.createElement("div");
+    row.className = "fact";
+    const txt = document.createElement("span");
+    txt.textContent = f.text || "";
+    const x = document.createElement("button");
+    x.className = "fact-forget";
+    x.setAttribute("aria-label", "forget this");
+    x.onclick = async () => {
+      await api("/api/portrait/forget", { fact_id: f.id });
+      row.remove();
+      if (!factsEl.querySelector(".fact")) renderFacts([]);
+    };
+    row.append(txt, x);
+    factsEl.appendChild(row);
+  }
+}
+
+async function openPanel() {
+  panel.hidden = false;
+  try {
+    const data = await api("/api/portrait");
+    renderFacts(data.facts);
+  } catch (e) {
+    renderFacts([]);
+  }
+}
+
+memBtn.addEventListener("click", openPanel);
+panelClose.addEventListener("click", () => { panel.hidden = true; });
+
 form.addEventListener("submit", e => { e.preventDefault(); say(box.value); });
 box.addEventListener("input", grow);
 box.addEventListener("keydown", e => {

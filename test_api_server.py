@@ -93,6 +93,24 @@ class TestApiServer(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(body[:8], b"\x89PNG\r\n\x1a\n")
 
+    def test_portrait_lists_and_forgets(self):
+        # the portrait room: she lists what she remembers, and any line can be dropped
+        from core import portrait
+        portrait.remember("is writing a thesis", kind="goal", source="her")
+        status, body = self._get("/api/portrait")
+        self.assertEqual(status, 200)
+        self.assertTrue(body["facts"])
+        fid = body["facts"][0]["id"]
+        status, b2 = self._post("/api/portrait/forget", {"fact_id": fid})
+        self.assertEqual(status, 200)
+        self.assertTrue(b2["forgotten"])
+        _, b3 = self._get("/api/portrait")
+        self.assertFalse(any(f["id"] == fid for f in b3["facts"]))
+
+    def test_forget_needs_a_fact_id(self):
+        status, _ = self._post("/api/portrait/forget", {})
+        self.assertEqual(status, 400)
+
     def test_health(self):
         status, body = self._get("/api/health")
         self.assertEqual(status, 200)
