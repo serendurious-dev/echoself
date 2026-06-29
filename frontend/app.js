@@ -6,9 +6,22 @@ const form   = document.getElementById("say");
 const box    = document.getElementById("box");
 const send   = document.getElementById("send");
 const here   = document.getElementById("here");
+const face   = document.getElementById("face");
 
 let sessionId = null;
 let busy      = false;
+let faceEmotion = "neutral";
+
+// let her expression follow how the talk feels. cross-fade so it never snaps -
+// she settles into the new feeling the way a face does, not like a slideshow.
+function setFace(emotion) {
+  if (!face || emotion === faceEmotion) return;
+  faceEmotion = emotion;
+  const next = new Image();
+  next.onload = () => { face.src = next.src; face.classList.remove("settling"); };
+  face.classList.add("settling");
+  next.src = "/api/face?emotion=" + encodeURIComponent(emotion) + "&h=320&t=" + Date.now();
+}
 
 async function api(path, body) {
   const opt = { method: body ? "POST" : "GET" };
@@ -81,6 +94,7 @@ async function say(text) {
       : await api("/api/respond", { text });
     await pause(res.reply);
     t.remove();
+    if (res.emotion) setFace(res.emotion);
     addLine(res.reply || "i'm still here.", "her", res.crisis);
   } catch (e) {
     t.remove();

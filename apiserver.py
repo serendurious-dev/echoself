@@ -75,10 +75,34 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _send_face(self):
+        # her face as a png, expression following the emotion asked for. rendered by
+        # the same engine the window uses, so a frontend never draws a second her.
+        from urllib.parse import urlparse, parse_qs
+        q = parse_qs(urlparse(self.path).query)
+        emotion = (q.get("emotion") or ["neutral"])[0]
+        try:
+            height = max(120, min(480, int((q.get("h") or ["240"])[0])))
+        except ValueError:
+            height = 240
+        try:
+            from character import face
+            png = face.render_png(emotion, height=height)
+        except Exception as e:
+            return self._send(500, {"error": str(e)})
+        self.send_response(200)
+        self.send_header("Content-Type", "image/png")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Content-Length", str(len(png)))
+        self.end_headers()
+        self.wfile.write(png)
+
     def do_GET(self):
         route = self.path.split("?")[0]
         if not route.startswith("/api/"):
             return self._serve_static(route)
+        if route == "/api/face":
+            return self._send_face()
         fn = _get_routes().get(route)
         if fn is None:
             return self._send(404, {"error": "no such endpoint"})

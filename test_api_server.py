@@ -81,6 +81,18 @@ class TestApiServer(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertTrue(body["ok"])
 
+    def test_serves_her_face_as_png(self):
+        # the same character the window draws, rendered for the web ui
+        status, ctype, body = self._get_raw("/api/face?emotion=sadness&h=200")
+        self.assertEqual(status, 200)
+        self.assertIn("image/png", ctype)
+        self.assertEqual(body[:8], b"\x89PNG\r\n\x1a\n")
+
+    def test_face_falls_back_on_an_unknown_emotion(self):
+        status, _, body = self._get_raw("/api/face?emotion=zzzz")
+        self.assertEqual(status, 200)
+        self.assertEqual(body[:8], b"\x89PNG\r\n\x1a\n")
+
     def test_health(self):
         status, body = self._get("/api/health")
         self.assertEqual(status, 200)
