@@ -445,6 +445,7 @@ class Conversation:
         self.ended     = False   # set on crisis; informational, doesn't gag her
         self._concerned = False  # so the soft "real help exists" word lands once a sitting
         self._noted_returns = set()   # heavy feelings she's already noted circling back
+        self._reflected = set()       # topics she's already mirrored, so she doesn't twice
         self.now       = now
         self._offered  = None    # a technique she's offered and is waiting a yes on
         self._offered_kinds = set()   # so she offers each tool at most once a sitting
@@ -561,17 +562,26 @@ class Conversation:
             light = playful_touch(emo, self.drift)
             if light:
                 reply = reply + " " + light
-            # if a heavy feeling from earlier this sitting has come back, she
-            # remembers it; otherwise, if the feeling just moved, she names the move.
-            prior = [e for role, _, e in self.history[:-1] if role == "you"]
-            if (emo in _HEAVY and emo != self.last_emo and emo in prior
-                    and emo not in self._noted_returns):
-                self._noted_returns.add(emo)
-                reply = random.choice(_RETURNED) + " " + reply
+            # mirror back the thing they actually named, once per topic - the
+            # mirror-self made literal. it leads the answer and stands in for a generic
+            # shift line, because reflecting your own words beats noting "something moved".
+            from psychology import reflection
+            refl = reflection.topic(text)
+            if refl and refl not in self._reflected:
+                self._reflected.add(refl)
+                reply = reflection.lead(refl) + " " + reply
+            # otherwise: a heavy feeling circling back gets remembered; a feeling that
+            # just moved gets named.
             else:
-                shift = shift_line(self.last_emo, emo)
-                if shift:
-                    reply = shift + " " + reply
+                prior = [e for role, _, e in self.history[:-1] if role == "you"]
+                if (emo in _HEAVY and emo != self.last_emo and emo in prior
+                        and emo not in self._noted_returns):
+                    self._noted_returns.add(emo)
+                    reply = random.choice(_RETURNED) + " " + reply
+                else:
+                    shift = shift_line(self.last_emo, emo)
+                    if shift:
+                        reply = shift + " " + reply
 
         # a quiet sinking (not crisis) gets a soft word that real help exists, once
         # a sitting - more than comfort, never instead of the crisis path.

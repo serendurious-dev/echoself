@@ -34,8 +34,16 @@ nearly all of it runs on your own machine.
   intense it is), a normalizing word on what a feeling is doing, a gentle notice
   when one keeps recurring, and a motivational-interviewing stance for when you're
   stuck. A concern tier between comfort and crisis, for the quiet sinking.
+- **She reflects you back** - she mirrors the thing you actually named ("your
+  thesis - that's what's sitting with you, isn't it?") before answering, so it lands
+  as being heard, not sorted into a bucket. Offline, and she stays quiet rather than
+  mirror it wrong. The mirror-self, in words this time.
 - **She follows the conversation** - notices when your feeling shifts mid-talk,
   and remembers when a heavy one comes back around.
+- **Safer where it matters most** - the crisis read now catches far more of the
+  quiet, indirect ways people say it, and shrugs off odd spacing and curly quotes.
+  Still deterministic and offline; it errs toward catching, because a missed one is
+  the worst outcome.
 - **Six courses now** - Python, C, C++ and Java (each two or three clusters), plus
   a full Data Structures & Algorithms course and a How Computers Work / OS course.
   Switch with `g`, then `1`-`6`.

@@ -4,7 +4,7 @@ import datetime
 import tempfile
 import unittest
 
-from core import crisis, companion, datastore, settings
+from core import crisis, companion, datastore, settings, emotion
 
 
 class TestCrisisResources(unittest.TestCase):
@@ -48,6 +48,26 @@ class TestRegionPicker(unittest.TestCase):
         for region in crisis.RESOURCES:
             self.assertIn(region, crisis.REGIONS, region)
             self.assertNotEqual(crisis.region_name(region), region)   # has a real name
+
+
+class TestCrisisDetection(unittest.TestCase):
+    # the gate itself - err toward catching, since a missed crisis is the worst outcome
+
+    def test_catches_passive_and_indirect_phrasings(self):
+        for s in ("i just want to disappear", "i wish i wasn't here anymore",
+                  "i don't want to wake up tomorrow", "i can't keep living like this",
+                  "no longer want to live", "ready to die honestly",
+                  "everyone would be better off without me"):
+            self.assertTrue(emotion.is_crisis(s), s)
+
+    def test_normalises_spacing_and_smart_apostrophes(self):
+        self.assertTrue(emotion.is_crisis("i want  to   die"))
+        self.assertTrue(emotion.is_crisis("i don" + chr(0x2019) + "t want to be alive"))   # curly quote
+
+    def test_does_not_fire_on_ordinary_heaviness(self):
+        for s in ("i feel so sad and empty", "this week has been exhausting",
+                  "i'm really stressed about work"):
+            self.assertFalse(emotion.is_crisis(s), s)
 
 
 class TestCrisisInCompanion(unittest.TestCase):

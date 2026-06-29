@@ -91,14 +91,24 @@ _NEGATIONS = {"not", "no", "never", "isnt", "isn't", "wasnt", "wasn't", "dont", 
 
 # crisis phrases, handled before anything else (see companion.py). err toward
 # catching: a missed one is far worse than a false alarm.
-_CRISIS = ["kill myself", "killing myself", "end my life", "ending my life",
+_CRISIS = ["kill myself", "killing myself", "kill me", "kms", "end my life",
+           "ending my life", "take my own life", "take my life", "off myself",
            "end it all", "ending it all", "end it", "suicide", "suicidal",
-           "want to die", "wanna die", "don't want to live", "do not want to live",
-           "dont want to be here", "don't want to be here", "hurt myself", "harm myself",
-           "self harm", "self-harm", "no reason to live", "no point in living",
-           "better off dead", "better off without me", "can't go on", "cant go on",
-           "can't do this anymore", "cant do this anymore", "can't take it anymore",
-           "cant take it anymore", "want it to end", "tired of living", "give up on life"]
+           "want to die", "wanna die", "want to be dead", "ready to die",
+           "don't want to live", "do not want to live", "dont want to live",
+           "don't want to be alive", "dont want to be alive", "no longer want to live",
+           "can't keep living", "cant keep living", "tired of living",
+           "dont want to be here", "don't want to be here", "wish i wasn't here",
+           "wish i wasnt here", "don't want to wake up", "dont want to wake up",
+           "want to disappear", "want to be gone", "want to sleep forever",
+           "wish i was dead", "wish i were dead", "wish i didn't exist", "wish i didnt exist",
+           "hurt myself", "harm myself", "self harm", "self-harm", "cut myself",
+           "cutting myself", "hang myself", "overdose on", "slit my",
+           "no reason to live", "no point in living", "not worth living",
+           "better off dead", "better off without me", "everyone better off without me",
+           "can't go on", "cant go on", "can't do this anymore", "cant do this anymore",
+           "can't take it anymore", "cant take it anymore", "want it to end",
+           "give up on life"]
 
 # the few words that mean "yes, walk me through it" - read only when she's just
 # offered a technique, so a normal "okay" never gets mistaken for one.
@@ -107,7 +117,9 @@ _AFFIRM = {"yes", "yeah", "yep", "yup", "sure", "ok", "okay", "please", "alright
 
 
 def is_crisis(text):
-    t = text.lower()
+    # normalise curly apostrophes and runaway spacing so "want  to die" and a smart-quote
+    # "don't" still match. err toward catching - a missed crisis is the worst outcome.
+    t = re.sub(r"\s+", " ", text.lower().replace(chr(0x2019), "'"))
     return any(phrase in t for phrase in _CRISIS)
 
 
