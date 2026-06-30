@@ -111,6 +111,15 @@ class TestApiServer(unittest.TestCase):
         status, _ = self._post("/api/portrait/forget", {})
         self.assertEqual(status, 400)
 
+    def test_echo_distance_returns_the_four_axes(self):
+        status, body = self._get("/api/echo-distance")
+        self.assertEqual(status, 200)
+        for axis in ("mental", "behavioral", "emotional", "learning"):
+            self.assertIn(axis, body)
+            self.assertIsInstance(body[axis], (int, float))
+            self.assertGreaterEqual(body[axis], 0.0)
+            self.assertLessEqual(body[axis], 1.0)
+
     def test_health(self):
         status, body = self._get("/api/health")
         self.assertEqual(status, 200)

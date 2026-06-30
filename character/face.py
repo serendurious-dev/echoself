@@ -7,10 +7,15 @@ moment, the same map the window uses (companion.EXPRESSION)."""
 
 import io
 import os
+import threading
 
 # the server has no display - draw to an offscreen buffer.
 os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
 import pygame
+
+# pygame's display + render state is global, and the api server is threaded - two
+# face requests at once would race the init and the draw. one lock serialises it.
+_LOCK = threading.Lock()
 
 from core import session_manager
 from core import companion
@@ -35,28 +40,29 @@ def render_png(emotion="neutral", height=240, bg=DUSK, portrait=True):
     # her, with the expression this feeling calls for, as png bytes. portrait=True crops
     # to head and shoulders, because that's where a feeling actually shows - at the small
     # size a frontend renders her, a full figure would lose the face the read lives in.
-    _ensure_pygame()
+    with _LOCK:
+        _ensure_pygame()
 
-    profile = session_manager.load_profile()
-    spec    = spec_from_profile(profile) if profile else gentle_guide()
+        profile = session_manager.load_profile()
+        spec    = spec_from_profile(profile) if profile else gentle_guide()
 
-    cw, chh = int(height * 0.74), int(height * 1.05)
-    who = make_character(spec, pos=(cw // 2, int(chh - 0.015 * height)), height=height)
-    who.set_expression(companion.EXPRESSION.get(emotion, "neutral"))
+        cw, chh = int(height * 0.74), int(height * 1.05)
+        who = make_character(spec, pos=(cw // 2, int(chh - 0.015 * height)), height=height)
+        who.set_expression(companion.EXPRESSION.get(emotion, "neutral"))
 
-    # this is a still frame, not an animation - settle the expression at once so she
-    # isn't caught mid-change. (the painted ArtCharacter has no expr to settle.)
-    if hasattr(who, "expr") and hasattr(who, "target"):
-        who.expr = dict(who.target)
+        # this is a still frame, not an animation - settle the expression at once so she
+        # isn't caught mid-change. (the painted ArtCharacter has no expr to settle.)
+        if hasattr(who, "expr") and hasattr(who, "target"):
+            who.expr = dict(who.target)
 
-    surface = pygame.Surface((cw, chh))
-    surface.fill(bg)
-    who.draw(surface)
+        surface = pygame.Surface((cw, chh))
+        surface.fill(bg)
+        who.draw(surface)
 
-    if portrait:
-        # head and shoulders. the figure is centered, so keep full width, top slice.
-        surface = surface.subsurface((0, 0, cw, int(chh * 0.46))).copy()
+        if portrait:
+            # head and shoulders. the figure is centered, so keep full width, top slice.
+            surface = surface.subsurface((0, 0, cw, int(chh * 0.46))).copy()
 
-    buf = io.BytesIO()
-    pygame.image.save(surface, buf, "face.png")
-    return buf.getvalue()
+        buf = io.BytesIO()
+        pygame.image.save(surface, buf, "face.png")
+        return buf.getvalue()

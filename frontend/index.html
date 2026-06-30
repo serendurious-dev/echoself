@@ -8,7 +8,10 @@
 </head>
 <body>
   <main class="room">
-    <button id="memBtn" class="mem-btn" aria-label="what she remembers about you">memory</button>
+    <nav class="rooms">
+      <button id="echoBtn" class="room-btn" aria-label="how far apart we are">echo distance</button>
+      <button id="memBtn" class="room-btn" aria-label="what she remembers about you">memory</button>
+    </nav>
 
     <header class="top">
       <img id="face" class="face" alt="" src="/api/face?emotion=neutral&h=320">
@@ -35,6 +38,15 @@
       </header>
       <p class="panel-note">these are the things i've gathered. each one is yours - tap to let it go.</p>
       <div class="facts" id="facts"></div>
+    </section>
+
+    <section class="panel" id="echoPanel" hidden aria-label="how far apart we are">
+      <header class="panel-top">
+        <span class="panel-title">how far apart we are</span>
+        <button id="echoClose" class="panel-close" aria-label="back to the conversation">back</button>
+      </header>
+      <p class="panel-note">echo distance, across four ways of being. reaching outward is closer - the gaps close as we go.</p>
+      <div class="echo" id="echo"></div>
     </section>
   </main>
 

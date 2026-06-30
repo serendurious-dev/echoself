@@ -34,11 +34,15 @@ html, body {
   position: relative;
 }
 
-/* a quiet way into what she remembers - tucked top-right, never shouting */
-.mem-btn {
+/* quiet ways into the other rooms - tucked top-right, never shouting */
+.rooms {
   position: absolute;
-  top: 16px; right: 18px;
+  top: 14px; right: 18px;
   z-index: 3;
+  display: flex;
+  gap: 8px;
+}
+.room-btn {
   background: transparent;
   border: 1px solid var(--edge);
   color: var(--ink-dim);
@@ -50,7 +54,7 @@ html, body {
   cursor: pointer;
   transition: color 0.2s ease, border-color 0.2s ease;
 }
-.mem-btn:hover { color: var(--ink); border-color: rgba(217,168,108,0.4); }
+.room-btn:hover { color: var(--ink); border-color: rgba(217,168,108,0.4); }
 
 /* the portrait room: what she's gathered about you, every line yours to drop */
 .panel {
@@ -108,6 +112,17 @@ html, body {
 .fact-forget::before { content: "\00d7"; }
 .fact-forget:hover { color: var(--care); }
 .facts-empty { color: var(--ink-dim); font-size: 15px; line-height: 1.6; padding: 8px 2px; }
+
+/* the echo-distance room: the radar, then a soft readout per axis */
+.echo { flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.echo svg { width: 100%; max-width: 300px; height: auto; }
+.echo-legend { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+.echo-axis { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink); }
+.echo-dot { flex: none; width: 10px; height: 10px; border-radius: 50%; }
+.echo-name { flex: none; width: 90px; color: var(--ink-dim); }
+.echo-bar { flex: 1; height: 6px; border-radius: 6px; background: var(--her); overflow: hidden; }
+.echo-fill { height: 100%; border-radius: 6px; }
+.echo-pct { flex: none; width: 44px; text-align: right; color: var(--ink-dim); font-size: 13px; }
 
 /* her presence - she's actually here, the same character the window draws */
 .top {

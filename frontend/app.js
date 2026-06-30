@@ -151,6 +151,76 @@ async function openPanel() {
 memBtn.addEventListener("click", openPanel);
 panelClose.addEventListener("click", () => { panel.hidden = true; });
 
+// the echo-distance room - how far apart we are, across four ways of being. the gap
+// is 1 - closeness, so the shape reaching outward means we're closer. same four axes
+// and colours the window uses, in gentler words.
+const echoPanel = document.getElementById("echoPanel");
+const echoBtn   = document.getElementById("echoBtn");
+const echoClose = document.getElementById("echoClose");
+const echoEl    = document.getElementById("echo");
+
+const ECHO_AXES = [
+  { key: "mental",     name: "mind",       color: "#8ab0e0", deg: -90 },
+  { key: "behavioral", name: "showing up", color: "#e0b884", deg: 0 },
+  { key: "emotional",  name: "feeling",    color: "#d88aa8", deg: 90 },
+  { key: "learning",   name: "growing",    color: "#7bb5a8", deg: 180 },
+];
+
+function closenessOf(dist, key) {
+  const d = (dist && typeof dist[key] === "number") ? dist[key] : 0.5;
+  return Math.max(0, Math.min(1, 1 - d));
+}
+
+function radarSVG(dist) {
+  const cx = 150, cy = 130, R = 84;
+  const pt = (deg, r) => {
+    const a = deg * Math.PI / 180;
+    return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+  };
+  let g = "";
+  for (const f of [0.25, 0.5, 0.75, 1]) {
+    g += `<circle cx="${cx}" cy="${cy}" r="${(R * f).toFixed(1)}" fill="none" stroke="rgba(255,255,255,0.08)"/>`;
+  }
+  const poly = [];
+  for (const ax of ECHO_AXES) {
+    const [tx, ty] = pt(ax.deg, R);
+    g += `<line x1="${cx}" y1="${cy}" x2="${tx.toFixed(1)}" y2="${ty.toFixed(1)}" stroke="rgba(255,255,255,0.08)"/>`;
+    const [lx, ly] = pt(ax.deg, R + 16);
+    g += `<text x="${lx.toFixed(1)}" y="${(ly + 4).toFixed(1)}" fill="${ax.color}" font-size="12" text-anchor="middle">${ax.name}</text>`;
+    const [px, py] = pt(ax.deg, closenessOf(dist, ax.key) * R);
+    poly.push(`${px.toFixed(1)},${py.toFixed(1)}`);
+  }
+  const shape = `<polygon points="${poly.join(" ")}" fill="rgba(123,181,168,0.28)" stroke="#7bb5a8" stroke-width="2"/>`;
+  return `<svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="echo distance radar">${g}${shape}</svg>`;
+}
+
+function renderEcho(dist) {
+  let legend = '<div class="echo-legend">';
+  for (const ax of ECHO_AXES) {
+    const pct = Math.round(closenessOf(dist, ax.key) * 100);
+    legend += `<div class="echo-axis">
+      <span class="echo-dot" style="background:${ax.color}"></span>
+      <span class="echo-name">${ax.name}</span>
+      <span class="echo-bar"><span class="echo-fill" style="width:${pct}%;background:${ax.color}"></span></span>
+      <span class="echo-pct">${pct}%</span>
+    </div>`;
+  }
+  legend += "</div>";
+  echoEl.innerHTML = radarSVG(dist) + legend;
+}
+
+async function openEcho() {
+  echoPanel.hidden = false;
+  try {
+    renderEcho(await api("/api/echo-distance"));
+  } catch (e) {
+    echoEl.innerHTML = '<p class="facts-empty">the distance fills in as the days do.</p>';
+  }
+}
+
+echoBtn.addEventListener("click", openEcho);
+echoClose.addEventListener("click", () => { echoPanel.hidden = true; });
+
 form.addEventListener("submit", e => { e.preventDefault(); say(box.value); });
 box.addEventListener("input", grow);
 box.addEventListener("keydown", e => {
